@@ -9,6 +9,7 @@ const ITEMS = [
   { k: '/projects',label: 'go: projects',                hint: 'gp', href: '/projects' },
   { k: '/projects/kairos', label: 'open: kairos case study', hint: 'gk', href: '/projects/kairos' },
   { k: '/resume',  label: 'open: resume',                hint: 'gr', href: '/resume' },
+  { k: '/writing', label: 'go: writing',                hint: 'gw', href: '/writing' },
   { k: '_mail',    label: 'copy: samridh@samridhlimbu.com', hint: '⌘c', href: null },
   { k: '_gh',      label: 'open: github',                hint: '',   href: 'https://github.com/samridhlimbu' },
   { k: '_li',      label: 'open: linkedin',              hint: '',   href: 'https://linkedin.com/in/samridhlimbu' },
@@ -23,6 +24,7 @@ export function CommandPalette({ open, onClose }: Props) {
   const router = useRouter()
   const [q, setQ] = useState('')
   const [idx, setIdx] = useState(0)
+  const [copied, setCopied] = useState(false)
 
   const filtered = ITEMS.filter(x => x.label.toLowerCase().includes(q.toLowerCase()))
 
@@ -30,12 +32,19 @@ export function CommandPalette({ open, onClose }: Props) {
   useEffect(() => { if (!open) setQ('') }, [open])
 
   function run(item: typeof ITEMS[0]) {
+    if (item.k === '_mail') {
+      navigator.clipboard.writeText('samridh@samridhlimbu.com')
+      setCopied(true)
+      setTimeout(() => {
+        setCopied(false)
+        onClose()
+      }, 1500)
+      return
+    }
     if (item.href && !item.href.startsWith('http')) {
       router.push(item.href)
     } else if (item.href) {
       window.open(item.href, '_blank')
-    } else if (item.k === '_mail') {
-      navigator.clipboard.writeText('samridh@samridhlimbu.com')
     }
     onClose()
   }
@@ -78,7 +87,9 @@ export function CommandPalette({ open, onClose }: Props) {
               onMouseEnter={() => setIdx(i)}
             >
               <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', width: 10 }}>›</span>
-              <span style={{ flex: 1 }}>{item.label}</span>
+              <span style={{ flex: 1, color: copied && item.k === '_mail' ? 'var(--term-green)' : undefined }}>
+                {copied && item.k === '_mail' ? '✓ copied!' : item.label}
+              </span>
               {item.hint && <span className="t2-key">{item.hint}</span>}
             </div>
           ))}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Manrope, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+import { CmdProvider } from '@/components/cmd-provider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       style={{ background: '#050505' }}
     >
       <body style={{ margin: 0, background: '#050505' }}>
-        {children}
+        <CmdProvider>
+          {children}
+        </CmdProvider>
       </body>
     </html>
   )

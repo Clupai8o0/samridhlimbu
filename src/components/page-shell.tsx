@@ -50,6 +50,12 @@ export function PageShell({ children }: { children: React.ReactNode }) {
               {s.label}
             </Link>
           ))}
+          <kbd
+            className="t2-key"
+            style={{ color: 'var(--muted-2)', fontSize: 10, fontFamily: 'var(--font-mono, "JetBrains Mono", monospace)', cursor: 'pointer' }}
+          >
+            ⌘K
+          </kbd>
           <Link
             href="/"
             style={{
