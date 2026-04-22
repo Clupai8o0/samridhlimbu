@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const NAV = [
+const SECTIONS = [
   { href: '/about', label: 'about' },
   { href: '/projects', label: 'projects' },
   { href: '/writing', label: 'writing' },
@@ -12,6 +12,8 @@ const NAV = [
 
 export function PageShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const current = SECTIONS.find(s => pathname?.startsWith(s.href))
+  const others = SECTIONS.filter(s => !pathname?.startsWith(s.href))
 
   return (
     <div style={{ background: 'var(--bg)', color: 'var(--fg)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -26,23 +28,38 @@ export function PageShell({ children }: { children: React.ReactNode }) {
         position: 'relative',
         zIndex: 10,
       }}>
-        <Link href="/" style={{ color: 'var(--fg)', textDecoration: 'none', fontWeight: 500 }}>
-          samridh<span style={{ color: 'var(--accent)' }}>·</span>limbu
+        <Link
+          href={current?.href ?? '/'}
+          style={{ color: 'var(--muted-2)', textDecoration: 'none', fontWeight: 400 }}
+        >
+          ~/samridhlimbu
+          {current && (
+            <>
+              <span>/</span>
+              <span style={{ color: 'var(--fg)', fontWeight: 500 }}>{current.label}</span>
+            </>
+          )}
         </Link>
-        <div style={{ display: 'flex', gap: 28 }}>
-          {NAV.map(l => (
+        <div style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
+          {others.map(s => (
             <Link
-              key={l.href}
-              href={l.href}
-              style={{
-                color: pathname?.startsWith(l.href) ? 'var(--fg)' : 'var(--muted-2)',
-                textDecoration: 'none',
-                transition: 'color .12s',
-              }}
+              key={s.href}
+              href={s.href}
+              style={{ color: 'var(--muted-2)', textDecoration: 'none', transition: 'color .12s' }}
             >
-              {l.label}
+              {s.label}
             </Link>
           ))}
+          <Link
+            href="/"
+            style={{
+              color: !current ? 'var(--fg)' : 'var(--muted-2)',
+              textDecoration: 'none',
+              transition: 'color .12s',
+            }}
+          >
+            /
+          </Link>
         </div>
       </nav>
       <main style={{ flex: 1 }}>{children}</main>
