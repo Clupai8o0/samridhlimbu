@@ -75,9 +75,11 @@ export default function KairosPage() {
         </div>
 
         {/* Context */}
-        <div style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, marginBottom: 28 }}>
+        <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
-          Solo, 2025–ongoing. I own design, scheduling logic, plugin system, and API surface. The core problem: a scheduler that fails loudly instead of dropping events silently. Started as a Python/FastAPI prototype, rewrote the whole thing into a clean Next.js monorepo once the prototype hit 1,051 lines in a single file.
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
+            Solo, 2025–ongoing. I own design, scheduling logic, plugin system, and API surface. The core problem: a scheduler that fails loudly instead of dropping events silently. Started as a Python/FastAPI prototype, rewrote the whole thing into a clean Next.js monorepo once the prototype hit 1,051 lines in a single file.
+          </p>
         </div>
 
         {/* Timeline */}

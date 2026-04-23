@@ -1,6 +1,15 @@
-import { PageShell } from '@/components/page-shell'
+import type { Metadata } from 'next'
 import { MonoPortrait } from '@/components/mono-portrait'
+import { PageShell } from '@/components/page-shell'
 import { Prompt } from '@/components/prompt'
+
+export const metadata: Metadata = {
+  title: 'About',
+  description:
+    'Samridh Limbu — 3rd-year CS student at Deakin, CTO at Hoddle Melbourne, president of DSEC (190+ members). Full-stack engineer with Next.js, TypeScript, and PostgreSQL. Seeking SWE internships Nov 2026–Feb 2027.',
+  alternates: { canonical: 'https://samridhlimbu.com/about' },
+  openGraph: { url: 'https://samridhlimbu.com/about', title: 'About · Samridh Limbu' },
+}
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
@@ -12,18 +21,24 @@ export default function AboutPage() {
     <PageShell>
       <div style={{ maxWidth: 600, margin: '0 auto', padding: '40px 28px' }}>
 
+        {/* Breadcrumb */}
+        <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: 0.02 }}>
+          <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
+          cat ~/about.md<span className="t2-cursor thin" />
+        </div>
+
         {/* Header */}
         <div style={{ display: 'flex', gap: 18, alignItems: 'flex-start', marginBottom: 24 }}>
           <MonoPortrait size={72} />
           <div>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: -0.02, color: 'var(--fg)' }}>Samridh Limbu</h1>
-            <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>software engineer · melbourne · he/him</div>
+            <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>full-stack software engineer · melbourne · he/him</div>
           </div>
         </div>
 
         {/* Bio */}
         <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--fg-dim)', lineHeight: 1.7, display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
-          <p style={{ margin: 0 }}>I&apos;m a 3rd-year CS (IoT) student at Deakin on a Vice-Chancellor&apos;s International Scholarship, president of DSEC (190+ members), and CTO at Hoddle Melbourne. Most of my work is frontend-first, but I own the full stack.</p>
+          <p style={{ margin: 0 }}>I&apos;m a full-stack software engineer — 3rd-year CS (IoT) at Deakin on a Vice-Chancellor&apos;s International Scholarship, CTO at Hoddle Melbourne (sole developer), and president of DSEC (190+ members). I own the entire stack: schema design, API, auth, and UI, through to deployment and SEO.</p>
           <p style={{ margin: 0 }}>I&apos;ve shipped Kairos (AI scheduling app, Next.js monorepo, plugin marketplace), TapCraft (headless Shopify + React Three Fiber, B2C → B2B), and a Next.js rebuild for King Double Glazing with a custom Instant Estimate Tool and SEO strategy. I also build workflow automations with n8n for clients.</p>
           <p style={{ margin: 0 }}>Outside the terminal: long runs along the Yarra, bad coffee in good company, and an Obsidian vault that&apos;s getting out of hand.</p>
         </div>

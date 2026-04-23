@@ -207,6 +207,22 @@ a.t2-link:hover { border-color: var(--accent); }
   z-index: 9999;
 }
 
+/* ─── Mobile nav ─────────────────────────────────────────── */
+.t2-nav { padding: 14px 20px; }
+.t2-nav-ham { display: flex !important; }
+.t2-nav-drawer { display: block !important; }
+
+@media (min-width: 641px) {
+  .t2-nav { padding: 18px 40px; }
+  .t2-nav-links { display: flex !important; }
+  .t2-nav-ham { display: none !important; }
+  .t2-nav-drawer { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  .t2-nav-links { display: none !important; }
+}
+
 /* ─── Print / PDF ────────────────────────────────────────── */
 .no-print { display: none !important; }
 

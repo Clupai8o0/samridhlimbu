@@ -1,5 +1,14 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+
+export const metadata: Metadata = {
+  title: 'Projects',
+  description:
+    'Portfolio of Samridh Limbu — Kairos (AI scheduling), Hoddle (mentorship matching), TapCraft (headless Shopify + Three.js), King Double Glazing (Next.js rebuild + SEO), NMMUN, Krishnaveni CMS.',
+  alternates: { canonical: 'https://samridhlimbu.com/projects' },
+  openGraph: { url: 'https://samridhlimbu.com/projects', title: 'Projects · Samridh Limbu' },
+}
 import { Prompt } from '@/components/prompt'
 import { PROJECTS, ARCHIVE } from '@/lib/data'
 
@@ -12,7 +21,7 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 export default function ProjectsPage() {
   return (
     <PageShell>
-      <div style={{ maxWidth: 700, margin: '0 auto', padding: '40px 28px' }}>
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '40px 28px' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 24 }}>

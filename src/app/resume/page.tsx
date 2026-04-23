@@ -131,12 +131,18 @@ const SECTIONS = [
 export default function ResumePage() {
   return (
     <PageShell>
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '36px 28px' }}>
+      <div style={{ maxWidth: 600, margin: '0 auto', padding: '40px 28px' }}>
+
+        {/* Breadcrumb */}
+        <div className="no-print" style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: 0.02 }}>
+          <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
+          cat ~/resume.md<span className="t2-cursor thin" />
+        </div>
 
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 16, borderBottom: '1px solid var(--accent)', marginBottom: 24 }}>
           <div>
-            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 22, margin: '0 0 4px', letterSpacing: -0.02, color: 'var(--fg)' }}>Samridh Limbu</h1>
+            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: -0.02, color: 'var(--fg)' }}>Samridh Limbu</h1>
             <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>Software Engineer · Melbourne</div>
             <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginTop: 4 }}>samridh@samridhlimbu.com · samridhlimbu.com</div>
           </div>

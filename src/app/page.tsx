@@ -1,7 +1,32 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { Icon } from '@/components/icons'
 import { PROJECTS } from '@/lib/data'
+
+export const metadata: Metadata = {
+  alternates: { canonical: 'https://samridhlimbu.com' },
+  openGraph: { url: 'https://samridhlimbu.com' },
+}
+
+const PERSON_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Samridh Limbu',
+  url: 'https://samridhlimbu.com',
+  jobTitle: 'Software Engineer',
+  description: 'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL.',
+  email: 'samridh@samridhlimbu.com',
+  sameAs: [
+    'https://github.com/clupai8o0',
+    'https://linkedin.com/in/samridh-limbu',
+  ],
+  worksFor: [
+    { '@type': 'Organization', name: 'Hoddle Melbourne', url: 'https://hoddle.org' },
+  ],
+  alumniOf: { '@type': 'EducationalOrganization', name: 'Deakin University' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Melbourne', addressCountry: 'AU' },
+}
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 
@@ -25,10 +50,14 @@ const CONTACTS = [
 ]
 
 export default function HomePage() {
-  const featured = PROJECTS.filter(p => p.featured).slice(0, 3)
+  const featured = PROJECTS.filter(p => p.featured)
 
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }}
+      />
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 32px' }}>
 
         {/* Top accent rule */}
@@ -116,11 +145,11 @@ export default function HomePage() {
 
         {/* projects */}
         <div>
-          <SectionHeader>projects --featured --limit=3</SectionHeader>
+          <SectionHeader>projects --featured</SectionHeader>
           {featured.map((p, i) => (
             <Link
               key={p.slug}
-              href={p.slug === 'kairos' ? '/projects/kairos' : '/projects'}
+              href={`/projects/${p.slug}`}
               className="row-hover"
               style={{
                 display: 'grid', gridTemplateColumns: '40px 1fr 20px', gap: 16,
