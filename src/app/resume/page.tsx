@@ -161,9 +161,9 @@ export default function ResumePage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {sec.rows.map((r, i) => (
                 <div key={i}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
+                  <div className="t2-resume-row">
                     <div style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 12.5, color: 'var(--fg)' }}>{r.head}</div>
-                    <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', whiteSpace: 'nowrap' }}>{r.meta}</div>
+                    {r.meta && <div className="t2-resume-meta" style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)' }}>{r.meta}</div>}
                   </div>
                   <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', marginTop: 4, lineHeight: 1.55 }}>{r.body}</div>
                 </div>

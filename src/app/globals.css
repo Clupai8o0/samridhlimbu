@@ -26,10 +26,30 @@ html, body {
   height: 100%;
 }
 
-/* ─── Cursor ─────────────────────────────────────────────── */
+/* ─── Keyframes ──────────────────────────────────────────── */
 @keyframes t2-blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
+}
+
+@keyframes t2-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes t2-slide-up {
+  from { opacity: 0; transform: translateY(-8px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes t2-slide-down {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes t2-page-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .t2-cursor {
@@ -61,11 +81,12 @@ html, body {
   background: transparent;
   text-decoration: none;
   border-radius: 2px;
-  transition: border-color .12s, color .12s, background .12s;
+  transition: border-color .12s, color .12s, background .12s, transform .08s;
   cursor: pointer;
   white-space: nowrap;
 }
-.btn:hover { border-color: var(--fg-dim); }
+.btn:hover  { border-color: var(--fg-dim); }
+.btn:active { transform: scale(0.97); }
 .btn-primary { color: var(--bg); background: var(--accent); border-color: var(--accent); }
 .btn-primary:hover { background: var(--accent-dim); border-color: var(--accent-dim); }
 .btn-ghost { border-color: transparent; color: var(--muted); padding-left: 0; padding-right: 0; }
@@ -78,8 +99,28 @@ html, body {
   transition: color .12s;
   cursor: pointer;
 }
-.t2-nav-link:hover { color: var(--fg); }
+.t2-nav-link:hover  { color: var(--fg); }
 .t2-nav-link.active { color: var(--fg); }
+
+/* Desktop nav links — underline grows on hover */
+.t2-nav-item {
+  position: relative;
+  color: var(--muted-2);
+  text-decoration: none;
+  transition: color .15s;
+}
+.t2-nav-item:hover { color: var(--fg); }
+.t2-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width .18s ease;
+}
+.t2-nav-item:hover::after { width: 100%; }
 
 /* ─── Rows ───────────────────────────────────────────────── */
 .row-hover { transition: background .12s; }
@@ -138,6 +179,11 @@ kbd, .t2-key {
   border-radius: 3px;
   color: var(--muted);
   background: var(--bg-2);
+  transition: border-color .12s, color .12s;
+}
+kbd:hover, .t2-key:hover {
+  border-color: var(--accent);
+  color: var(--fg);
 }
 
 /* ─── Monogram ───────────────────────────────────────────── */
@@ -155,6 +201,9 @@ kbd, .t2-key {
 }
 
 /* ─── Command palette ────────────────────────────────────── */
+.t2-cmd-backdrop { animation: t2-fade-in 140ms ease both; }
+.t2-cmd-panel    { animation: t2-slide-up 180ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
 .t2-cmd-item {
   padding: 8px 14px;
   cursor: pointer;
@@ -181,9 +230,51 @@ a.t2-link {
 }
 a.t2-link:hover { border-color: var(--accent); }
 
+/* ─── Contact form ───────────────────────────────────────── */
+.t2-contact-input::placeholder,
+.t2-contact-textarea::placeholder {
+  color: var(--muted-2);
+  opacity: 1;
+}
+
+/* ─── Contact grid ───────────────────────────────────────── */
+.t2-contact-grid { grid-template-columns: 1fr 1fr; }
+.t2-contact-grid a                      { border-bottom: 1px solid var(--border); }
+.t2-contact-grid a:nth-last-child(-n+2) { border-bottom: none; }
+.t2-contact-grid a:nth-child(odd)       { border-right: 1px solid var(--border); }
+
+@media (max-width: 640px) {
+  .t2-contact-grid                  { grid-template-columns: 1fr; }
+  .t2-contact-grid a                { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
+  .t2-contact-grid a:last-child     { border-bottom: none !important; }
+}
+
 /* ─── Contact grid item ──────────────────────────────────── */
 .contact-item { transition: background .12s, color .12s; }
 .contact-item:hover { background: var(--bg-2); color: var(--fg); }
+
+/* ─── Archive table ──────────────────────────────────────── */
+.t2-archive-grid { grid-template-columns: 55px 130px 1fr 90px; }
+.t2-archive-year { display: block; }
+
+@media (max-width: 640px) {
+  .t2-archive-grid { grid-template-columns: 130px 1fr 90px; }
+  .t2-archive-year { display: none !important; }
+}
+
+/* ─── Resume row (title + meta) ─────────────────────────── */
+.t2-resume-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.t2-resume-meta { white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .t2-resume-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .t2-resume-meta { white-space: normal; }
+}
 
 /* ─── Prose article ──────────────────────────────────────── */
 .prose-article code {
@@ -210,7 +301,13 @@ a.t2-link:hover { border-color: var(--accent); }
 /* ─── Mobile nav ─────────────────────────────────────────── */
 .t2-nav { padding: 14px 20px; }
 .t2-nav-ham { display: flex !important; }
-.t2-nav-drawer { display: block !important; }
+.t2-nav-drawer {
+  display: block !important;
+  animation: t2-slide-down 160ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Page entry ─────────────────────────────────────────── */
+.t2-main { animation: t2-page-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 
 @media (min-width: 641px) {
   .t2-nav { padding: 18px 40px; }
@@ -263,4 +360,6 @@ a.t2-link:hover { border-color: var(--accent); }
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
+  .t2-main { animation: none; }
 }

@@ -108,6 +108,7 @@ export function CommandPalette({ open, onClose }: Props) {
 
   return (
     <div
+      className="t2-cmd-backdrop"
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 100,
@@ -116,6 +117,7 @@ export function CommandPalette({ open, onClose }: Props) {
       }}
     >
       <div
+        className="t2-cmd-panel"
         onClick={e => e.stopPropagation()}
         style={{
           width: 500, background: 'var(--bg)',

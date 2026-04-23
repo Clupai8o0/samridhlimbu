@@ -55,7 +55,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
             <Link
               key={s.href}
               href={s.href}
-              style={{ color: 'var(--muted-2)', textDecoration: 'none', transition: 'color .12s' }}
+              className="t2-nav-item"
             >
               {s.label}
             </Link>
@@ -155,7 +155,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <main style={{ flex: 1 }}>{children}</main>
+      <main key={pathname} className="t2-main" style={{ flex: 1 }}>{children}</main>
     </div>
   )
 }

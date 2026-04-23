@@ -52,12 +52,12 @@ export default function ProjectsPage() {
         {/* Archive */}
         <div className="section-label" style={{ fontFamily: MONO }}>Archive</div>
         <div style={{ fontFamily: MONO }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '55px 130px 1fr 90px', gap: 12, padding: '6px 0', fontSize: 9, color: 'var(--muted-2)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: 0.08 }}>
-            <span>year</span><span>name</span><span>tech</span><span style={{ textAlign: 'right' }}>link</span>
+          <div className="t2-archive-grid" style={{ display: 'grid', gap: 12, padding: '6px 0', fontSize: 9, color: 'var(--muted-2)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: 0.08 }}>
+            <span className="t2-archive-year">year</span><span>name</span><span>tech</span><span style={{ textAlign: 'right' }}>link</span>
           </div>
           {ARCHIVE.map((r, i) => (
-            <div key={i} className="row-hover" style={{ display: 'grid', gridTemplateColumns: '55px 130px 1fr 90px', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', fontSize: 11, alignItems: 'center' }}>
-              <span style={{ color: 'var(--muted-2)', fontSize: 10 }}>{r.year}</span>
+            <div key={i} className="t2-archive-grid row-hover" style={{ display: 'grid', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', fontSize: 11, alignItems: 'center' }}>
+              <span className="t2-archive-year" style={{ color: 'var(--muted-2)', fontSize: 10 }}>{r.year}</span>
               <span style={{ color: 'var(--fg)' }}>{r.name.toLowerCase()}</span>
               <span style={{ color: 'var(--muted)', fontSize: 10.5 }}>{r.tech}</span>
               {r.slug ? (

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { Icon } from '@/components/icons'
+import { ContactForm } from '@/components/contact-form'
 import { PROJECTS } from '@/lib/data'
 
 export const metadata: Metadata = {
@@ -113,11 +114,11 @@ export default function HomePage() {
         {/* contact */}
         <div style={{ marginBottom: 36 }}>
           <SectionHeader>contact --list</SectionHeader>
-          <div style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr',
-            border: '1px solid var(--border)', borderRadius: 4, overflow: 'hidden',
-          }}>
-            {CONTACTS.map((c, i) => (
+          <div
+            className="t2-contact-grid"
+            style={{ display: 'grid', border: '1px solid var(--border)', borderRadius: 4, overflow: 'hidden' }}
+          >
+            {CONTACTS.map((c) => (
               <a
                 key={c.icon}
                 href={c.href}
@@ -128,8 +129,6 @@ export default function HomePage() {
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '15px 18px',
                   fontFamily: MONO, fontSize: 11, color: 'var(--fg-dim)', textDecoration: 'none',
-                  borderRight: i % 2 === 0 ? '1px solid var(--border)' : undefined,
-                  borderBottom: i < 2 ? '1px solid var(--border)' : undefined,
                 }}
               >
                 <span style={{ color: 'var(--accent)', flexShrink: 0, display: 'flex' }}>
@@ -144,9 +143,9 @@ export default function HomePage() {
         <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
 
         {/* projects */}
-        <div>
+        <div style={{ marginBottom: 36 }}>
           <SectionHeader>projects --featured</SectionHeader>
-          {featured.map((p, i) => (
+          {featured.slice(0, 3).map((p, i) => (
             <Link
               key={p.slug}
               href={`/projects/${p.slug}`}
@@ -169,6 +168,26 @@ export default function HomePage() {
               </span>
             </Link>
           ))}
+          <Link
+            href="/projects"
+            className="row-hover"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '13px 0', textDecoration: 'none',
+              fontFamily: MONO, fontSize: 10.5, color: 'var(--muted-2)',
+            }}
+          >
+            <span>view all projects</span>
+            <Icon name="arrow-up-right" size={11} />
+          </Link>
+        </div>
+
+        <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
+
+        {/* get in touch */}
+        <div style={{ marginBottom: 16 }}>
+          <SectionHeader>get_in_touch()</SectionHeader>
+          <ContactForm />
         </div>
 
       </div>
