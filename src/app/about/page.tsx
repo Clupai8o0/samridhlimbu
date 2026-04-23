@@ -23,25 +23,25 @@ export default function AboutPage() {
 
         {/* Bio */}
         <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--fg-dim)', lineHeight: 1.7, display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
-          <p style={{ margin: 0 }}>I&apos;m a 3rd-year CS (IoT) student at Deakin, on a Vice-Chancellor&apos;s International Scholarship, and president of DSEC. Most of my work is frontend-focused but I own the backend too.</p>
-          <p style={{ margin: 0 }}>My day splits between Python/FastAPI and TypeScript/Next.js, with strong opinions about state machines over cron and why Postgres is usually the answer. I ship things, then I write about the trade-offs.</p>
-          <p style={{ margin: 0 }}>Outside the terminal: long runs along the Yarra, bad coffee in good company, and a Notion graveyard of essays.</p>
+          <p style={{ margin: 0 }}>I&apos;m a 3rd-year CS (IoT) student at Deakin on a Vice-Chancellor&apos;s International Scholarship, president of DSEC (190+ members), and CTO at Hoddle Melbourne. Most of my work is frontend-first, but I own the full stack.</p>
+          <p style={{ margin: 0 }}>I&apos;ve shipped Kairos (AI scheduling app, Next.js monorepo, plugin marketplace), TapCraft (headless Shopify + React Three Fiber, B2C → B2B), and a Next.js rebuild for King Double Glazing with a custom Instant Estimate Tool and SEO strategy. I also build workflow automations with n8n for clients.</p>
+          <p style={{ margin: 0 }}>Outside the terminal: long runs along the Yarra, bad coffee in good company, and an Obsidian vault that&apos;s getting out of hand.</p>
         </div>
 
         {/* Visa note */}
         <div style={{ padding: '12px 14px', border: '1px solid var(--border)', borderLeft: `2px solid ${GREEN}`, marginBottom: 24, fontFamily: SANS, fontSize: 12, lineHeight: 1.55, color: 'var(--muted)' }}>
-          Based in Melbourne on a subclass 500 student visa with work rights; eligible for subclass 485 post-study from mid-2027.
+          Melbourne · Subclass 500 student visa · unlimited work rights Nov–Feb · eligible for Subclass 485 post-study from June 2027 · no sponsorship needed for internships or grad roles.
         </div>
 
         {/* Stack */}
         <Prompt>ls stack/</Prompt>
         <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: '90px 1fr', gap: '10px 20px', fontSize: 12, lineHeight: 1.7, marginBottom: 24 }}>
           <span style={{ color: 'var(--accent)', fontFamily: MONO, fontSize: 10.5 }}>languages/</span>
-          <span style={{ color: 'var(--fg-dim)', fontFamily: SANS }}>TypeScript · Python · Go · Rust · SQL</span>
+          <span style={{ color: 'var(--fg-dim)', fontFamily: SANS }}>TypeScript · Python · SQL · C#</span>
           <span style={{ color: 'var(--accent)', fontFamily: MONO, fontSize: 10.5 }}>frameworks/</span>
-          <span style={{ color: 'var(--fg-dim)', fontFamily: SANS }}>Next.js · React · FastAPI · Remix · React Three Fiber</span>
+          <span style={{ color: 'var(--fg-dim)', fontFamily: SANS }}>Next.js · React · FastAPI · Tailwind v4 · Drizzle · React Three Fiber</span>
           <span style={{ color: 'var(--accent)', fontFamily: MONO, fontSize: 10.5 }}>infra/</span>
-          <span style={{ color: 'var(--fg-dim)', fontFamily: SANS }}>Postgres · Supabase · Vercel · Fly.io · Cloudflare</span>
+          <span style={{ color: 'var(--fg-dim)', fontFamily: SANS }}>Postgres · Supabase · Neon · Vercel · Cloudflare · n8n</span>
         </div>
 
         {/* Other */}

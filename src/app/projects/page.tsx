@@ -3,6 +3,8 @@ import { PageShell } from '@/components/page-shell'
 import { Prompt } from '@/components/prompt'
 import { PROJECTS, ARCHIVE } from '@/lib/data'
 
+const DETAIL_PAGES = new Set(['kairos', 'hoddle', 'tapcraft', 'king-glazing', 'nmmun', 'krishnaveni', 'notes-app', 'load-balancer'])
+
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
 const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
@@ -24,8 +26,8 @@ export default function ProjectsPage() {
           {PROJECTS.filter(p => p.featured).map(p => (
             <Link
               key={p.slug}
-              href={p.slug === 'kairos' ? '/projects/kairos' : '#'}
-              style={{ border: '1px solid var(--border)', padding: 14, cursor: p.slug === 'kairos' ? 'pointer' : 'default', textDecoration: 'none', color: 'inherit', display: 'block', transition: 'border-color .12s' }}
+              href={DETAIL_PAGES.has(p.slug) ? `/projects/${p.slug}` : '#'}
+              style={{ border: '1px solid var(--border)', padding: 14, cursor: DETAIL_PAGES.has(p.slug) ? 'pointer' : 'default', textDecoration: 'none', color: 'inherit', display: 'block', transition: 'border-color .12s' }}
               onMouseEnter={undefined}
             >
               <div className="placeholder" style={{ height: 90, marginBottom: 10 }}>[ {p.slug} · cover ]</div>
@@ -49,7 +51,11 @@ export default function ProjectsPage() {
               <span style={{ color: 'var(--muted-2)', fontSize: 10 }}>{r.year}</span>
               <span style={{ color: 'var(--fg)' }}>{r.name.toLowerCase()}</span>
               <span style={{ color: 'var(--muted)', fontSize: 10.5 }}>{r.tech}</span>
-              <span style={{ textAlign: 'right', fontSize: 10, color: (r.link === 'private' || r.link === 'archived') ? 'var(--muted-2)' : 'var(--accent)' }}>{r.link}</span>
+              {r.slug ? (
+                <Link href={`/projects/${r.slug}`} style={{ textAlign: 'right', fontSize: 10, color: 'var(--accent)', textDecoration: 'none', display: 'block' }}>view →</Link>
+              ) : (
+                <span style={{ textAlign: 'right', fontSize: 10, color: (r.link === 'private' || r.link === 'archived') ? 'var(--muted-2)' : 'var(--accent)' }}>{r.link}</span>
+              )}
             </div>
           ))}
         </div>

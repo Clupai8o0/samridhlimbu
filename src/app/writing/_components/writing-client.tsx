@@ -18,8 +18,8 @@ export function WritingClient({ posts }: { posts: Post[] }) {
 
   return (
     <div>
-      {/* Tag filter */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 32 }}>
+      {/* Tag filter — hidden when no tags exist */}
+      {ALL_TAGS.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 32 }}>
         <button
           onClick={() => setActive('all')}
           style={{
@@ -63,7 +63,7 @@ export function WritingClient({ posts }: { posts: Post[] }) {
             # {tag}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* Featured section */}
       {featured.length > 0 && (
@@ -89,7 +89,7 @@ export function WritingClient({ posts }: { posts: Post[] }) {
 
       {filtered.length === 0 && (
         <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted-2)', padding: '32px 0' }}>
-          no posts tagged #{active}
+          {active === 'all' ? 'nothing here yet.' : `no posts tagged #${active}`}
         </div>
       )}
     </div>

@@ -19,8 +19,8 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
 
 const CONTACTS = [
   { icon: 'mail',     text: 'samridh@samridhlimbu.com', href: 'mailto:samridh@samridhlimbu.com' },
-  { icon: 'github',   text: 'github.com/samridhlimbu',  href: 'https://github.com/samridhlimbu' },
-  { icon: 'linkedin', text: 'in/samridhlimbu',           href: 'https://linkedin.com/in/samridhlimbu' },
+  { icon: 'github',   text: 'github.com/clupai8o0',     href: 'https://github.com/clupai8o0' },
+  { icon: 'linkedin', text: 'in/samridh-limbu',          href: 'https://linkedin.com/in/samridh-limbu' },
   { icon: 'file',     text: 'resume.pdf',                href: '/resume' },
 ]
 
@@ -52,7 +52,7 @@ export default function HomePage() {
 
         {/* Tagline */}
         <p style={{ fontFamily: MONO, fontSize: 14, color: 'var(--fg-dim)', margin: '0 0 36px', lineHeight: 1.65 }}>
-          frontend-focused <span style={{ color: 'var(--accent)' }}>software engineer</span> in melbourne, building production backends.
+          full-stack <span style={{ color: 'var(--accent)' }}>software engineer</span> in melbourne. next.js · python · postgres.
         </p>
 
         <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
@@ -60,8 +60,11 @@ export default function HomePage() {
         {/* whoami */}
         <div style={{ marginBottom: 36 }}>
           <SectionHeader>whoami</SectionHeader>
+          <p style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg-dim)', margin: '0 0 12px', lineHeight: 1.75 }}>
+            3rd-year BCS (IoT) at Deakin, graduating June 2027. CTO at Hoddle Melbourne (sole developer), solo founder of Kairos, co-founder at TapCraft Studio, and president of DSEC — 190+ members.
+          </p>
           <p style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg-dim)', margin: '0 0 20px', lineHeight: 1.75 }}>
-            3rd-year CS at Deakin. Available for 2026–27 software engineering internships and graduate roles in Melbourne.
+            Seeking SWE internships for <span style={{ color: 'var(--fg)' }}>Nov 2026–Feb 2027</span> — Australia&apos;s summer semester break, when my Subclass 500 student visa permits unlimited work hours. Graduate roles open from <span style={{ color: 'var(--fg)' }}>June 2027</span>. No sponsorship required; Subclass 500 converts to Subclass 485 post-study automatically.
           </p>
           <div style={{
             border: '1px dashed var(--border-2)', borderRadius: 4,
@@ -70,9 +73,9 @@ export default function HomePage() {
           }}>
             <span>
               <span style={{ color: 'var(--term-green)' }}>●</span>
-              {' '}status: available · nov 2026 – feb 2027
+              {' '}internship: nov 2026–feb 2027 · grad: from jun 2027
             </span>
-            <span style={{ color: 'var(--muted-2)' }}>last_updated: 2026-04-21</span>
+            <span style={{ color: 'var(--muted-2)' }}>last_updated: 2026-04-23</span>
           </div>
         </div>
 

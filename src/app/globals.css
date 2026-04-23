@@ -206,3 +206,45 @@ a.t2-link:hover { border-color: var(--accent); }
   opacity: 0.9;
   z-index: 9999;
 }
+
+/* ─── Print / PDF ────────────────────────────────────────── */
+.no-print { display: none !important; }
+
+@media print {
+  .no-print { display: none !important; }
+
+  @page {
+    size: A4;
+    margin: 16mm 20mm;
+  }
+
+  :root {
+    --bg: #ffffff;
+    --bg-2: #f7f7f7;
+    --bg-3: #f0f0f0;
+    --fg: #0a0a0a;
+    --fg-dim: #1c1c1c;
+    --muted: #3a3a3a;
+    --muted-2: #5a5a5a;
+    --border: #d4d4d4;
+    --border-2: #c4c4c4;
+    --accent: #1a56db;
+    --accent-soft: rgba(26, 86, 219, 0.10);
+    --term-green: #16a34a;
+  }
+
+  html, body {
+    background: #fff !important;
+    color: #0a0a0a !important;
+  }
+
+  nav,
+  .t2-scanlines {
+    display: none !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

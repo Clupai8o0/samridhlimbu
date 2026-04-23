@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
-import { Prompt } from '@/components/prompt'
 import { CodeBlock } from '@/components/code-block'
 import { Icon } from '@/components/icons'
 import { PROJECTS } from '@/lib/data'
@@ -16,15 +15,16 @@ const TIMELINE = [
   { date: 'Aug 2025', title: 'State machine', body: 'Replaced the "run and hope" loop with an explicit FSM. Everything downstream cleaner.' },
   { date: 'Oct 2025', title: 'Postgres over Redis', body: 'Migrated off Redis queues. Advisory locks, single source of truth.' },
   { date: 'Jan 2026', title: 'The off-by-one', body: '1 in ~120 jobs expired quietly. Wrote the boundary tests I should have written first.', highlight: true },
-  { date: 'Mar 2026', title: 'Frontend rewrite', body: 'Started Next.js 16 frontend from scratch. Backend stays.' },
-  { date: 'Apr 2026', title: 'Current', body: 'p95 38ms, 84% coverage, 99.96% uptime. Quiet.', current: true },
+  { date: 'Feb 2026', title: 'Full rewrite decision', body: 'Largest file hit 1,051 lines. Declared prototype done, started clean Next.js monorepo. Backend logic ported as pure functions.' },
+  { date: 'Mar 2026', title: 'Plugin system + Phase 3', body: 'Zod-validated plugin I/O contract. PluginContext abstraction. Core has zero LLM dependencies — all provider calls route through lib/llm/.' },
+  { date: 'Apr 2026', title: 'Marketplaces · Phase 4', body: 'Theme + plugin marketplaces shipped. HTTP plugin distribution enables install-without-redeploy on the hosted instance.', current: true },
 ]
 
 const DECISIONS = [
-  ['state machine', 'cron', 'A scheduler that "mostly runs" but silently drops events is worse than one that halts loudly. The FSM made failure modes enumerable.'],
+  ['next.js monorepo', 'fastapi prototype', 'The original prototype hit 1,051 lines in a single file. A clean monorepo with a pure-function pipeline made the scheduler independently testable without touching the HTTP layer.'],
+  ['pure-function pipeline', 'side-effectful scheduler', 'runner.ts is the only file with DB or Google Calendar side effects. Everything else is a pure function — enabling full unit test coverage of scheduling logic with no mocks.'],
+  ['zod-validated plugin I/O', 'loose plugin contract', 'A Zod schema at the plugin boundary makes the contract machine-checkable. Invalid plugins fail at registration, not at runtime.'],
   ['postgres + advisory locks', 'redis queues', 'Single source of truth beats 2× throughput at my scale. Transactions were worth keeping.'],
-  ['fastapi', 'django', '~40 endpoints, Pydantic for free contract tests, no admin needed.'],
-  ['rewrite frontend', 'rewrite everything', 'The bugs are in the UI contract, not the scheduling logic. Rewriting both would have been a different project.'],
 ]
 
 const BUG_LINES = [
@@ -53,30 +53,19 @@ export default function KairosPage() {
         <div style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8 }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>Kairos</h1>
-            <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● in rewrite</span>
+            <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · next.js monorepo</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Scheduling that reads intent. FastAPI backend with a state-machine core, now rewriting the frontend from scratch in Next.js 16.
+            Scheduling that reads intent. Rewrote a 1,051-line Python/FastAPI prototype into a clean Next.js monorepo — pure-function scheduler pipeline, plugin system with Zod-validated I/O, and theme + plugin marketplaces shipped in Phase 4.
           </p>
           <div style={{ display: 'flex', gap: 6 }}>
-            <a href="#" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="play" size={11} /> demo</a>
-            <a href="https://github.com/samridhlimbu/kairos" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> code</a>
-            <a href="#" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.dev</a>
+            <a href="https://kairos.app" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.app</a>
+            <a href="https://github.com/clupai8o0/kairos" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> code</a>
           </div>
         </div>
-
-        {/* Video placeholder */}
-        <div style={{ border: '1px solid var(--border)', background: '#0a0a0c', aspectRatio: '16 / 9', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', marginBottom: 8, overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(45deg, #0c0c0e 0 8px, #101014 8px 16px)', opacity: 0.4 }} />
-          <div style={{ position: 'relative', width: 56, height: 56, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 6px rgba(99,102,241,0.2)' }}>
-            <Icon name="play" size={22} />
-          </div>
-          <div style={{ position: 'absolute', bottom: 12, left: 14, fontFamily: MONO, fontSize: 9.5, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 0.08 }}>loom · 00:22 · walkthrough</div>
-        </div>
-        <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginBottom: 28, letterSpacing: 0.08, textTransform: 'uppercase' }}>fig. 01 — 20s demo</div>
 
         {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           {kairos.metrics!.map((m, i) => (
             <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
               <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: -0.02 }}>{m.v}</div>
@@ -88,7 +77,7 @@ export default function KairosPage() {
         {/* Context */}
         <div style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
-          Solo, open source, 2025–ongoing (9 months active). I own design, backend, and API surface. The core problem: writing a scheduler that fails loudly instead of dropping events.
+          Solo, 2025–ongoing. I own design, scheduling logic, plugin system, and API surface. The core problem: a scheduler that fails loudly instead of dropping events silently. Started as a Python/FastAPI prototype, rewrote the whole thing into a clean Next.js monorepo once the prototype hit 1,051 lines in a single file.
         </div>
 
         {/* Timeline */}
@@ -104,15 +93,6 @@ export default function KairosPage() {
             </div>
           ))}
         </div>
-
-        {/* Screenshot grid */}
-        <div className="section-label" style={{ fontFamily: MONO }}>Screenshots</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '140px 140px', gap: 10, marginBottom: 8 }}>
-          <div className="placeholder" style={{ gridRow: 'span 2', height: '100%' }}>[ dashboard · main view ]</div>
-          <div className="placeholder">[ job detail ]</div>
-          <div className="placeholder">[ fsm diagram ]</div>
-        </div>
-        <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginBottom: 28, letterSpacing: 0.08, textTransform: 'uppercase' }}>fig. 02 — ui + state machine</div>
 
         {/* Key decisions */}
         <div className="section-label" style={{ fontFamily: MONO }}>Key technical decisions</div>
@@ -144,13 +124,13 @@ export default function KairosPage() {
         {/* What I'd do differently */}
         <div className="section-label" style={{ fontFamily: MONO }}>What I&apos;d do differently</div>
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.7, marginBottom: 28 }}>
-          Write the state machine before the HTTP layer, not alongside it. I pinned myself into endpoint shapes early that the FSM had to work around — the rewrite undoes most of that.
+          Write the pure-function pipeline before the HTTP layer, not alongside it. I pinned myself into endpoint shapes early that the scheduler had to work around. The rewrite enforces the discipline: runner.ts is the only file with side effects — everything else is a pure function you can test without a database.
         </p>
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)' }}>
-          <a href="#" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.dev</a>
-          <a href="https://github.com/samridhlimbu/kairos" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
+          <a href="https://kairos.app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.app</a>
+          <a href="https://github.com/clupai8o0/kairos" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
         </div>
 
