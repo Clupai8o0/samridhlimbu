@@ -28,7 +28,7 @@ export async function sendContact(data: {
   try {
     await resend.emails.send({
       from: 'contact@samridhlimbu.com',
-      to: 'samridh@samridhlimbu.com',
+      to: 'limbusamaka@icloud.com',
       replyTo: email,
       subject: `[samridhlimbu.com] message from ${name}`,
       text: `name: ${name}\nemail: ${email}\n\n${message}`,
