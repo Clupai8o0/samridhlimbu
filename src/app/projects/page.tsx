@@ -39,7 +39,10 @@ export default function ProjectsPage() {
               style={{ border: '1px solid var(--border)', padding: 14, cursor: DETAIL_PAGES.has(p.slug) ? 'pointer' : 'default', textDecoration: 'none', color: 'inherit', display: 'block', transition: 'border-color .12s' }}
               onMouseEnter={undefined}
             >
-              <div className="placeholder" style={{ height: 90, marginBottom: 10 }}>[ {p.slug} · cover ]</div>
+              {p.cover
+                ? <img src={p.cover} alt={p.name} style={{ width: '100%', height: 90, objectFit: 'cover', display: 'block', marginBottom: 10 }} />
+                : <div className="placeholder" style={{ height: 90, marginBottom: 10 }}>[ {p.slug} · cover ]</div>
+              }
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 13, color: 'var(--fg)' }}>{p.name}</span>
                 <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)' }}>{p.year}</span>

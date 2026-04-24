@@ -9,6 +9,7 @@ export interface Project {
   stack: { Frontend: string[]; Backend?: string[]; Infra?: string[] }
   metrics?: { k: string; v: string }[]
   featured: boolean
+  cover?: string
 }
 
 export interface ArchiveItem {
@@ -53,6 +54,7 @@ export const PROJECTS: Project[] = [
     tag: 'International student mentorship platform',
     year: '2026',
     status: 'Live · hoddle.org',
+    cover: '/projects/hoddle/dashboard.png',
     pitch: 'CTO, sole developer. Built auth, 5-step onboarding wizard, and a weighted matching algorithm (country_match +30 / field_match +15 / expertise_match +10) with nightly recompute. Mentor invite system uses a token table with email validation, 14-day expiry, and full audit trail.',
     pitchShort: 'Mentorship matching. Weighted algorithm. Next.js 15 + Supabase.',
     stack: {
