@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { PageShell } from '@/components/page-shell'
 import { Icon } from '@/components/icons'
 import { ContactForm } from '@/components/contact-form'
@@ -74,11 +75,16 @@ export default function HomePage() {
           <span>samridhlimbu.com · v0.1</span>
         </div>
 
-        {/* Name */}
-        <h1 style={{ fontFamily: MONO, fontSize: 52, fontWeight: 700, margin: '0 0 14px', letterSpacing: '-0.02em', lineHeight: 1 }}>
-          <span style={{ color: 'var(--fg)' }}>samridh </span>
-          <span style={{ color: 'var(--accent)' }}>limbu</span>
-        </h1>
+        {/* Hero: photo + name */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 24, marginBottom: 14 }}>
+          <div style={{ position: 'relative', width: 96, height: 96, flexShrink: 0, border: '1px solid var(--border-2)', borderRadius: 2, overflow: 'hidden' }}>
+            <Image src="/sam.jpeg" alt="Samridh Limbu" fill style={{ objectFit: 'cover', objectPosition: 'center top' }} priority sizes="96px" />
+          </div>
+          <h1 style={{ fontFamily: MONO, fontSize: 52, fontWeight: 700, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
+            <span style={{ color: 'var(--fg)' }}>samridh </span>
+            <span style={{ color: 'var(--accent)' }}>limbu</span>
+          </h1>
+        </div>
 
         {/* Tagline */}
         <p style={{ fontFamily: MONO, fontSize: 14, color: 'var(--fg-dim)', margin: '0 0 36px', lineHeight: 1.65 }}>
