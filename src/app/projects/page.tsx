@@ -44,7 +44,10 @@ export default function ProjectsPage() {
                 : <div className="placeholder" style={{ height: 90, marginBottom: 10 }}>[ {p.slug} · cover ]</div>
               }
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 13, color: 'var(--fg)' }}>{p.name}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 13, color: 'var(--fg)' }}>{p.name}</span>
+                  {p.updating && <span style={{ fontFamily: MONO, fontSize: 8, color: 'var(--muted-2)', border: '1px dashed var(--border)', padding: '1px 4px', letterSpacing: 0.04 }}>updating</span>}
+                </div>
                 <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)' }}>{p.year}</span>
               </div>
               <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', marginTop: 4, lineHeight: 1.5 }}>{p.pitchShort}</div>

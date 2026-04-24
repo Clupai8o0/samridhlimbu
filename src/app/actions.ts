@@ -30,7 +30,7 @@ export async function sendContact(data: {
       from: 'contact@clupai.com',
       to: 'limbusamaka@icloud.com',
       replyTo: email,
-      subject: `[samridhlimbu.com] message from ${name}`,
+      subject: `${name} sent you a message`,
       text: `name: ${name}\nemail: ${email}\n\n${message}`,
     })
     return { ok: true }

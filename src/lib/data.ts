@@ -10,6 +10,7 @@ export interface Project {
   metrics?: { k: string; v: string }[]
   featured: boolean
   cover?: string
+  updating?: boolean
 }
 
 export interface ArchiveItem {
@@ -47,6 +48,7 @@ export const PROJECTS: Project[] = [
       { k: 'infra cost', v: '~$1/mo' },
     ],
     featured: true,
+    updating: true,
   },
   {
     slug: 'hoddle',
@@ -82,6 +84,7 @@ export const PROJECTS: Project[] = [
       Infra: ['Vercel', 'Cloudflare R2'],
     },
     featured: true,
+    updating: true,
   },
   {
     slug: 'king-glazing',
@@ -93,6 +96,7 @@ export const PROJECTS: Project[] = [
     pitchShort: 'Next.js 15 rebuild + Instant Estimate Tool + SEO strategy.',
     stack: { Frontend: ['Next.js 15', 'Tailwind v4'], Backend: ['Neon', 'Drizzle', 'Resend'], Infra: ['Vercel', 'Cloudflare'] },
     featured: true,
+    updating: true,
   },
   {
     slug: 'nmmun',
@@ -107,6 +111,7 @@ export const PROJECTS: Project[] = [
       Infra: ['Vercel'],
     },
     featured: true,
+    updating: true,
   },
   {
     slug: 'krishnaveni',
@@ -121,6 +126,7 @@ export const PROJECTS: Project[] = [
       Infra: ['Vercel', 'Sanity CDN'],
     },
     featured: true,
+    updating: true,
   },
 ]
 
