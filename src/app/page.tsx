@@ -75,9 +75,9 @@ export default function HomePage() {
           <span>samridhlimbu.com · v0.1</span>
         </div>
 
-        {/* Hero: photo + name */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 24, marginBottom: 14 }}>
-          <div style={{ position: 'relative', width: 96, height: 96, flexShrink: 0, border: '1px solid var(--border-2)', borderRadius: 2, overflow: 'hidden' }}>
+        {/* Hero: photo above name */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ position: 'relative', width: 96, height: 96, border: '1px solid var(--border-2)', borderRadius: 2, overflow: 'hidden', marginBottom: 18 }}>
             <Image src="/sam.jpeg" alt="Samridh Limbu" fill style={{ objectFit: 'cover', objectPosition: 'center top' }} priority sizes="96px" />
           </div>
           <h1 style={{ fontFamily: MONO, fontSize: 52, fontWeight: 700, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
