@@ -60,7 +60,7 @@ export default function KairosPage() {
             Scheduling that reads intent. Rewrote a 1,051-line Python/FastAPI prototype into a clean Next.js monorepo — pure-function scheduler pipeline, plugin system with Zod-validated I/O, and theme + plugin marketplaces shipped in Phase 4.
           </p>
           <div style={{ display: 'flex', gap: 6 }}>
-            <a href="https://kairos.app" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.app</a>
+            <a href="https://kairos.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.clupai.com</a>
             <a href="https://github.com/clupai8o0/kairos" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> code</a>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function KairosPage() {
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)' }}>
-          <a href="https://kairos.app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.app</a>
+          <a href="https://kairos.clupai.com" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.clupai.com</a>
           <a href="https://github.com/clupai8o0/kairos" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
         </div>

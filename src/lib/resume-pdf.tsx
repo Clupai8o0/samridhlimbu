@@ -275,7 +275,7 @@ export function ResumeDocument() {
           <View style={s.entry}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>Kairos · AI-native scheduling app</Text>
-              <Link src="https://kairos.app" style={s.entryMetaLink}>kairos.app</Link>
+              <Link src="https://kairos.clupai.com" style={s.entryMetaLink}>kairos.clupai.com</Link>
             </View>
             <Text style={s.projectStack}>
               Next.js 16 · Drizzle ORM · PostgreSQL · Vercel AI SDK · Better Auth
@@ -316,7 +316,7 @@ export function ResumeDocument() {
           <View style={s.entry}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>Krishnaveni · headless CMS (freelance)</Text>
-              <Link src="https://krishnaveni-sanity-client.vercel.app" style={s.entryMetaLink}>live</Link>
+              <Link src="https://krishnavenischool.co.in" style={s.entryMetaLink}>krishnavenischool.co.in</Link>
             </View>
             <Text style={s.projectStack}>Sanity Studio · TypeScript · Vercel</Text>
             <Text style={s.entryBody}>

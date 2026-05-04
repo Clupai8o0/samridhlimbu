@@ -46,7 +46,7 @@ export default function KrishnaveniPage() {
             Headless CMS for a real school client — multilingual (EN/HI/TE) with Sanity v3 and Accept-Language middleware. Non-technical staff update pages, announcements, and media without developer involvement.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://krishnaveni-sanity-client.vercel.app" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> live preview</a>
+            <a href="https://krishnavenischool.co.in" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> krishnavenischool.co.in</a>
             <a href="https://github.com/clupai8o0/krishnaveni-sanity" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> code</a>
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function KrishnaveniPage() {
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
-          <a href="https://krishnaveni-sanity-client.vercel.app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> live preview</a>
+          <a href="https://krishnavenischool.co.in" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> krishnavenischool.co.in</a>
           <a href="https://github.com/clupai8o0/krishnaveni-sanity" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
         </div>
