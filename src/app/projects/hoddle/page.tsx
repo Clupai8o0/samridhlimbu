@@ -104,7 +104,7 @@ export default function HoddlePage() {
         </div>
 
         {/* Demo video */}
-        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
+        <div style={{ marginBottom: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
           <video
             src="/projects/hoddle/demo.mp4"
             controls
@@ -117,7 +117,7 @@ export default function HoddlePage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           {[
             { k: 'verified mentors', v: '10+' },
-            { k: 'early-access mentees', v: '20+' },
+            { k: 'early-access mentees', v: '100+' },
             { k: 'linkedin impressions', v: '14,040' },
           ].map((m, i) => (
             <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
@@ -129,7 +129,7 @@ export default function HoddlePage() {
 
         {/* Hero screenshot */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <img src="/projects/hoddle/dashboard.png" alt="Student dashboard" style={{ width: '100%', display: 'block' }} />
+          <video src="/projects/hoddle/dashboard.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Context */}
@@ -138,8 +138,11 @@ export default function HoddlePage() {
           <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: '0 0 10px' }}>
             CTO and sole developer, Mar 2026–present. Hoddle is a one-to-many mentorship platform — mentors publish articles, host live Q&As, and tell their story; students get matched based on shared background and goals, browse a content library, and ask questions in forums. Eventually students graduate into mentors themselves.
           </p>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: '0 0 10px' }}>
             I owned the full stack from day one: database schema and RLS policies, auth flows, matching algorithm, community features, background jobs, and admin tooling. The codebase sits at 26,000+ lines across 51 routes, 38 components, 19 server action files, and 17 migrations.
+          </p>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
+            Built as part of the Study Melbourne Leadership 4Impact Program alongside co-founders Aarav Verma and Tanvir Kaur Sohi. The team placed 2nd at the final pitch day.
           </p>
         </div>
 
@@ -159,7 +162,7 @@ export default function HoddlePage() {
 
         {/* Screenshot — matching dashboard */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <img src="/projects/hoddle/mentor-recom.png" alt="Mentor matching dashboard" style={{ width: '100%', display: 'block' }} />
+          <img src="/projects/hoddle/mentor-rec.webp" alt="Mentor matching dashboard" style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Key decisions */}
@@ -190,8 +193,13 @@ export default function HoddlePage() {
         </p>
 
         {/* Screenshot — forums */}
+        <div style={{ marginBottom: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
+          <video src="/projects/hoddle/forum.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
+        </div>
+
+        {/* Mentors */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <img src="/projects/hoddle/forum.png" alt="Community forums" style={{ width: '100%', display: 'block' }} />
+          <video src="/projects/hoddle/mentors.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Database */}
@@ -252,6 +260,43 @@ export default function HoddlePage() {
               <div key={m.k} style={{ padding: '12px 14px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
                 <div style={{ fontFamily: DISPLAY, fontSize: 18, color: 'var(--fg)', fontWeight: 700, letterSpacing: -0.02 }}>{m.v}</div>
                 <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.08 }}>{m.k}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Testimonial */}
+        <div style={{ marginBottom: 28, borderLeft: '2px solid var(--accent)', paddingLeft: 16 }}>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: '0 0 8px', fontStyle: 'italic' }}>
+            &ldquo;They had a really easy time navigating through the UI — the experience matched the promise.&rdquo;
+          </p>
+          <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: 0.1 }}>
+            Early-access cohort · Hoddle Melbourne
+          </div>
+        </div>
+
+        {/* Roadmap */}
+        <div style={{ marginBottom: 28 }}>
+          <div className="section-label" style={{ fontFamily: MONO }}>What&apos;s next</div>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 14 }}>
+            Phase 3 starts after two weeks of production telemetry. The platform is designed to extend — every feature boundary is RLS-enforced and IO-separated so new surfaces can be added without touching existing data contracts.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+            {[
+              ['Mentor badges + achievement tiers', 'gamified progression for verified mentors'],
+              ['Mentee → mentor graduation program', 'structured pathway for students to give back to the next cohort'],
+              ['Multi-language UI', 'Mandarin, Hindi, Vietnamese, Korean — the four largest student cohorts'],
+              ['PWA', 'installable shell, offline mode, web push notifications'],
+              ['University calendar integrations', 'Unimelb, Monash, RMIT ICS feeds synced to session scheduling'],
+              ['Matching algorithm v2', 'telemetry-driven collaborative filter replacing the static weight model'],
+              ['AWS backend migration', 'Lambda + RDS for multi-region deployment, reduced cold start latency, and decoupling from Vercel function limits'],
+            ].map(([label, desc], i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 10, alignItems: 'baseline' }}>
+                <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--accent)', paddingTop: 2 }}>›</span>
+                <div>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--fg)' }}>{label}</span>
+                  <span style={{ fontFamily: SANS, fontSize: 11, color: 'var(--muted-2)', marginLeft: 8 }}>{desc}</span>
+                </div>
               </div>
             ))}
           </div>

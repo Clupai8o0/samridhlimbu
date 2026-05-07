@@ -58,16 +58,17 @@ export const PROJECTS: Project[] = [
     year: '2026',
     status: 'Live · hoddle.org',
     cover: '/projects/hoddle/dashboard.png',
-    pitch: 'CTO, sole developer. Built auth, 5-step onboarding wizard, and a weighted matching algorithm (country_match +30 / field_match +15 / expertise_match +10) with nightly recompute. Mentor invite system uses a token table with email validation, 14-day expiry, and full audit trail.',
-    pitchShort: 'Mentorship matching. Weighted algorithm. Next.js 15 + Supabase.',
+    pitch: 'CTO and sole developer. Built the full platform for a Study Melbourne 4Impact startup (placed 2nd): magic-link auth, 5-step student onboarding wizard, weighted matching algorithm (country_origin +30 / field_overlap +15 / expertise +10) with nightly cron recompute. Tiptap content library, category forums with two-level nesting and anonymous posting, live Q&A sessions with capacity limits, direct messaging with rate limiting, Supabase Realtime notifications. Token-gated mentor invite system with 14-day expiry and full audit trail. 26K+ lines across 51 routes, 23 tables, 17 migrations.',
+    pitchShort: 'Full-stack EdTech platform. Weighted matching. Community + content + live sessions. 4Impact 2nd.',
     stack: {
-      Frontend: ['Next.js 15', 'TypeScript', 'Tailwind v4'],
+      Frontend: ['Next.js 16', 'TypeScript', 'Tailwind v4'],
       Backend: ['Supabase', 'PostgreSQL', 'RLS'],
       Infra: ['Vercel'],
     },
     metrics: [
-      { k: 'mentors onboarded', v: '5' },
-      { k: 'match signals', v: '3' },
+      { k: 'verified mentors', v: '10+' },
+      { k: 'early-access students', v: '100+' },
+      { k: 'linkedin impressions', v: '14,040' },
     ],
     featured: true,
   },
@@ -152,7 +153,7 @@ export const ARCHIVE: ArchiveItem[] = [
 ]
 
 export const EXPERIENCE: ExperienceItem[] = [
-  { when: '2026–', role: 'CTO', org: 'Hoddle Melbourne', detail: 'Sole developer. Weighted mentorship matching, token invite system, 5 mentors onboarded.' },
+  { when: '2026–', role: 'CTO', org: 'Hoddle Melbourne', detail: 'Sole developer. Full-stack platform: auth, onboarding wizards, weighted matching algorithm, content library, forums, live Q&As, DMs, Realtime notifications. 26K+ lines, 51 routes, 23 tables. Placed 2nd at Study Melbourne Leadership 4Impact.' },
   { when: '2025–', role: 'President', org: 'DSEC · Deakin Software Engineering Club', detail: '190+ members. Tiered sponsorship prospectus ($150–$1,000+). "My First Australian Offer" workshop.' },
   { when: '2026', role: 'Technical Lead', org: 'King Double Glazing (Freelance)', detail: 'Full rebrand + rebuild from The Glass Discounters. Next.js 16, TinaCMS, Neon, Resend. Instant Estimate Tool. Desktop Performance 99 · SEO 100.' },
   { when: '2026–', role: 'Co-founder', org: 'TapCraft Studio', detail: 'Headless Shopify + React Three Fiber. NFC products. Led B2C → B2B migration.' },
