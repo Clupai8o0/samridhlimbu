@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { Icon } from '@/components/icons'
@@ -9,17 +10,17 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 const GREEN = '#4ade80'
 
 const TIMELINE = [
-  { date: '2025', title: 'Client brief', body: "School was running on a static HTML site. Non-technical staff had to email a developer to update anything. The brief: give staff full content control." },
-  { date: '2025', title: 'CMS selection', body: 'Evaluated Contentful, Prismic, and Sanity. Sanity won on schema flexibility, the Vision plugin for live GROQ queries, and a clean enough Studio UI that staff can adopt it without training docs.' },
-  { date: '2025', title: 'Multilingual requirement', body: 'School serves English, Hindi, and Telugu-speaking families. Built Accept-Language middleware to redirect to the correct locale on first visit, with a single URL structure — no subdomains.' },
-  { date: '2025', title: 'Live at krishnaveniischool.co.in', body: 'Deployed. Staff independently update pages, announcements, and media through Sanity Studio.', current: true },
+  { date: '2025', title: 'Client brief', body: "School was running on a static HTML site. Any content change — a new post, updated gallery, announcement — required emailing a developer. The brief: give non-technical staff full content control." },
+  { date: '2026', title: 'Architecture decision', body: 'Chose Sanity v5 for structured content with typed GROQ queries. Designed a polymorphic section architecture — 13 section types rendered by SectionRenderer — so any page layout can be assembled in Studio without code changes.' },
+  { date: '2026', title: 'Content pipeline', body: 'Built a custom data pipeline: fetch-sanity.mjs pulls a CMS snapshot, generate-data.mjs converts it into a static TypeScript file. The site runs without a live CMS connection at runtime — content is baked into the bundle.' },
+  { date: '2026', title: 'Live at krishnavenischool.co.in', body: 'Deployed and handed over with a full handover doc. Staff independently manage all pages, posts, and facilities through Sanity Studio with no developer involvement.', current: true },
 ]
 
 const DECISIONS = [
-  ['sanity v3', 'wordpress', 'Schema-first CMS with typed GROQ queries. The Studio interface is clean and opinionated — fewer ways to accidentally break layout. Custom table plugin handles schedule data.'],
-  ['accept-language middleware', 'subdomain per locale', 'Single URL structure, language redirect on first visit based on browser locale. Easier to share links, easier to maintain, no DNS complexity.'],
-  ['next.js 15 + tailwind v4', 'cms theme', 'Full control over layout, typography, and performance. No theme limitations that would constrain the design after handoff.'],
-  ['groq queries', 'rest api', 'GROQ lets you shape the exact data you need in a single query — no overfetching. next-sanity handles the client connection and revalidation.'],
+  ['sanity v5', 'wordpress', 'Schema-first CMS with typed GROQ queries. The Studio UI is clean and opinionated — staff adopted it without training docs. Schema-first model validates all content before it reaches the frontend.'],
+  ['section-driven architecture', 'hardcoded page layouts', 'Page body is an array of typed section objects. SectionRenderer maps each _type to its component. Adding a new page section requires a data definition and a component — no routing changes, no rebuild required.'],
+  ['static data pipeline', 'live sanity connection at runtime', 'fetch-sanity.mjs → generate-data.mjs → lib/data/index.ts bakes CMS data into the bundle. Site has zero runtime CMS dependency. Trade-off: requires a script re-run and redeploy to pick up content changes.'],
+  ['next.js 15 + tailwind v4', 'cms theme', 'Full control over layout, typography, and performance. GSAP for scroll animations, Radix UI for accessible accordion FAQs and video lightbox dialogs. No theme constraints after handoff.'],
 ]
 
 export default function KrishnaveniPage() {
@@ -40,10 +41,9 @@ export default function KrishnaveniPage() {
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>Krishnaveni</h1>
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · freelance</span>
-            <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', border: '1px dashed var(--border)', padding: '2px 6px', letterSpacing: 0.04 }}>updating</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Headless CMS for a real school client — multilingual (EN/HI/TE) with Sanity v3 and Accept-Language middleware. Non-technical staff update pages, announcements, and media without developer involvement.
+            Full school marketing website for Krishnaveni School, India — 13 section types, Sanity v5 CMS, and a section-driven architecture so staff manage all content without developer involvement. Delivered with a full handover doc.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <a href="https://krishnavenischool.co.in" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> krishnavenischool.co.in</a>
@@ -54,9 +54,9 @@ export default function KrishnaveniPage() {
         {/* Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           {[
-            { k: 'languages', v: '3' },
-            { k: 'client type', v: 'real' },
-            { k: 'dev touch after deploy', v: '0' },
+            { k: 'SEO score', v: '92' },
+            { k: 'Best Practices', v: '100' },
+            { k: 'CLS', v: '0' },
           ].map((m, i) => (
             <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
               <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: -0.02 }}>{m.v}</div>
@@ -65,11 +65,27 @@ export default function KrishnaveniPage() {
           ))}
         </div>
 
+        {/* Screenshot */}
+        <div style={{ marginBottom: 28 }}>
+          <a href="https://krishnavenischool.co.in" target="_blank" rel="noopener noreferrer" style={{ display: 'block', position: 'relative', borderRadius: 6, overflow: 'hidden', border: '1px solid var(--border)' }}>
+            <Image
+              src="/projects/krishnaveni/homepage.webp"
+              alt="Krishnaveni School homepage"
+              width={1456}
+              height={816}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+              priority
+            />
+            <div style={{ position: 'absolute', inset: 0, background: 'transparent', transition: 'background 0.15s' }} />
+          </a>
+          <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginTop: 6, textAlign: 'center', letterSpacing: 0.06 }}>krishnavenischool.co.in — homepage</div>
+        </div>
+
         {/* Context */}
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
-            Freelance. The school was running on a static HTML site that required a developer to update anything. The brief was clear: give non-technical staff full content control. Sanity Studio was the right call — structured content with typed GROQ queries, and a UI clean enough that staff adopted it without training docs.
+            Freelance. The school was running on a static HTML site — any content change required a developer. Delivered a Next.js 15 monorepo with 13 section types, a Sanity v5 CMS, and a custom content pipeline that bakes CMS data into the bundle at build time. Staff manage pages, announcements, gallery posts, and facilities entirely through Studio. Handed over with a full handover doc.
           </p>
         </div>
 
@@ -114,6 +130,27 @@ export default function KrishnaveniPage() {
               <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{items.join(' · ')}</span>
             </div>
           ))}
+        </div>
+
+        {/* What I'd do differently */}
+        <div style={{ marginBottom: 28 }}>
+          <div className="section-label" style={{ fontFamily: MONO }}>What I&apos;d do differently</div>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.7, margin: 0 }}>
+            Performance sits at 72 desktop / 69 mobile — the bottleneck is TBT from GSAP and LCP from Sanity CDN image delivery. I&apos;d add <code style={{ fontFamily: MONO, fontSize: 11 }}>priority</code> hints on above-the-fold images, lazy-load GSAP until after first paint, and set up a Vercel revalidation webhook so content changes don&apos;t require a manual script re-run. CLS is 0 and SEO is 92, which are the signals that matter most for a school marketing site — but the performance gap is the honest thing to flag.
+          </p>
+        </div>
+
+        {/* Testimonial */}
+        <div style={{ marginBottom: 28 }}>
+          <div className="section-label" style={{ fontFamily: MONO }}>In their words</div>
+          <div style={{ borderLeft: '2px solid var(--accent)', paddingLeft: 16 }}>
+            <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--fg)', lineHeight: 1.7, margin: '0 0 10px', fontStyle: 'italic' }}>
+              &ldquo;We&rsquo;re not a technical team — we gave Samridh the brief and he handled everything else. What we asked for, he delivered. Then he delivered more.&rdquo;
+            </p>
+            <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', letterSpacing: 0.06 }}>
+              Krishnaveni School · India
+            </div>
+          </div>
         </div>
 
         {/* Footer actions */}

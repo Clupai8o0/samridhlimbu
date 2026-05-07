@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { Icon } from '@/components/icons'
@@ -10,27 +11,30 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 const GREEN = '#4ade80'
 
 const TIMELINE = [
-  { date: 'Mar 2026', title: 'Engagement starts', body: 'Client came in expecting a WordPress site. Ran a proper evaluation — WordPress wins on familiarity, loses on everything else for this brief.' },
-  { date: 'Mar 2026', title: 'Stack decision: Next.js from scratch', body: 'Next.js 15 + Tailwind v4 + Neon + Drizzle + Resend. Full control over the Instant Estimate Tool UX, programmatic suburb pages, and performance that WordPress themes can\'t match.' },
-  { date: 'Mar 2026', title: 'Instant Estimate Tool', body: 'The core UX bet: show the price range before asking for contact details. Reverses the standard lead-gen pattern — qualify first, capture second.' },
-  { date: 'Apr 2026', title: 'SEO strategy + suburb pages', body: 'Five keyword verticals. Programmatic suburb page template covering Melbourne suburbs for local search. LLM/GEO schema on every page for AI-powered search visibility.', current: true },
+  { date: 'Apr 2026', title: 'Engagement starts — rebrand evaluation', body: 'Client had an existing site under "The Glass Discounters" brand. Lighthouse: Performance 57 mobile, LCP 13.1s. Brief: new brand (King Double Glazing), new site, new positioning — full restart.' },
+  { date: 'Apr 2026', title: 'Stack decision: Next.js 16 from scratch', body: 'Next.js 16 + Tailwind v4 + Neon + Drizzle + Resend. Full control over the Instant Estimate Tool UX and CMS integration. No WordPress, no page builder.' },
+  { date: 'Apr 2026', title: 'Funnel pivot — 27 routes → 5 pages', body: 'Original plan was a 27-route SEO content cluster with suburb pages and a blog. Mid-project pivot to a tight 5-page conversion funnel with the Instant Estimate Tool as the primary CTA. SEO infrastructure preserved for future expansion.' },
+  { date: 'May 2026', title: 'TinaCMS integration + launch', body: 'Content migrated to TinaCMS (git-based JSON). Visual editor live via Tina Cloud. Full ecosystem handed to client. Lighthouse: Performance 99 · SEO 100 · Best Practices 100 on desktop.', current: true },
 ]
 
 const DECISIONS = [
-  ['next.js 15', 'wordpress', 'WordPress themes can\'t do the Instant Estimate Tool without heavy plugin stacks, and programmatic suburb pages at scale need static generation — not a CMS. Next.js wins on both counts.'],
-  ['price-first estimate tool', 'contact-first quote form', 'Standard quote forms promise a callback. Showing the price range first removes the friction point — users know what they\'re looking at before giving up their contact details. Better conversion, better-qualified leads.'],
-  ['programmatic suburb pages', 'single city landing page', 'Local SEO in Melbourne is suburb-level. One page for "double glazing Melbourne" competes with every local trade. One page per suburb (/double-glazing-fitzroy, /double-glazing-richmond) targets the specific search intent.'],
-  ['llm/geo schema', 'standard json-ld only', 'AI-powered search (ChatGPT, Perplexity, Google AI Overviews) pulls from structured, machine-readable content. Schema optimised for LLM extraction means the business shows up in AI-generated answers, not just blue links.'],
-  ['resend', 'smtp / contact form plugin', 'Resend gives deliverability, logs, and a clean API. Estimate submissions and contact requests both route through a single Resend integration — no plugin dependency, no shared sending reputation.'],
+  ['next.js 16', 'wordpress', "WordPress couldn't support the Instant Estimate Tool UX without heavy plugin stacks. Next.js 16 App Router gave full control over the multi-step calculator, server actions for lead capture, and zero plugin bloat dragging down Core Web Vitals."],
+  ['price-first estimate tool', 'contact-first quote form', "Standard trades sites gate the price behind a callback. The Instant Estimate Tool shows a price range before asking for contact details — qualify first, capture second. Filters tyre-kickers before they reach the owner's phone."],
+  ['5-page conversion funnel', '27-route seo cluster', 'The SEO content plan was killed mid-build. The client needed leads in 30 days, not 6 months. A tight funnel pointing every visitor to the estimate tool converts faster. The SEO infrastructure (schema, sitemap, suburb template) is preserved for when the time is right.'],
+  ['tinacms (git-based)', 'sanity cms', 'TinaCMS stores content as JSON files committed to the git repo — no external CDN, no separate database. Visual editor via Tina Cloud. Content is version-controlled with code. Simpler handoff for a non-technical client.'],
+  ['resend + token confirmation', 'smtp / contact form plugin', 'Two-step quote confirmation: customer receives a link, clicks to confirm, then KDG gets the lead notification. Filters junk submissions before they reach the owner. DKIM/SPF/DMARC configured from day one.'],
 ]
 
-const SUBURB_LINES = [
-  `<span style="color:#71717a">// generateStaticParams — one page per suburb</span>`,
-  `<span style="color:#c084fc">export async function</span> <span style="color:#60a5fa">generateStaticParams</span>() {`,
-  `  <span style="color:#c084fc">const</span> suburbs = <span style="color:#c084fc">await</span> db`,
-  `    .<span style="color:#60a5fa">select</span>()`,
-  `    .<span style="color:#60a5fa">from</span>(suburbsTable)`,
-  `  <span style="color:#c084fc">return</span> suburbs.<span style="color:#60a5fa">map</span>(s => ({ slug: s.slug }))`,
+const ESTIMATE_LINES = [
+  `<span style="color:#71717a">// server action — quote submission + token confirmation</span>`,
+  `<span style="color:#c084fc">export async function</span> <span style="color:#60a5fa">submitQuote</span>(data: QuoteInput) {`,
+  `  <span style="color:#c084fc">const</span> token = crypto.<span style="color:#60a5fa">randomUUID</span>()`,
+  `  <span style="color:#c084fc">await</span> db.<span style="color:#60a5fa">insert</span>(quotes).<span style="color:#60a5fa">values</span>({ ...data, status: <span style="color:#86efac">'pending'</span>, confirmToken: token })`,
+  `  <span style="color:#c084fc">await</span> resend.emails.<span style="color:#60a5fa">send</span>({`,
+  `    to: data.email,`,
+  `    react: <QuoteConfirmation token={token} />,`,
+  `  })`,
+  `  <span style="color:#71717a">// KDG only notified after customer confirms —  filters junk</span>`,
   `}`,
 ]
 
@@ -52,22 +56,22 @@ export default function KingGlazingPage() {
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>King Double Glazing</h1>
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · freelance</span>
-            <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', border: '1px dashed var(--border)', padding: '2px 6px', letterSpacing: 0.04 }}>updating</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Next.js 15 rebuild for a Melbourne double glazing business — Instant Estimate Tool that surfaces price before asking for contact details, programmatic suburb pages for local SEO, and LLM/GEO schema optimisation for AI-powered search visibility.
+            Rebrand and full rebuild from The Glass Discounters to King Double Glazing. Conversion-first architecture built around a self-serve Instant Estimate Tool — price before contact details, not after. Desktop Lighthouse: Performance 99 · SEO 100 · Best Practices 100.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <a href="https://kingdoubleglazing.com.au" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> live site</a>
+            <a href={kg.github} target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
           </div>
         </div>
 
         {/* Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           {[
-            { k: 'keyword verticals', v: '5' },
-            { k: 'wordpress used', v: '0' },
-            { k: 'estimate: price first', v: '✓' },
+            { k: 'desktop performance', v: '99' },
+            { k: 'SEO score', v: '100' },
+            { k: 'desktop LCP', v: '1.0s' },
           ].map((m, i) => (
             <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
               <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: -0.02 }}>{m.v}</div>
@@ -76,11 +80,27 @@ export default function KingGlazingPage() {
           ))}
         </div>
 
+        {/* Screenshot */}
+        <div style={{ marginBottom: 28 }}>
+          <a href="https://kingdoubleglazing.com.au" target="_blank" rel="noopener noreferrer" style={{ display: 'block', position: 'relative', borderRadius: 6, overflow: 'hidden', border: '1px solid var(--border)' }}>
+            <Image
+              src="/projects/kdg/homepage.webp"
+              alt="King Double Glazing homepage"
+              width={1456}
+              height={816}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+              priority
+            />
+            <div style={{ position: 'absolute', inset: 0, background: 'transparent', transition: 'background 0.15s' }} />
+          </a>
+          <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginTop: 6, textAlign: 'center', letterSpacing: 0.06 }}>kingdoubleglazing.com.au — homepage</div>
+        </div>
+
         {/* Context */}
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
-            Freelance technical lead and SEO consultant, Mar 2026–present. King Double Glazing is a Melbourne trades business — double glazing retrofits for homes and apartments. The brief was a new website. The actual deliverable is an organic search acquisition channel: programmatic suburb pages, keyword-targeted content, and schema that surfaces in AI-generated answers as well as traditional search.
+            Freelance technical lead, Apr–May 2026. King Double Glazing is a Melbourne retrofit double glazing business — they upgrade existing window frames with insulated glass units rather than replacing the whole window. The brief was a full rebrand from The Glass Discounters plus a new site. The actual deliverable is a conversion funnel built around one insight: show the price before asking for the phone number.
           </p>
         </div>
 
@@ -116,13 +136,13 @@ export default function KingGlazingPage() {
           ))}
         </div>
 
-        {/* Suburb pages */}
-        <div className="section-label" style={{ fontFamily: MONO }}>Programmatic suburb pages</div>
+        {/* Estimate tool */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Instant estimate tool — token confirmation flow</div>
         <div style={{ marginBottom: 12 }}>
-          <CodeBlock lines={SUBURB_LINES} />
+          <CodeBlock lines={ESTIMATE_LINES} />
         </div>
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
-          Every Melbourne suburb gets a statically generated page from a shared template. Suburb name, postcode, and local copy slots in at build time — Google indexes each as a distinct, geo-relevant page. A single "double glazing Melbourne" page can&apos;t compete with suburb-level intent; fifty suburb pages can.
+          The multi-step calculator produces a price range in under 60 seconds. On submit, the customer receives a confirmation link — KDG only gets the lead notification after they click it. Junk submissions are filtered at the email layer before they reach the owner&apos;s inbox.
         </p>
 
         {/* Stack */}
@@ -139,6 +159,7 @@ export default function KingGlazingPage() {
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
           <a href="https://kingdoubleglazing.com.au" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> live site</a>
+          <a href={kg.github} target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
         </div>
 

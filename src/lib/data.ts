@@ -11,6 +11,7 @@ export interface Project {
   featured: boolean
   cover?: string
   updating?: boolean
+  github?: string
 }
 
 export interface ArchiveItem {
@@ -89,14 +90,20 @@ export const PROJECTS: Project[] = [
   {
     slug: 'king-glazing',
     name: 'King Double Glazing',
-    tag: 'Freelance technical lead · Melbourne',
+    tag: 'Rebrand · conversion funnel · Melbourne',
     year: '2026',
-    status: 'Live',
-    pitch: 'Freelance. Evaluated and rejected WordPress before building Next.js 15 + Tailwind v4 + Neon + Drizzle + Resend from scratch. Instant Estimate Tool surfaces price before requesting contact details. Full SEO strategy across five verticals with suburb page template and LLM/GEO optimisation.',
-    pitchShort: 'Next.js 15 rebuild + Instant Estimate Tool + SEO strategy.',
-    stack: { Frontend: ['Next.js 15', 'Tailwind v4'], Backend: ['Neon', 'Drizzle', 'Resend'], Infra: ['Vercel', 'Cloudflare'] },
+    status: 'Live · kingdoubleglazing.com.au',
+    cover: '/projects/kdg/homepage.webp',
+    github: 'https://github.com/clupai8o0/kingdoubleglazing',
+    pitch: 'Freelance. Full rebrand and rebuild from The Glass Discounters (57 Lighthouse mobile, 13.1s LCP) to King Double Glazing. Next.js 16 + Tailwind v4 + TinaCMS + Neon + Drizzle + Resend. Instant Estimate Tool surfaces price before lead capture — the core conversion differentiator. Desktop performance 99 · SEO 100 · Best Practices 100. Full ecosystem handed to client.',
+    pitchShort: 'Rebrand + rebuild. Instant Estimate Tool. Performance 99 · SEO 100.',
+    stack: { Frontend: ['Next.js 16', 'Tailwind v4', 'TinaCMS'], Backend: ['Neon', 'Drizzle', 'Resend'], Infra: ['Vercel'] },
+    metrics: [
+      { k: 'desktop performance', v: '99' },
+      { k: 'SEO score', v: '100' },
+      { k: 'desktop LCP', v: '1.0s' },
+    ],
     featured: true,
-    updating: true,
   },
   {
     slug: 'nmmun',
@@ -116,17 +123,23 @@ export const PROJECTS: Project[] = [
   {
     slug: 'krishnaveni',
     name: 'Krishnaveni',
-    tag: 'Headless CMS · freelance client',
-    year: '2025',
-    status: 'Live',
-    pitch: 'Freelance. Headless CMS built with Sanity Studio for a real client — enables non-technical staff to independently update pages, announcements, and media without developer involvement. Schema-first content modelling.',
-    pitchShort: 'Sanity CMS for a real client. Non-technical staff self-serve content.',
+    tag: 'School website · freelance client',
+    year: '2026',
+    status: 'Live · krishnavenischool.co.in',
+    cover: '/projects/krishnaveni/homepage.webp',
+    pitch: 'Freelance. End-to-end school marketing website for Krishnaveni School, India. Monorepo: Next.js 15 + Sanity v5. 10 public pages driven by a polymorphic section architecture — 13 section types rendered by SectionRenderer with zero routing changes per page. Content baked into the bundle via a custom pipeline (fetch-sanity.mjs → generate-data.mjs → lib/data/index.ts) so the site runs without a live CMS connection at runtime. GSAP scroll animations, bento grid gallery, video testimonial lightbox, keyboard-navigable media lightbox. Delivered with a full handover doc.',
+    pitchShort: 'Full school website + Sanity v5 CMS. Section-driven architecture. Delivered with handover doc.',
     stack: {
-      Frontend: ['Sanity Studio', 'TypeScript'],
+      Frontend: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind v4', 'GSAP', 'Radix UI'],
+      Backend: ['Sanity v5'],
       Infra: ['Vercel', 'Sanity CDN'],
     },
+    metrics: [
+      { k: 'SEO score', v: '92' },
+      { k: 'Best Practices', v: '100' },
+      { k: 'CLS', v: '0' },
+    ],
     featured: true,
-    updating: true,
   },
 ]
 
@@ -141,7 +154,7 @@ export const ARCHIVE: ArchiveItem[] = [
 export const EXPERIENCE: ExperienceItem[] = [
   { when: '2026–', role: 'CTO', org: 'Hoddle Melbourne', detail: 'Sole developer. Weighted mentorship matching, token invite system, 5 mentors onboarded.' },
   { when: '2025–', role: 'President', org: 'DSEC · Deakin Software Engineering Club', detail: '190+ members. Tiered sponsorship prospectus ($150–$1,000+). "My First Australian Offer" workshop.' },
-  { when: '2026–', role: 'Technical Lead & SEO Consultant', org: 'King Double Glazing (Freelance)', detail: 'Next.js 15 rebuild. Instant Estimate Tool. SEO strategy across five verticals.' },
+  { when: '2026', role: 'Technical Lead', org: 'King Double Glazing (Freelance)', detail: 'Full rebrand + rebuild from The Glass Discounters. Next.js 16, TinaCMS, Neon, Resend. Instant Estimate Tool. Desktop Performance 99 · SEO 100.' },
   { when: '2026–', role: 'Co-founder', org: 'TapCraft Studio', detail: 'Headless Shopify + React Three Fiber. NFC products. Led B2C → B2B migration.' },
   { when: '2025–', role: 'Residential Leader', org: 'DeakinRes', detail: 'Community support for international and domestic student accommodation.' },
   { when: '2026–', role: 'Sessional IT Support', org: 'Deakin Law School', detail: 'Technical support for academics; scope expanded to lecture material preparation.' },
