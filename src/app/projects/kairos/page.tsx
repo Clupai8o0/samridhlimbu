@@ -16,15 +16,17 @@ const TIMELINE = [
   { date: 'Oct 2025', title: 'Postgres over Redis', body: 'Migrated off Redis queues. Advisory locks, single source of truth.' },
   { date: 'Jan 2026', title: 'The off-by-one', body: '1 in ~120 jobs expired quietly. Wrote the boundary tests I should have written first.', highlight: true },
   { date: 'Feb 2026', title: 'Full rewrite decision', body: 'Largest file hit 1,051 lines. Declared prototype done, started clean Next.js monorepo. Backend logic ported as pure functions.' },
-  { date: 'Mar 2026', title: 'Plugin system + Phase 3', body: 'Zod-validated plugin I/O contract. PluginContext abstraction. Core has zero LLM dependencies — all provider calls route through lib/llm/.' },
-  { date: 'Apr 2026', title: 'Marketplaces · Phase 4', body: 'Theme + plugin marketplaces shipped. HTTP plugin distribution enables install-without-redeploy on the hosted instance.', current: true },
+  { date: 'Mar 2026', title: 'Plugin system · Phase 3', body: 'Zod-validated plugin I/O contract. PluginContext abstraction. Core has zero LLM dependencies — all provider calls route through lib/llm/.' },
+  { date: 'Apr 2026', title: 'Marketplaces · Phase 4', body: 'Theme + plugin marketplaces shipped. HTTP plugin runtime: HMAC-signed requests, 5 s timeout, circuit breaker. Install-without-redeploy on the hosted instance.' },
+  { date: 'Apr 2026', title: 'Chat · Phase 5c', body: 'Session-scoped chat with streaming tokens. LLM can read and write tasks, query the schedule, manage collections. Tool calls render inline with collapsible output blocks.' },
+  { date: 'May 2026', title: 'Collections · Phase 5d', body: 'Coordination layer above tags: ordered phases, bulk-schedule, progress endpoint. Added backlog + blocked task states. v1.0.0 tag pending.', current: true },
 ]
 
 const DECISIONS = [
-  ['next.js monorepo', 'fastapi prototype', 'The original prototype hit 1,051 lines in a single file. A clean monorepo with a pure-function pipeline made the scheduler independently testable without touching the HTTP layer.'],
-  ['pure-function pipeline', 'side-effectful scheduler', 'runner.ts is the only file with DB or Google Calendar side effects. Everything else is a pure function — enabling full unit test coverage of scheduling logic with no mocks.'],
-  ['zod-validated plugin I/O', 'loose plugin contract', 'A Zod schema at the plugin boundary makes the contract machine-checkable. Invalid plugins fail at registration, not at runtime.'],
-  ['postgres + advisory locks', 'redis queues', 'Single source of truth beats 2× throughput at my scale. Transactions were worth keeping.'],
+  ['plugin host over hardcoded extraction', 'LLM call in core', 'PluginContext gives every plugin complete/completeStructured, config, memory, and logging — without core importing any provider SDK. Adding a new input source is a PR to the public registry, not a core change. 10 plugins shipped at launch.'],
+  ['schedule-on-write', 'poll-and-schedule', 'Creating a task enqueues a Postgres job immediately — placement completes in 1–3 s within the same Vercel function call. No separate trigger, no user action. Idempotency keys prevent duplicates under concurrent saves.'],
+  ['no-raw-colors ESLint rule', 'style guide doc', 'A custom ESLint rule bans hex literals and raw Tailwind colour utilities in component files. All components reference semantic tokens (--color-accent, --color-surface, etc.). Theme marketplace themes compile to CSS at install time — safe without code review.'],
+  ['pure-function pipeline', 'side-effectful scheduler', 'runner.ts is the only file with DB or Google Calendar side effects. Every other module in lib/scheduler/ is a pure function — full unit coverage with no mocks and no database connection required.'],
 ]
 
 const BUG_LINES = [
@@ -57,12 +59,24 @@ export default function KairosPage() {
             <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', border: '1px dashed var(--border)', padding: '2px 6px', letterSpacing: 0.04 }}>updating</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Scheduling that reads intent. Rewrote a 1,051-line Python/FastAPI prototype into a clean Next.js monorepo — pure-function scheduler pipeline, plugin system with Zod-validated I/O, and theme + plugin marketplaces shipped in Phase 4.
+            Scheduling that reads intent. Paste unstructured notes — Kairos extracts tasks and places them into Google Calendar automatically. Rewrote a 1,051-line Python prototype into a clean Next.js monorepo: pure-function scheduler pipeline, plugin host with zero LLM imports in core, HTTP plugin runtime, theme marketplace enforced by CI, and a session-scoped LLM chat that can read and write your entire task graph.
           </p>
           <div style={{ display: 'flex', gap: 6 }}>
             <a href="https://kairos.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> kairos.clupai.com</a>
             <a href="https://github.com/clupai8o0/kairos" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> code</a>
           </div>
+        </div>
+
+        {/* Hero media */}
+        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
+          <video
+            src="/projects/kairos/kairos-demo.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{ width: '100%', display: 'block' }}
+          />
         </div>
 
         {/* Metrics */}
@@ -79,7 +93,7 @@ export default function KairosPage() {
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
-            Solo, 2025–ongoing. I own design, scheduling logic, plugin system, and API surface. The core problem: a scheduler that fails loudly instead of dropping events silently. Started as a Python/FastAPI prototype, rewrote the whole thing into a clean Next.js monorepo once the prototype hit 1,051 lines in a single file.
+            Solo, 2025–ongoing. I own design, scheduling logic, plugin system, API surface, and all five shipped phases. The core problem: a scheduling tool that understands context — deadlines, dependencies, preferred working windows — instead of just storing a list. Started as a Python/FastAPI prototype, rewrote everything once the file hit 1,051 lines. Phase 5d (Collections) shipped May 2026; v1.0.0 tag pending.
           </p>
         </div>
 
