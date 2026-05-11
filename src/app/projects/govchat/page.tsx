@@ -52,7 +52,8 @@ export default function GovchatPage() {
             Retrieval-Augmented Generation platform for natural-language querying of government information. Ask a policy question, get a grounded answer with source citations — no hallucination, explicit fallback when the answer isn&apos;t in the corpus.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://github.com/clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> github</a>
+            <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> frontend</a>
+            <a href="https://github.com/Clupai8o0/govchat-api" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> api</a>
           </div>
         </div>
 
@@ -136,7 +137,8 @@ export default function GovchatPage() {
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
-          <a href="https://github.com/clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
+          <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> frontend</a>
+          <a href="https://github.com/Clupai8o0/govchat-api" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> api</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
         </div>
 
