@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { PageHeader } from '@/components/page-header'
 import { ProjectCard } from './_components/project-card'
 
 export const metadata: Metadata = {
@@ -22,15 +23,18 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 export default function ProjectsPage() {
   return (
     <PageShell>
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '40px 28px' }}>
+      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '40px 28px' }}>
+
+        <PageHeader />
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 24 }}>
+        <div data-stagger-item style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 24 }}>
           <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: -0.02, color: 'var(--fg)' }}>Projects</h1>
           <Prompt>ls -la projects/</Prompt>
         </div>
 
         {/* Featured */}
+        <div data-reveal>
         <div className="section-label" style={{ fontFamily: MONO }}>Featured</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 32 }}>
           {PROJECTS.filter(p => p.featured).map(p => (
@@ -41,8 +45,10 @@ export default function ProjectsPage() {
             />
           ))}
         </div>
+        </div>
 
         {/* Archive */}
+        <div data-reveal>
         <div className="section-label" style={{ fontFamily: MONO }}>Archive</div>
         <div style={{ fontFamily: MONO }}>
           <div className="t2-archive-grid" style={{ display: 'grid', gap: 12, padding: '6px 0', fontSize: 9, color: 'var(--muted-2)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: 0.08 }}>
@@ -60,6 +66,7 @@ export default function ProjectsPage() {
               )}
             </div>
           ))}
+        </div>
         </div>
 
       </div>

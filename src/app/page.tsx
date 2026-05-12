@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { PageShell } from '@/components/page-shell'
 import { Icon } from '@/components/icons'
 import { ContactForm } from '@/components/contact-form'
+import { PageHeader } from '@/components/page-header'
 import { PROJECTS } from '@/lib/data'
 
 export const metadata: Metadata = {
@@ -60,23 +61,15 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }}
       />
-      <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 32px' }}>
+      <div data-stagger style={{ maxWidth: 740, margin: '0 auto', padding: '48px 32px' }}>
 
         {/* Top accent rule */}
-        <div style={{ height: 2, background: 'var(--accent)', marginBottom: 24 }} />
+        <div data-stagger-item style={{ height: 2, background: 'var(--accent)', marginBottom: 24 }} />
 
-        {/* Breadcrumb */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between',
-          fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)',
-          letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28,
-        }}>
-          <span>/home/sl</span>
-          <span>samridhlimbu.com · v0.1</span>
-        </div>
+        <PageHeader />
 
         {/* Hero: photo above name */}
-        <div style={{ marginBottom: 14 }}>
+        <div data-stagger-item style={{ marginBottom: 14 }}>
           <div style={{ position: 'relative', width: 96, height: 96, border: '1px solid var(--border-2)', borderRadius: 2, overflow: 'hidden', marginBottom: 18 }}>
             <Image src="/sam.jpeg" alt="Samridh Limbu" fill style={{ objectFit: 'cover', objectPosition: 'center top' }} priority sizes="96px" />
           </div>
@@ -87,14 +80,14 @@ export default function HomePage() {
         </div>
 
         {/* Tagline */}
-        <p style={{ fontFamily: MONO, fontSize: 14, color: 'var(--fg-dim)', margin: '0 0 36px', lineHeight: 1.65 }}>
+        <p data-stagger-item style={{ fontFamily: MONO, fontSize: 14, color: 'var(--fg-dim)', margin: '0 0 36px', lineHeight: 1.65 }}>
           full-stack <span style={{ color: 'var(--accent)' }}>software engineer</span> in melbourne. next.js · python · postgres.
         </p>
 
-        <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
+        <div data-stagger-item style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
 
         {/* whoami */}
-        <div style={{ marginBottom: 36 }}>
+        <div data-reveal style={{ marginBottom: 36 }}>
           <SectionHeader>whoami</SectionHeader>
           <p style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg-dim)', margin: '0 0 12px', lineHeight: 1.75 }}>
             3rd-year BCS (IoT) at Deakin, graduating June 2027. CTO at Hoddle Melbourne (sole developer), solo founder of Kairos, co-founder at TapCraft Studio, and president of DSEC — 190+ members.
@@ -118,7 +111,7 @@ export default function HomePage() {
         <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
 
         {/* contact */}
-        <div style={{ marginBottom: 36 }}>
+        <div data-reveal style={{ marginBottom: 36 }}>
           <SectionHeader>contact --list</SectionHeader>
           <div
             className="t2-contact-grid"
@@ -149,7 +142,7 @@ export default function HomePage() {
         <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
 
         {/* projects */}
-        <div style={{ marginBottom: 36 }}>
+        <div data-reveal style={{ marginBottom: 36 }}>
           <SectionHeader>projects --featured</SectionHeader>
           {featured.slice(0, 3).map((p, i) => (
             <Link
@@ -169,7 +162,7 @@ export default function HomePage() {
                 </div>
                 <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{p.pitchShort}</div>
               </div>
-              <span style={{ color: 'var(--muted-2)', display: 'flex', justifyContent: 'flex-end' }}>
+              <span className="row-arrow" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Icon name="arrow-up-right" size={12} />
               </span>
             </Link>
@@ -191,7 +184,7 @@ export default function HomePage() {
         <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
 
         {/* get in touch */}
-        <div style={{ marginBottom: 16 }}>
+        <div data-reveal style={{ marginBottom: 16 }}>
           <SectionHeader>get_in_touch()</SectionHeader>
           <ContactForm />
         </div>

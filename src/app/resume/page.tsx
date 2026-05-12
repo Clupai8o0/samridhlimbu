@@ -1,4 +1,5 @@
 import { PageShell } from '@/components/page-shell'
+import { PageHeader } from '@/components/page-header'
 import { DownloadPdfButton } from '@/components/download-pdf-button'
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
@@ -131,16 +132,18 @@ const SECTIONS = [
 export default function ResumePage() {
   return (
     <PageShell>
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '40px 28px' }}>
+      <div data-stagger style={{ maxWidth: 600, margin: '0 auto', padding: '40px 28px' }}>
+
+        <div className="no-print"><PageHeader /></div>
 
         {/* Breadcrumb */}
-        <div className="no-print" style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: 0.02 }}>
+        <div data-stagger-item className="no-print" style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: 0.02 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cat ~/resume.md<span className="t2-cursor thin" />
         </div>
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 16, borderBottom: '1px solid var(--accent)', marginBottom: 24 }}>
+        <div data-stagger-item style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 16, borderBottom: '1px solid var(--accent)', marginBottom: 24 }}>
           <div>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: -0.02, color: 'var(--fg)' }}>Samridh Limbu</h1>
             <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>Software Engineer · Melbourne</div>
@@ -150,13 +153,13 @@ export default function ResumePage() {
         </div>
 
         {/* Summary */}
-        <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.65, marginBottom: 24 }}>
+        <p data-reveal style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.65, marginBottom: 24 }}>
           Penultimate-year CS (IoT) at Deakin (graduating Jun 2027). Building production-grade full-stack applications across scheduling, edtech, and e-commerce as both sole developer and technical co-founder. Strong in Next.js/TypeScript/Postgres. Available for SWE internships Nov 2026–Feb 2027 and grad roles from mid-2027.
         </p>
 
         {/* Sections */}
         {SECTIONS.map(sec => (
-          <div key={sec.label} style={{ marginBottom: 24 }}>
+          <div key={sec.label} data-reveal style={{ marginBottom: 24 }}>
             <div className="section-label" style={{ fontFamily: MONO }}>{sec.label}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {sec.rows.map((r, i) => (

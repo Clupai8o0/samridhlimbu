@@ -116,11 +116,10 @@ export const PROJECTS: Project[] = [
     pitch: 'Production-ready conference website and operations toolkit used live by 500+ participants during a Model United Nations event. Built for reliability and fast iteration under real event deadlines.',
     pitchShort: 'Conference platform used live by 500+ participants at a MUN event.',
     stack: {
-      Frontend: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+      Frontend: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Framer Motion', 'Embla Carousel'],
       Infra: ['Vercel'],
     },
     featured: true,
-    updating: true,
   },
   {
     slug: 'krishnaveni',

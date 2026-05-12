@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { PageAnimations } from '@/components/page-animations'
 
 const SECTIONS = [
   { href: '/about', label: 'about' },
@@ -155,7 +156,10 @@ export function PageShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <main key={pathname} className="t2-main" style={{ flex: 1 }}>{children}</main>
+      <main key={pathname} className="t2-main" style={{ flex: 1 }}>
+        <PageAnimations />
+        {children}
+      </main>
     </div>
   )
 }

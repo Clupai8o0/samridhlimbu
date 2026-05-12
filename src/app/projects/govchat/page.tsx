@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { CodeBlock } from '@/components/code-block'
 
@@ -34,16 +35,18 @@ const RAG_LINES = [
 export default function GovchatPage() {
   return (
     <PageShell>
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+
+        <PageHeader />
 
         {/* breadcrumb */}
-        <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/govchat
         </div>
 
         {/* Banner */}
-        <div style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>GovChat</h1>
             <span className="pill" style={{ color: '#60a5fa', borderColor: 'rgba(96,165,250,0.3)', fontFamily: MONO }}>● RAG · 2025</span>

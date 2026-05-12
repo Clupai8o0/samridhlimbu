@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { PROJECTS } from '@/lib/data'
 
@@ -18,7 +19,7 @@ const TIMELINE = [
 const DECISIONS = [
   ['data-driven content', 'hardcoded pages', 'Committee assignments, schedules, and navigation links live in lib/config.ts and lib/links.ts. Organizers update content without touching component code.'],
   ['next.js 14 app router', 'single-page app', 'File-system routing + metadata API gives every council page correct title/description tags for free. Conference sites need fast first paint on mobile.'],
-  ['shadcn/ui + framer motion', 'custom component library', 'Time-boxed project — reusing accessible primitives (shadcn/ui) and adding motion polish (Framer Motion) was faster than building from scratch without quality compromise.'],
+  ['shadcn/ui + framer motion', 'custom component library', 'Time-boxed project — reusing accessible primitives (shadcn/ui) and adding motion polish (Framer Motion) was faster and safer than building a design system from scratch under event deadlines.'],
   ['embla carousel', 'css scroll snap', 'Embla gives touch-gesture support and smooth snap behaviour that CSS snap alone lacks on Safari.'],
 ]
 
@@ -27,20 +28,22 @@ export default function NmmunPage() {
 
   return (
     <PageShell>
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+
+        <PageHeader />
 
         {/* breadcrumb */}
-        <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/nmmun
         </div>
 
         {/* Banner */}
-        <div style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>NMMUN</h1>
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · nmmun.vercel.app</span>
-            <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', border: '1px dashed var(--border)', padding: '2px 6px', letterSpacing: 0.04 }}>updating</span>
+            <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', border: '1px dashed var(--border)', padding: '2px 6px', letterSpacing: 0.04 }}>concluded · archived</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
             Conference website and operations toolkit used live by 500+ participants at a Model United Nations event. Built for reliability and fast iteration under real event deadlines.

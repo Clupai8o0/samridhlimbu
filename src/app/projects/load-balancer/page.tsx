@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { CodeBlock } from '@/components/code-block'
 
@@ -13,14 +14,15 @@ const TIMELINE = [
   { date: '2025 · v5–10', title: 'Health-aware routing', body: 'Added weighted round-robin and least-connections. Backends with higher measured latency receive proportionally fewer requests.' },
   { date: '2025 · v11–15', title: 'P2C-EWMA', body: 'Power-of-Two-Choices with Exponentially Weighted Moving Average. Pick two backends at random, route to the one with lower EWMA latency. Avoids hot-spots without explicit health scores.' },
   { date: '2025 · v16–20', title: 'AIMD + circuit breakers', body: 'AIMD concurrency control — additive increase on success, multiplicative decrease on timeout. Circuit breakers (closed/half-open/open) with outlier quarantine.' },
-  { date: '2025 · v21', title: 'Observability + admin API', body: 'Prometheus scrape endpoint at /metrics. JSON metrics at /admin/metrics/json. Dynamic weight and health-check config via admin endpoints.', current: true },
+  { date: '2025 · v21', title: 'Observability + admin API', body: 'Prometheus /metrics, slog structured JSON logging, /admin/metrics/json. Dynamic backend add/remove without restart, live strategy switching, canary rollout controls. /admin/selftest and /debug/config for diagnostics.', current: true },
 ]
 
 const DECISIONS = [
   ['p2c-ewma', 'pure round-robin', 'Round-robin ignores backend health. P2C-EWMA naturally avoids slow backends — latency is the signal, no explicit health scores needed. Two random picks, route to the better one.'],
   ['aimd concurrency', 'fixed connection limit', "The same algorithm TCP uses for congestion control. Grows aggressively when backends are healthy, halves on the first timeout. Adapts in real time without coordination between backends."],
-  ['circuit breakers', 'timeout-only failure handling', 'A consistently failing backend should be quarantined, not just timed out. Half-open probing lets it recover without manual intervention.'],
-  ['prometheus /metrics', 'log-only observability', 'Metrics are queryable over time; logs are forensic. Prometheus lets you correlate request rate with error rate across the same time window.'],
+  ['circuit breakers', 'timeout-only failure handling', 'A consistently failing backend should be quarantined, not just timed out. Warm-up ramp on recovery + half-open probing lets it return to rotation gradually without manual intervention.'],
+  ['ip-hash sticky sessions', 'stateless round-robin', 'Stateful workloads need affinity. IP-Hash maps client IP → consistent backend so session state stays local — no external store needed.'],
+  ['prometheus /metrics', 'log-only observability', 'Metrics are queryable over time; logs are forensic. Structured slog JSON logging pairs with Prometheus so you get both queryable time-series and machine-readable event context.'],
 ]
 
 const AIMD_LINES = [
@@ -37,16 +39,18 @@ const AIMD_LINES = [
 export default function LoadBalancerPage() {
   return (
     <PageShell>
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+
+        <PageHeader />
 
         {/* breadcrumb */}
-        <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/load-balancer
         </div>
 
         {/* Banner */}
-        <div style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>load-balancer</h1>
             <span className="pill" style={{ color: '#a78bfa', borderColor: 'rgba(167,139,250,0.3)', fontFamily: MONO }}>● systems · Go</span>
@@ -63,7 +67,7 @@ export default function LoadBalancerPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           {[
             { k: 'iterations', v: '21' },
-            { k: 'strategies', v: '4' },
+            { k: 'strategies', v: '5' },
             { k: 'grade', v: 'HD' },
           ].map((m, i) => (
             <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
@@ -127,9 +131,10 @@ export default function LoadBalancerPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 28 }}>
           {[
             { label: 'Language', items: 'Go 1.23' },
-            { label: 'Strategies', items: 'Round-Robin · Weighted RR · Least-Connections · P2C-EWMA' },
-            { label: 'Resilience', items: 'AIMD concurrency · token-bucket rate limiting · circuit breakers · outlier quarantine' },
-            { label: 'Observability', items: 'Prometheus /metrics · JSON admin API /admin/metrics/json' },
+            { label: 'Strategies', items: 'Round-Robin · Weighted RR · Least-Connections · P2C-EWMA · IP-Hash' },
+            { label: 'Resilience', items: 'AIMD concurrency · token-bucket rate limiting · circuit breakers · outlier quarantine · warm-up ramp · global semaphore' },
+            { label: 'Observability', items: 'Prometheus /metrics · slog JSON logging · /admin/metrics/json' },
+            { label: 'Admin', items: 'dynamic backend add/remove · live strategy switching · canary rollout · /admin/selftest · /debug/config' },
           ].map(({ label, items }) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
               <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: 0.08, width: 80, flexShrink: 0 }}>{label}</span>
