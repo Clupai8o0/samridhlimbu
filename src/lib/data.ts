@@ -53,6 +53,28 @@ export const PROJECTS: Project[] = [
     updating: true,
   },
   {
+    slug: 'allarkive',
+    name: 'AllArkive',
+    tag: 'Self-hosted offline knowledge ark · local LLM + RAG',
+    year: '2026',
+    status: 'Open source · v0.2 · github.com/clupai8o0/allarkive',
+    pitch: 'Co-founder (with Sham). Self-hostable offline research assistant: Wikipedia, repair manuals, medical wiki, Stack Exchange — all offline, all searchable with a local LLM that cites sources you can click. Presented at BSides Melbourne 2026. Architectural refusal: the FastAPI RAG layer short-circuits the LLM call entirely if retrieval returns nothing — the model cannot hallucinate because it is never invoked. v0.2 rewrote the indexer for batched async embeddings (10–30× faster), int8 vector quantisation (768 B vs 3,072 B per chunk), and offset-only chunk storage (index at 25% of ZIM size vs ~100% in v0.1).',
+    pitchShort: 'Offline LLM + RAG. API-layer hallucination refusal. BSides Melbourne 2026.',
+    stack: {
+      Frontend: ['nginx landing page', 'Open WebUI'],
+      Backend: ['FastAPI', 'Ollama', 'sqlite-vec', 'Kiwix', 'nomic-embed-text'],
+      Infra: ['Docker Compose', 'Raspberry Pi compatible'],
+    },
+    metrics: [
+      { k: 'hallucination guard', v: 'API layer' },
+      { k: 'indexing (laptop)', v: '10–25 min' },
+      { k: 'default bundle', v: '~24 GB' },
+    ],
+    cover: '/projects/allarkive/preview.png',
+    featured: true,
+    github: 'https://github.com/clupai8o0/allarkive',
+  },
+  {
     slug: 'hoddle',
     name: 'Hoddle Melbourne',
     tag: 'International student mentorship platform',
@@ -113,6 +135,7 @@ export const PROJECTS: Project[] = [
     tag: 'Conference website · operations toolkit',
     year: '2024',
     status: 'Live · nmmun.vercel.app',
+    cover: '/projects/nmmun/homepage.webp',
     pitch: 'Production-ready conference website and operations toolkit used live by 500+ participants during a Model United Nations event. Built for reliability and fast iteration under real event deadlines.',
     pitchShort: 'Conference platform used live by 500+ participants at a MUN event.',
     stack: {

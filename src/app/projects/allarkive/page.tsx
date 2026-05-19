@@ -104,7 +104,7 @@ export default function AllArkivePage() {
             A private, offline research assistant that runs on your own hardware, with citations you can check. Useful when your internet is fine. More useful when it isn&apos;t. Wikipedia, repair manuals, medical wiki, and Stack Exchange — all served by Kiwix, all searchable via a local LLM that refuses to answer when it has no source material to cite from.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://github.com/allarkive/allarkive" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> allarkive/allarkive</a>
+            <a href="https://github.com/clupai8o0/allarkive" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> clupai8o0/allarkive</a>
           </div>
         </div>
 
@@ -198,7 +198,7 @@ export default function AllArkivePage() {
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
-          <a href="https://github.com/allarkive/allarkive" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
+          <a href="https://github.com/clupai8o0/allarkive" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
         </div>
 
