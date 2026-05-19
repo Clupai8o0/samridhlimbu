@@ -54,6 +54,18 @@ export default function NmmunPage() {
           </div>
         </div>
 
+        {/* Hero media */}
+        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
+          <video
+            src="/projects/nmmun/home.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{ width: '100%', display: 'block' }}
+          />
+        </div>
+
         {/* Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           {[
@@ -90,6 +102,11 @@ export default function NmmunPage() {
           ))}
         </div>
 
+        {/* Screenshot — councils */}
+        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
+          <video src="/projects/nmmun/councils.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
+        </div>
+
         {/* Key decisions */}
         <div className="section-label" style={{ fontFamily: MONO }}>Key technical decisions</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
@@ -106,6 +123,11 @@ export default function NmmunPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Screenshot — gallery */}
+        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
+          <video src="/projects/nmmun/gallery.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Stack */}

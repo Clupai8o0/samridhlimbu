@@ -105,6 +105,7 @@ export default function AllArkivePage() {
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <a href="https://github.com/clupai8o0/allarkive" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> clupai8o0/allarkive</a>
+            <a href="https://allarkive.vercel.app" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>docs →</a>
           </div>
         </div>
 
@@ -199,6 +200,7 @@ export default function AllArkivePage() {
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
           <a href="https://github.com/clupai8o0/allarkive" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
+          <a href="https://allarkive.vercel.app" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>docs →</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
         </div>
 

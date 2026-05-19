@@ -71,30 +71,47 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {post.excerpt}
         </p>
 
-        {/* Author */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
-          <div style={{
-            position: 'relative',
-            width: 30, height: 30,
-            border: '1px solid var(--border-2)',
-            borderRadius: 4,
-            overflow: 'hidden',
-            flexShrink: 0,
-          }}>
-            <Image
-              src="/sam.jpeg"
-              alt="Samridh Limbu"
-              fill
-              sizes="30px"
-              style={{ objectFit: 'cover', objectPosition: 'center top' }}
-            />
+        {/* Author(s) */}
+        {post.authors && post.authors.length > 0 ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 22, flexWrap: 'wrap' }}>
+            {post.authors.map((author, i) => (
+              <span key={i} style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                {i > 0 && <span style={{ color: 'var(--border-2)', margin: '0 10px' }}>·</span>}
+                <strong style={{ color: 'var(--fg)', fontWeight: 500 }}>{author.name}</strong>
+                {author.role && (
+                  <>
+                    <span style={{ color: 'var(--muted-2)' }}>·</span>
+                    <span style={{ color: 'var(--muted-2)' }}>{author.role}</span>
+                  </>
+                )}
+              </span>
+            ))}
           </div>
-          <span style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>
-            Samridh Limbu{' '}
-            <span style={{ color: 'var(--muted-2)' }}>·</span>{' '}
-            Melbourne, AU
-          </span>
-        </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
+            <div style={{
+              position: 'relative',
+              width: 30, height: 30,
+              border: '1px solid var(--border-2)',
+              borderRadius: 4,
+              overflow: 'hidden',
+              flexShrink: 0,
+            }}>
+              <Image
+                src="/sam.jpeg"
+                alt="Samridh Limbu"
+                fill
+                sizes="30px"
+                style={{ objectFit: 'cover', objectPosition: 'center top' }}
+              />
+            </div>
+            <span style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>
+              Samridh Limbu{' '}
+              <span style={{ color: 'var(--muted-2)' }}>·</span>{' '}
+              Melbourne, AU
+            </span>
+          </div>
+        )}
 
         {/* Separator */}
         <div style={{ height: 1, background: 'var(--border)', marginBottom: 32 }} />
