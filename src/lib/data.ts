@@ -31,6 +31,27 @@ export interface ExperienceItem {
 
 export const PROJECTS: Project[] = [
   {
+    slug: 'acknowledgement-force',
+    name: 'Acknowledgement Force',
+    tag: 'identity reinforcement tool · macOS',
+    year: '2026',
+    status: 'Live · v0.2.0 · force.clupai.com',
+    pitch: 'A macOS app that blocks your screen until you read your personal rules, tick a box, and name your one highest-leverage action for the day. Built because most goal failures are identity failures — not laziness. The rule you set last week vanishes in moments of stress. Acknowledgement Force makes forgetting structurally impossible. v0.1 was Tauri + web. v0.2 is a full rewrite in native Swift 6 + SwiftUI: smaller, faster, proper macOS feel. Auto-launches via a user LaunchAgent at configurable cadences (every login, hourly, daily, weekly). No backend. No telemetry. Nothing leaves your machine.',
+    pitchShort: 'Blocks your Mac until you read your rules and commit to today. Native Swift 6, open source, no backend.',
+    stack: {
+      Frontend: ['Swift 6', 'SwiftUI'],
+      Infra: ['macOS LaunchAgent', 'ad-hoc signed .app'],
+    },
+    metrics: [
+      { k: 'binary size', v: '~3 MB' },
+      { k: 'backend', v: 'none' },
+      { k: 'platform', v: 'macOS 14+' },
+    ],
+    cover: '/projects/acknowledgement-force/preview.webp',
+    featured: true,
+    github: 'https://github.com/clupai8o0/force',
+  },
+  {
     slug: 'kairos',
     name: 'Kairos',
     tag: 'AI-native scheduling app',
