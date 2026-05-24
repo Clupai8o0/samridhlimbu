@@ -23,8 +23,13 @@ const TIMELINE = [
   },
   {
     date: 'May 2026',
-    title: 'v0.2.0 — native Swift · current',
+    title: 'v0.2.0 — native Swift',
     body: 'Full rewrite in Swift 6 + SwiftUI. LaunchAgent for configurable cadence (every login, hourly, daily, weekly). Single-instance lock. install.sh that builds a release binary, packages it into an .app, and installs to ~/Applications. No Xcode needed by the user.',
+  },
+  {
+    date: 'May 2026',
+    title: 'v0.3.0 — cloud sync · current',
+    body: 'Next.js web editor live at force.clupai.com. Edit contract, quotes, daily goals, and reflection from any device — changes sync to your Mac on next launch. Supabase-backed with RLS and light/dark mode. Opt-in: still runs fully local with no account. Hosted option or bring-your-own Supabase.',
     current: true,
   },
 ]
@@ -41,9 +46,9 @@ const DECISIONS = [
     'Login items only fire on login. A LaunchAgent can re-lock on any cadence — every hour, every 12 hours, once a day. One plist, full control, no proprietary daemon.',
   ],
   [
-    'fully local · no backend',
-    'cloud sync',
-    'Your personal rules are not data to be stored on a server. The acknowledgement log lives at ~/Library/Application Support/Force/acknowledgements.log. Cloud sync is roadmapped for v1.0, opt-in only.',
+    'opt-in sync · supabase',
+    'always-on cloud',
+    'Your personal rules are not data that should be stored on a server by default. Sync is opt-in: run fully local with no account, or sign in to force.clupai.com to sync contract, quotes, goals, and reflection. Acknowledgements and history always stay on-device. Last-edit-wins — no conflict resolution needed.',
   ],
   [
     'ad-hoc signed',
@@ -71,7 +76,7 @@ export default function AcknowledgementForcePage() {
         <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>Acknowledgement Force</h1>
-            <span className="pill" style={{ color: 'var(--accent)', borderColor: 'rgba(77,163,255,0.3)', fontFamily: MONO }}>● open source · v0.2.0</span>
+            <span className="pill" style={{ color: 'var(--accent)', borderColor: 'rgba(77,163,255,0.3)', fontFamily: MONO }}>● open source · v0.3.0</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
             A macOS app that blocks your screen until you read your personal rules, tick the box, and name your single highest-leverage action for the day. Most goal failures are identity failures — not laziness. The rule you set last week vanishes in moments of stress. This makes forgetting structurally impossible.
@@ -154,6 +159,8 @@ export default function AcknowledgementForcePage() {
             { label: 'Auto-launch', items: 'user LaunchAgent (~/Library/LaunchAgents/)' },
             { label: 'Storage', items: '~/Library/Application Support/Force/acknowledgements.log' },
             { label: 'Platform', items: 'macOS 14 Sonoma+ · Apple Silicon + Intel' },
+            { label: 'Web editor', items: 'Next.js · force.clupai.com' },
+            { label: 'Sync', items: 'Supabase · RLS · opt-in · self-hostable' },
           ].map(({ label, items }) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
               <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: 0.08, width: 80, flexShrink: 0 }}>{label}</span>
