@@ -920,14 +920,14 @@ export const POSTS: Post[] = [
     readMin: 22,
     tags: ['cryptography', 'blockchain', 'sha-256', 'math'],
     excerpt:
-      'My SIT202 5.1HD writeup. Cryptography from first principles, SHA-256 walked through gate by gate, Merkle trees, ECDSA, proof of work, and the mathematics behind why a 51% attack is technically possible and economically absurd.',
+      'Cryptography from first principles, SHA-256 walked through gate by gate, Merkle trees, ECDSA, proof of work, and the mathematics behind why a 51% attack is technically possible and economically absurd.',
     featured: true,
     content: [
       {
         type: 'paragraph',
         dropCap: true,
         html:
-          'I wrote this as the high-distinction task for SIT202 — Deakin\'s networks-and-security unit — and the brief was simple in shape and brutal in scope: explain blockchain end-to-end, but mean it. Not "blocks are linked by hashes" hand-waving. Show the modular arithmetic. Walk SHA-256. Justify why ECDSA works. Put numbers on the 51% attack. What follows is that paper, restructured as a long-form blog post.',
+          'I set out to explain blockchain end-to-end, but mean it — simple in shape, brutal in scope. Not "blocks are linked by hashes" hand-waving. Show the modular arithmetic. Walk SHA-256. Justify why ECDSA works. Put numbers on the 51% attack. What follows is that writeup, restructured as a long-form blog post.',
       },
       { type: 'heading', level: 2, text: 'Cryptography fundamentals' },
       {
@@ -1462,20 +1462,20 @@ H2 < Target`,
     readMin: 12,
     tags: ['networking', 'cryptography', 'python'],
     excerpt:
-      'My SIT202 3.2H writeup — a threaded TCP chat with mutual TLS, self-signed certs minted in Python, the handshake walked through end to end, and an honest list of the security properties this thing does and does not give you.',
+      'A threaded TCP chat with mutual TLS, self-signed certs minted in Python, the handshake walked through end to end, and an honest list of the security properties this thing does and does not give you.',
     featured: true,
     content: [
       {
         type: 'paragraph',
         dropCap: true,
         html:
-          'This started as an assignment for SIT202 — Deakin\'s networks-and-security unit — and ended up being the project where TLS finally stopped feeling like a magic incantation. The brief asked for a chat application in Python with encrypted communication. I could have wrapped <code>socket.socket</code> in <code>ssl.wrap_socket</code> and called it done. Instead I built it from the cert generator up, watched the handshake in Wireshark, and wrote down which flags I was setting and which defaults I was trusting. What follows is the same writeup, restructured for a blog: walkthrough first, code second, threat model third.',
+          'This is the project where TLS finally stopped feeling like a magic incantation. The goal was a chat application in Python with encrypted communication. I could have wrapped <code>socket.socket</code> in <code>ssl.wrap_socket</code> and called it done. Instead I built it from the cert generator up, watched the handshake in Wireshark, and wrote down which flags I was setting and which defaults I was trusting. What follows is the same writeup, restructured for a blog: walkthrough first, code second, threat model third.',
       },
       { type: 'heading', level: 2, text: 'What I was trying to learn' },
       {
         type: 'paragraph',
         html:
-          'The unit-level learning objectives were the usual mix: how TLS secures client-server traffic, how to set up SSL certificates in Python, how to implement and test a TLS-secured chat with <code>socket</code> and <code>ssl</code>, how to analyse encrypted traffic in Wireshark, and how to be honest about the limits of a base TLS implementation. The personal goal underneath that was simpler — to be able to defend every line of code I wrote.',
+          'The learning objectives were the usual mix: how TLS secures client-server traffic, how to set up SSL certificates in Python, how to implement and test a TLS-secured chat with <code>socket</code> and <code>ssl</code>, how to analyse encrypted traffic in Wireshark, and how to be honest about the limits of a base TLS implementation. The personal goal underneath that was simpler — to be able to defend every line of code I wrote.',
       },
       { type: 'heading', level: 2, text: 'Why TLS, briefly' },
       {
@@ -1514,7 +1514,7 @@ H2 < Target`,
       {
         type: 'paragraph',
         html:
-          'The full source — <code>generate_certs.py</code>, <code>server.py</code>, <code>client.py</code> — lives on <a href="https://github.com/Clupai8o0/sit202-3.2h" target="_blank" rel="noopener noreferrer">GitHub</a>. The walkthrough below is the same shape as the original report: certs, then server, then client, then a run.',
+          'The full source — <code>generate_certs.py</code>, <code>server.py</code>, <code>client.py</code> — lives on <a href="https://github.com/Clupai8o0/sit202-3.2h" target="_blank" rel="noopener noreferrer">GitHub</a>. The walkthrough below is the same shape as my original writeup: certs, then server, then client, then a run.',
       },
       {
         type: 'video',
@@ -1530,7 +1530,7 @@ H2 < Target`,
       {
         type: 'paragraph',
         html:
-          'In production, certificates are issued by a Certificate Authority — Let\'s Encrypt, an internal PKI, anyone whose root is already in your trust store. For a coursework project that lives entirely on <code>localhost</code>, I generate them myself. Both endpoints are the issuer; both endpoints manually trust the other\'s cert. The trust boundary is my laptop, and that\'s acceptable for what this is.',
+          'In production, certificates are issued by a Certificate Authority — Let\'s Encrypt, an internal PKI, anyone whose root is already in your trust store. For a local project that lives entirely on <code>localhost</code>, I generate them myself. Both endpoints are the issuer; both endpoints manually trust the other\'s cert. The trust boundary is my laptop, and that\'s acceptable for what this is.',
       },
       {
         type: 'paragraph',
@@ -1643,14 +1643,14 @@ H2 < Target`,
       {
         type: 'paragraph',
         html:
-          '<code>client.py</code> is the mirror image of the server: TCP socket, SSL context, wrap, connect, then two threads — one reads stdin and sends, one reads the socket and prints. There\'s one line I want to call out because it would be a real bug anywhere outside coursework.',
+          '<code>client.py</code> is the mirror image of the server: TCP socket, SSL context, wrap, connect, then two threads — one reads stdin and sends, one reads the socket and prints. There\'s one line I want to call out because it would be a real bug anywhere outside a local demo.',
       },
       { type: 'heading', level: 3, text: 'Setup and wrap' },
       { type: 'code', lang: 'python', code: CLIENT_SETUP },
       {
         type: 'paragraph',
         html:
-          '<code>check_hostname = False</code> is the dangerous line. Hostname verification is what ties a certificate to the name you dialled — it stops "any cert in my trust store" from becoming "any host can present any of those certs and I\'ll believe them." I disabled it because the self-signed setup\'s CN matching gets fussy and the assignment isn\'t about debugging PKI. In production with a real CA, that line is deleted.',
+          '<code>check_hostname = False</code> is the dangerous line. Hostname verification is what ties a certificate to the name you dialled — it stops "any cert in my trust store" from becoming "any host can present any of those certs and I\'ll believe them." I disabled it because the self-signed setup\'s CN matching gets fussy and this project isn\'t about debugging PKI. In production with a real CA, that line is deleted.',
       },
       { type: 'heading', level: 3, text: 'Connect' },
       { type: 'code', lang: 'python', code: CLIENT_CONNECT },
@@ -1744,7 +1744,7 @@ H2 < Target`,
       {
         type: 'paragraph',
         html:
-          'What this exercise gave me, beyond a pass on the unit, was a less mystical relationship with TLS. It\'s a state machine on top of a socket. The defaults are good. The places where you override them are exactly the places where you\'re taking responsibility for what "secure" means in your specific setup. The certificate is a file; the trust is a decision; the encryption is just math you chose to plug in.',
+          'What this exercise gave me was a less mystical relationship with TLS. It\'s a state machine on top of a socket. The defaults are good. The places where you override them are exactly the places where you\'re taking responsibility for what "secure" means in your specific setup. The certificate is a file; the trust is a decision; the encryption is just math you chose to plug in.',
       },
       {
         type: 'paragraph',
