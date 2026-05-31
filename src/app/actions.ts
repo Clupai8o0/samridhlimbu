@@ -36,11 +36,7 @@ export async function sendContact(data: {
     return { ok: false, error: 'invalid email address' }
   }
 
-  if (message.trim().length < 10) {
-    return { ok: false, error: 'message too short' }
-  }
-
-  try {
+try {
     const tgText = [
       `🔔 <b>New contact</b> · ${tgEsc(SITE)}`,
       '',
