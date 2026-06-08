@@ -83,9 +83,9 @@ export default function R1GptPage() {
           </div>
         </div>
 
-        {/* Hero image — drop overview.png into public/projects/r1gpt/ */}
+        {/* Hero image */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
-          <img src="/projects/r1gpt/overview.png" alt="R1GPT project overview dashboard" style={{ width: '100%', display: 'block' }} />
+          <img src="/projects/r1gpt/overview.webp" alt="R1GPT project overview dashboard" style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Metrics */}

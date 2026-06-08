@@ -71,9 +71,9 @@ export default function AriaPage() {
           </div>
         </div>
 
-        {/* Hero image — drop dashboard.png into public/projects/aria/ */}
+        {/* Hero image */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
-          <img src="/projects/aria/dashboard.png" alt="ARIA home dashboard" style={{ width: '100%', display: 'block' }} />
+          <img src="/projects/aria/dashboard.webp" alt="ARIA home dashboard" style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Metrics */}
@@ -108,16 +108,16 @@ export default function AriaPage() {
           ))}
         </div>
 
-        {/* Sandbox image — drop sandbox.png into public/projects/aria/ */}
+        {/* Sandbox image */}
         <div className="section-label" style={{ fontFamily: MONO }}>The sandbox</div>
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 12 }}>
           The whole engine runs live in the browser. Drag any slider — solar array, battery capacity, HVAC thermal mass, charge-at-midnight — and ARIA re-runs end to end: the six agents, the battery plan, the thermal model, and the 12-home swarm, all recomputed from your inputs with no network. Scrub the clock to step through the day.
         </p>
         <div style={{ marginBottom: 18, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
-          <img src="/projects/aria/sandbox.png" alt="ARIA sandbox — six agents recomputing live" style={{ width: '100%', display: 'block' }} />
+          <img src="/projects/aria/sandbox.webp" alt="ARIA sandbox — six agents recomputing live" style={{ width: '100%', display: 'block' }} />
         </div>
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
-          <img src="/projects/aria/swarm.png" alt="ARIA neighbourhood swarm — peer-to-peer trades clearing" style={{ width: '100%', display: 'block' }} />
+          <img src="/projects/aria/swarm.webp" alt="ARIA neighbourhood swarm — peer-to-peer trades clearing" style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Key decisions */}
