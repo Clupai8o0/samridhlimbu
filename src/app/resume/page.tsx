@@ -56,6 +56,16 @@ const SECTIONS = [
     label: 'Selected projects',
     rows: [
       {
+        head: 'ARIA · multi-agent home-energy brain',
+        meta: 'Next.js · TypeScript · Claude/OpenAI (ReAct) · IBM Carbon',
+        body: 'Hierarchical multi-agent system: one orchestrator coordinates five specialists (forecasting, battery scheduling, load shifting, grid monitoring, P2P trading), each a ReAct loop that explains its decisions. Backtested on the real 13 Feb 2024 AEMO VIC1 price-cap day — ~$120 day credit, ~$61 ahead of an unmanaged home. Whole engine recomputes client-side in a browser sandbox.',
+      },
+      {
+        head: 'R1GPT · NEM connection-approval audit engine',
+        meta: 'Next.js 14 · TypeScript · OpenAI gpt-4o · Zod · pdf-parse',
+        body: 'Built with Aarav. Audits R1 grid-connection submission packages clause-by-clause against AEMO PSMG v3.0 and NER S5.2. Six deterministic assessors produce a readiness index (95 − Σ severity weights, capped at 95) with every finding traced to its regulatory section. Predicted RFIs + rectification plans. 24/24 deterministic test cases pass; no database.',
+      },
+      {
         head: 'Kairos · AI-native scheduling app',
         meta: 'Next.js 16 · Drizzle · PostgreSQL · Vercel AI SDK',
         body: 'Rewrote a 1,051-line Python/FastAPI prototype into a Next.js monorepo. Pure-function scheduler pipeline across 7 modules; plugin system with Zod-validated I/O; theme + plugin marketplaces. ~$1/mo infra cost.',

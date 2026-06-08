@@ -7,14 +7,14 @@ import { ProjectCard } from './_components/project-card'
 export const metadata: Metadata = {
   title: 'Projects',
   description:
-    'Portfolio of Samridh Limbu — Kairos (AI scheduling), Hoddle (mentorship matching), AllArkive (offline LLM + RAG, BSides Melbourne 2026), TapCraft (headless Shopify + Three.js), King Double Glazing (Next.js rebuild + SEO), NMMUN, Krishnaveni CMS.',
+    'Portfolio of Samridh Limbu — ARIA (multi-agent home-energy brain), R1GPT (NEM connection-approval audit engine), Kairos (AI scheduling), Hoddle (mentorship matching), AllArkive (offline LLM + RAG, BSides Melbourne 2026), TapCraft (headless Shopify + Three.js), King Double Glazing (Next.js rebuild + SEO), NMMUN, Krishnaveni CMS.',
   alternates: { canonical: 'https://samridhlimbu.com/projects' },
   openGraph: { url: 'https://samridhlimbu.com/projects', title: 'Projects · Samridh Limbu' },
 }
 import { Prompt } from '@/components/prompt'
 import { PROJECTS, ARCHIVE } from '@/lib/data'
 
-const DETAIL_PAGES = new Set(['acknowledgement-force', 'kairos', 'hoddle', 'allarkive', 'tapcraft', 'king-glazing', 'nmmun', 'krishnaveni', 'notes-app', 'load-balancer'])
+const DETAIL_PAGES = new Set(['acknowledgement-force', 'aria', 'r1gpt', 'kairos', 'hoddle', 'allarkive', 'tapcraft', 'king-glazing', 'nmmun', 'krishnaveni', 'notes-app', 'load-balancer'])
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'

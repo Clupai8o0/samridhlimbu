@@ -274,6 +274,38 @@ export function ResumeDocument() {
 
           <View style={s.entry}>
             <View style={s.entryHeader}>
+              <Text style={s.entryHead}>ARIA · multi-agent home-energy brain</Text>
+              <Link src="https://github.com/Clupai8o0/aria" style={s.entryMetaLink}>github.com/clupai8o0/aria</Link>
+            </View>
+            <Text style={s.projectStack}>
+              Next.js · TypeScript · Claude / OpenAI (ReAct) · IBM Carbon
+            </Text>
+            <Text style={s.entryBody}>
+              Hierarchical multi-agent system — one orchestrator coordinating five specialists (forecasting,
+              battery scheduling, load shifting, grid monitoring, peer-to-peer trading), each a ReAct loop that
+              explains its decisions. Backtested on the real 13 Feb 2024 AEMO VIC1 price-cap day: ~$120 day
+              credit, ~$61 ahead of an unmanaged home. Whole engine recomputes client-side in a browser sandbox.
+            </Text>
+          </View>
+
+          <View style={s.entry}>
+            <View style={s.entryHeader}>
+              <Text style={s.entryHead}>R1GPT · NEM connection-approval audit engine</Text>
+              <Link src="https://github.com/Aarav261/R1gpt" style={s.entryMetaLink}>github.com/Aarav261/R1gpt</Link>
+            </View>
+            <Text style={s.projectStack}>
+              Next.js 14 · TypeScript (strict) · OpenAI gpt-4o · Zod · pdf-parse
+            </Text>
+            <Text style={s.entryBody}>
+              Built with Aarav. Audits R1 grid-connection submission packages clause-by-clause against AEMO PSMG v3.0 and NER S5.2.
+              Six deterministic assessors yield a readiness index (95 − Sigma severity weights, capped at 95), with
+              every finding traced to its regulatory section, plus predicted RFIs and rectification plans.
+              24/24 deterministic cases pass; no database.
+            </Text>
+          </View>
+
+          <View style={s.entry}>
+            <View style={s.entryHeader}>
               <Text style={s.entryHead}>Kairos · AI-native scheduling app</Text>
               <Link src="https://kairos.clupai.com" style={s.entryMetaLink}>kairos.clupai.com</Link>
             </View>

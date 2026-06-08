@@ -14,7 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   const projectSlugs = [
-    'kairos', 'hoddle', 'tapcraft', 'king-glazing',
+    'acknowledgement-force', 'aria', 'r1gpt', 'kairos', 'allarkive',
+    'hoddle', 'tapcraft', 'king-glazing',
     'nmmun', 'krishnaveni', 'farmers-intuition',
     'govchat', 'notes-app', 'load-balancer',
   ]
