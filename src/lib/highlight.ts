@@ -43,18 +43,43 @@ export function highlightBash(code: string): HToken[] {
   const lines = code.split('\n')
   lines.forEach((line, idx) => {
     if (idx > 0) tokens.push({ text: '\n' })
-    const m = /^(\s*)(\$)(\s+)(\S+)(.*)$/.exec(line)
-    if (m) {
-      if (m[1]) tokens.push({ text: m[1] })
-      tokens.push({ text: m[2], cls: 'prompt' })
-      tokens.push({ text: m[3] })
-      tokens.push({ text: m[4], cls: 'cmd' })
-      if (m[5]) tokens.push({ text: m[5] })
-    } else if (line.length) {
-      tokens.push({ text: line })
+    if (!line.length) return
+    // full-line comment
+    if (/^\s*#/.test(line)) { tokens.push({ text: line, cls: 'cmt' }); return }
+    // line with explicit $ prompt
+    const dollar = /^(\s*)(\$)(\s+)(\S+)(.*)$/.exec(line)
+    if (dollar) {
+      if (dollar[1]) tokens.push({ text: dollar[1] })
+      tokens.push({ text: dollar[2], cls: 'prompt' })
+      tokens.push({ text: dollar[3] })
+      tokens.push({ text: dollar[4], cls: 'cmd' })
+      if (dollar[5]) _bashRest(dollar[5], tokens)
+      return
+    }
+    // plain command line — highlight first word as cmd, rest token by token
+    const plain = /^(\s*)(\S+)(.*)$/.exec(line)
+    if (plain) {
+      if (plain[1]) tokens.push({ text: plain[1] })
+      tokens.push({ text: plain[2], cls: 'cmd' })
+      if (plain[3]) _bashRest(plain[3], tokens)
     }
   })
   return tokens
+}
+
+function _bashRest(rest: string, tokens: HToken[]): void {
+  // tokenise flags, quoted strings, inline comments, plain text
+  const re = /(#[^\n]*)|(["'`])(?:\\.|(?!\2)[^\\])*\2|(\s-{1,2}[\w-]+)/g
+  let last = 0; let m: RegExpExecArray | null
+  re.lastIndex = 0
+  while ((m = re.exec(rest)) !== null) {
+    if (m.index > last) tokens.push({ text: rest.slice(last, m.index) })
+    if (m[1]) tokens.push({ text: m[1], cls: 'cmt' })
+    else if (m[2]) tokens.push({ text: m[0], cls: 'str' })
+    else if (m[3]) tokens.push({ text: m[0], cls: 'attr' })
+    last = re.lastIndex
+  }
+  if (last < rest.length) tokens.push({ text: rest.slice(last) })
 }
 
 const JS_KEYWORDS = [
@@ -131,11 +156,53 @@ export function highlightCss(code: string): HToken[] {
   return tokens
 }
 
+const JSON_RE = new RegExp(
+  [
+    '("(?:\\\\.|[^"\\\\])*")\\s*:',   // 1 key
+    '("(?:\\\\.|[^"\\\\])*")',         // 2 string value
+    '(\\b(?:true|false|null)\\b)',     // 3 keyword
+    '(-?\\b\\d+(?:\\.\\d+)?\\b)',      // 4 number
+  ].join('|'),
+  'g'
+)
+
+export function highlightJson(code: string): HToken[] {
+  const tokens: HToken[] = []
+  let last = 0; let m: RegExpExecArray | null
+  JSON_RE.lastIndex = 0
+  while ((m = JSON_RE.exec(code)) !== null) {
+    if (m.index > last) tokens.push({ text: code.slice(last, m.index) })
+    if (m[1] !== undefined) {
+      tokens.push({ text: m[1], cls: 'attr' })
+      tokens.push({ text: code[JSON_RE.lastIndex - 1] }) // the ':'
+    } else if (m[2] !== undefined) tokens.push({ text: m[2], cls: 'str' })
+    else if (m[3] !== undefined) tokens.push({ text: m[3], cls: 'kw' })
+    else if (m[4] !== undefined) tokens.push({ text: m[4], cls: 'num' })
+    last = JSON_RE.lastIndex
+  }
+  if (last < code.length) tokens.push({ text: code.slice(last) })
+  return tokens
+}
+
+export function highlightText(code: string): HToken[] {
+  const tokens: HToken[] = []
+  for (const [idx, line] of code.split('\n').entries()) {
+    if (idx > 0) tokens.push({ text: '\n' })
+    const hash = line.indexOf('#')
+    if (hash === -1) { tokens.push({ text: line }); continue }
+    if (hash > 0) tokens.push({ text: line.slice(0, hash) })
+    tokens.push({ text: line.slice(hash), cls: 'cmt' })
+  }
+  return tokens
+}
+
 export function highlight(code: string, lang?: string): HToken[] {
   if (lang === 'python' || lang === 'py') return highlightPython(code)
   if (lang === 'bash' || lang === 'sh' || lang === 'shell') return highlightBash(code)
   if (lang === 'js' || lang === 'jsx' || lang === 'ts' || lang === 'tsx' || lang === 'javascript' || lang === 'typescript') return highlightJs(code)
   if (lang === 'css') return highlightCss(code)
+  if (lang === 'json') return highlightJson(code)
+  if (lang === 'text' || lang === 'plaintext') return highlightText(code)
   return [{ text: code }]
 }
 

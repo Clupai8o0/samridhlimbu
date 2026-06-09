@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 import { Prompt } from '@/components/prompt'
 import { PROJECTS, ARCHIVE } from '@/lib/data'
 
-const DETAIL_PAGES = new Set(['acknowledgement-force', 'aria', 'r1gpt', 'kairos', 'hoddle', 'allarkive', 'tapcraft', 'king-glazing', 'nmmun', 'krishnaveni', 'notes-app', 'load-balancer'])
+const DETAIL_PAGES = new Set(['acknowledgement-force', 'aria', 'r1gpt', 'kairos', 'hoddle', 'allarkive', 'tapcraft', 'king-glazing', 'nmmun', 'krishnaveni', 'notes-app', 'load-balancer', 'lock-in'])
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'

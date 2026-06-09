@@ -231,6 +231,28 @@ export const PROJECTS: Project[] = [
     ],
     featured: true,
   },
+  {
+    slug: 'lock-in',
+    name: 'Lock-In',
+    tag: 'Embedded focus tracker · Arduino + Raspberry Pi',
+    year: '2026',
+    status: 'Open source · SIT210 project · github.com/clupai8o0/lock-in-complete',
+    pitch: 'A desk-side focus tracker built over a weekend for SIT210 Embedded Systems. The core insight: every existing focus tool runs on the laptop you\'re trying not to get distracted by. An Arduino Uno watches the desk (PIR, HC-SR04, DHT22, LDR, button); a Raspberry Pi 5 runs a five-state FSM in pure Python (AWAY, IDLE, FOCUS, DEGRADING, BREAK) across 8 asyncio tasks; a Gemini API call every 75 s classifies what the camera sees. MQTT (mosquitto) is the IPC layer between the orchestrator and Flask dashboard; the dashboard pushes state to the browser via Server-Sent Events. All subsystems degrade independently: a dropped camera pauses vision, a disconnected Arduino reconnects every 5 s, a downed MQTT broker falls back to on-disk snapshot files. 51 tests across 4 suites (FSM, vision parser, serial reader, MQTT integration), systemd Type=notify watchdog, boot-on-power.',
+    pitchShort: 'Physical focus tracker. Arduino + Pi FSM + Gemini vision + MQTT. 51 tests. Boot-on-power.',
+    stack: {
+      Frontend: ['Flask + Jinja (dashboard)', 'Server-Sent Events'],
+      Backend: ['Python asyncio', 'Gemini API', 'SQLite', 'mosquitto MQTT', 'Arduino C++'],
+      Infra: ['Raspberry Pi OS', 'systemd (Type=notify, watchdog)'],
+    },
+    metrics: [
+      { k: 'FSM states', v: '5' },
+      { k: 'tests (4 suites)', v: '51' },
+      { k: 'parts cost', v: 'AU$70' },
+    ],
+    cover: '/projects/lock-in/dashboard.webp',
+    featured: false,
+    github: 'https://github.com/clupai8o0/lock-in-complete',
+  },
 ]
 
 export const ARCHIVE: ArchiveItem[] = [
@@ -239,6 +261,7 @@ export const ARCHIVE: ArchiveItem[] = [
   { year: '2025', name: 'notes-app · CI/CD showcase', tech: 'Next.js · Express · MongoDB · Docker · Jenkins · AWS · Prometheus', link: 'github', slug: 'notes-app' },
   { year: '2025', name: 'load-balancer', tech: 'Go · Prometheus', link: 'github', slug: 'load-balancer' },
   { year: '2025', name: 'DSEC · event platform', tech: 'Next.js · Supabase', link: 'github' },
+  { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
 ]
 
 export const EXPERIENCE: ExperienceItem[] = [

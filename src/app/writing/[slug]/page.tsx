@@ -7,6 +7,7 @@ import { POSTS } from '@/lib/writing'
 import type { ContentBlock } from '@/lib/writing'
 import { highlight, HL_COLORS, extractYouTubeId } from '@/lib/highlight'
 import { TableOfContents, type TocItem } from '@/components/table-of-contents'
+import { CopyButton } from '@/components/copy-button'
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
@@ -239,6 +240,8 @@ function renderBlock(block: ContentBlock, key: number) {
             {block.label}
           </div>
         )}
+        <div style={{ position: 'relative' }}>
+        <CopyButton code={block.code} />
         <pre style={{
           margin: 0,
           padding: '14px 16px',
@@ -268,6 +271,7 @@ function renderBlock(block: ContentBlock, key: number) {
             )}
           </code>
         </pre>
+        </div>
       </div>
     )
   }
@@ -282,11 +286,13 @@ function renderBlock(block: ContentBlock, key: number) {
           style={{
             maxWidth: '100%',
             height: 'auto',
-            border: '1px solid var(--border)',
             borderRadius: 4,
-            background: '#e8e8ea',
-            padding: 12,
-            boxSizing: 'border-box',
+            ...(block.lightBg ? {
+              background: '#e8e8ea',
+              border: '1px solid var(--border)',
+              padding: 12,
+              boxSizing: 'border-box' as const,
+            } : {}),
           }}
         />
         {block.caption && (
@@ -383,15 +389,17 @@ function renderBlock(block: ContentBlock, key: number) {
         key={key}
         style={{
           margin: '0 0 22px',
-          paddingLeft: 22,
+          paddingLeft: 28,
           fontFamily: SANS,
           fontSize: 14,
           color: 'var(--fg-dim)',
           lineHeight: 1.75,
+          listStyleType: block.ordered ? 'decimal' : 'disc',
+          listStylePosition: 'outside',
         }}
       >
         {block.items.map((item, i) => (
-          <li key={i} style={{ marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: item }} />
+          <li key={i} style={{ marginBottom: 8, display: 'list-item' }} dangerouslySetInnerHTML={{ __html: item }} />
         ))}
       </Tag>
     )

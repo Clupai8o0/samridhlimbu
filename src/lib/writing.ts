@@ -3,7 +3,7 @@ export type ContentBlock =
   | { type: 'blockquote'; html: string }
   | { type: 'heading'; text: string; level: 2 | 3 }
   | { type: 'code'; lang?: string; code: string; label?: string }
-  | { type: 'image'; src: string; alt: string; caption?: string }
+  | { type: 'image'; src: string; alt: string; caption?: string; lightBg?: boolean }
   | { type: 'video'; href: string; label: string }
   | { type: 'list'; items: string[]; ordered?: boolean }
   | { type: 'table'; headers: string[]; rows: string[][] }
@@ -1297,6 +1297,7 @@ H2 < Target`,
         src: '/writing/blockchain/merkle-tree.png',
         alt: 'Merkle tree with four transactions hashing pairwise into a single root',
         caption: 'A four-transaction Merkle tree. The root is the single hash that summarises the entire block.',
+        lightBg: true,
       },
       {
         type: 'paragraph',
@@ -1498,12 +1499,14 @@ H2 < Target`,
         src: '/writing/secure-tls-chat/tls-handshake-part1.png',
         alt: 'TCP handshake and TLS certificate check flow diagram',
         caption: 'Part 1 — TCP handshake into TLS Client Hello and certificate check (asymmetric).',
+        lightBg: true,
       },
       {
         type: 'image',
         src: '/writing/secure-tls-chat/tls-handshake-part2.png',
         alt: 'TLS key exchange and data transmission flow diagram',
         caption: 'Part 2 — key exchange, change cipher spec, and the symmetric data phase.',
+        lightBg: true,
       },
       { type: 'heading', level: 2, text: 'Project shape' },
       {
@@ -2219,6 +2222,381 @@ module.exports = {
       {
         type: 'blockquote',
         html: 'It will always be free. It will always be inspectable. If we both get hit by a bus, somebody else can fork it and keep going.',
+      },
+    ],
+  },
+  {
+    slug: 'lock-in-embedded-focus-tracker',
+    title: 'Lock-In: a desk-side embedded focus tracker you can build in a weekend',
+    date: '2026-06-09',
+    readMin: 14,
+    tags: ['embedded', 'arduino', 'raspberry-pi', 'python', 'sit210'],
+    excerpt: 'Every focus tool runs on the laptop you\'re trying not to get distracted by. I built a physical box instead. Arduino + Raspberry Pi + Gemini vision + a five-state FSM. Under AU$70. Boot-on-power.',
+    featured: false,
+    content: [
+      { type: 'heading', level: 2, text: 'The story behind it' },
+      {
+        type: 'paragraph',
+        dropCap: true,
+        html: 'I built Lock-In because every tool for managing study focus lives on the exact device you are trying not to get distracted by. Pomodoro apps, browser blockers, screen-time dashboards. They all run on the laptop, they are easy to dismiss, and none of them can tell whether you actually focused or just left a timer ticking while you scrolled your phone in the other hand.',
+      },
+      {
+        type: 'paragraph',
+        html: 'A small physical box on the desk is a different kind of nudge. It watches the desk, makes one clear decision, and gives you feedback through lights and a buzzer. It is hard to ignore, hard to mute, and hard to game, because it is looking at the real world instead of at what the laptop reports.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The build came together over a weekend in my room. A Raspberry Pi 4 is the brain (a Pi 4 is plenty, you do not need a Pi 5). An Arduino Uno runs all the sensors and the lights. A spare laptop on the same Wi-Fi acts as a wireless camera. One Gemini API call reads what the camera sees. A five-state machine on the Pi makes every decision. Total parts cost is under AU$70 if you already have a Pi.',
+      },
+      {
+        type: 'paragraph',
+        html: 'This is a teaching case, so I am not just going to show you my finished box. I want you to be able to build a similar one. The pieces are swappable on purpose, and I will point out the few contracts that hold the whole thing together as we go. If you follow along, you will end up with a working, boot-on-power, dashboard-equipped focus tracker of your own. Everything I built (schematics, firmware, Python source, systemd units, tests) is on GitHub at <a href="https://github.com/clupai8o0/lock-in-complete" target="_blank" rel="noopener noreferrer">github.com/clupai8o0/lock-in-complete</a> if you want a reference while you build.',
+      },
+      { type: 'image', src: '/projects/lock-in/dashboard.webp', alt: 'Lock-In dashboard showing IDLE state, pomodoro ring, distraction count, and system status pills', caption: 'The Flask dashboard at port 8080.' },
+      { type: 'heading', level: 2, text: 'What it does, end to end' },
+      {
+        type: 'list',
+        ordered: true,
+        items: [
+          '<strong>The Arduino watches the desk.</strong> A PIR detects whether anyone is sitting there. An ultrasonic sensor measures how far the user is from the screen. A DHT22 reads room temperature and humidity. An LDR reads ambient light. A button takes input. Three LEDs (red, yellow, green) and a passive piezo are the output.',
+          '<strong>The Pi listens.</strong> Sensor frames stream over USB serial at 1 Hz as JSON. Button events are pushed the moment they happen.',
+          '<strong>The camera looks.</strong> Every 75 seconds the Pi grabs a JPEG from a tiny Flask server running on a laptop, sends it to Google\'s Gemini API with a strict JSON prompt, and gets back <code>{focused, confidence, observation}</code>.',
+          '<strong>The state machine decides.</strong> All of that goes into one pure-logic state machine that moves through <code>AWAY</code>, <code>IDLE</code>, <code>FOCUS</code>, <code>DEGRADING</code>, <code>BREAK</code>. It returns actions like <em>turn the LED yellow</em> or <em>play the confirm buzzer pattern</em>.',
+          '<strong>The orchestrator acts.</strong> Those actions become serial writes back to the Arduino.',
+          '<strong>The dashboard shows it.</strong> A Flask page on port 8080 displays the current state, a pomodoro ring, sensor stats, distraction count, and live online/offline pills for the Arduino, camera, and vision service.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'The whole loop runs on the Pi as two systemd services and boots automatically on power.',
+      },
+      { type: 'heading', level: 2, text: 'Things used in this project' },
+      { type: 'heading', level: 3, text: 'Hardware' },
+      {
+        type: 'table',
+        headers: ['Component', 'Qty', 'Notes'],
+        rows: [
+          ['PIR Motion Sensor (generic)', '1', 'Motion detection'],
+          ['PTS 645 Series Switch (C&K), a normal push button', '1', 'Button input'],
+          ['HC-SR04 Ultrasonic Sensor', '1', 'Distance to screen'],
+          ['Passive piezo buzzer', '1', 'Audio feedback'],
+          ['LED (generic)', '3', 'Red, yellow, green'],
+          ['DHT22 Temperature and Humidity Sensor', '1', 'Temp + humidity'],
+          ['Arduino UNO', '1', 'Sensor + actuator controller'],
+          ['Raspberry Pi 4 Model B', '1', 'Runs the orchestrator and dashboard'],
+          ['Spare laptop or phone (camera)', '1', 'Anything that can run a tiny web server on your Wi-Fi'],
+          ['Photo resistor (LDR)', '1', 'Ambient light'],
+          ['Breadboard (generic)', '1', ''],
+          ['Resistor 220 Ω', '3', 'One per LED'],
+          ['Resistor 10 kΩ', '1', 'Pull-up for the DHT22 data line, plus the LDR voltage divider'],
+          ['Jumper wires', '1 pack', ''],
+        ],
+      },
+      { type: 'heading', level: 3, text: 'Software' },
+      {
+        type: 'table',
+        headers: ['Tool', 'Purpose'],
+        rows: [
+          ['Arduino IDE', 'Flash the firmware to the Uno'],
+          ['Raspberry Pi OS (Raspbian)', 'OS on the Pi'],
+          ['Python 3', 'Orchestrator and the Flask dashboard'],
+          ['Google Gemini API key', 'Vision check — focused or not'],
+        ],
+      },
+      { type: 'heading', level: 2, text: 'Step 1: wire the Arduino' },
+      {
+        type: 'paragraph',
+        html: 'Here is the wiring laid out in Tinkercad so you can see the whole circuit at once.',
+      },
+      { type: 'image', src: '/projects/lock-in/circuit.webp', alt: 'Arduino Uno wiring diagram showing all sensors, LEDs, buzzer, and USB serial connection to Raspberry Pi', caption: 'Simulated in Tinkercad. The black TMP part on the breadboard stands in for the DHT22 (Tinkercad has no DHT22 part). In the real build that slot is a DHT22 on D7. The Raspberry Pi is not shown because the Arduino talks to it over USB only.' },
+      {
+        type: 'paragraph',
+        html: 'This is the pin map I settled on. It groups inputs at the low-numbered end and outputs at the high end, which keeps the breadboard tidy.',
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>D2</strong>: PIR OUT (<code>INT0</code>, rising edge interrupt).',
+          '<strong>D3</strong>: Button (<code>INT1</code>, <code>INPUT_PULLUP</code>, active-low).',
+          '<strong>D4</strong>: HC-SR04 TRIG (10 µs trigger pulse).',
+          '<strong>D5</strong>: HC-SR04 ECHO (pulse width equals round-trip time).',
+          '<strong>D6</strong>: LED red (+), 220 Ω to GND.',
+          '<strong>D7</strong>: DHT22 DATA, with a 10 kΩ pull-up to 5 V.',
+          '<strong>D8</strong>: LED yellow (+), 220 Ω to GND.',
+          '<strong>D9</strong>: Buzzer (+), passive piezo, driven by <code>tone()</code>.',
+          '<strong>D10</strong>: LED green (+), 220 Ω to GND.',
+          '<strong>A0</strong>: LDR tap (LDR top to 5 V, A0 between the LDR and a 10 kΩ resistor to GND).',
+          '<strong>5 V rail</strong>: PIR, HC-SR04, DHT22, LDR top.',
+          '<strong>GND rail</strong>: everything\'s ground.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'The full ASCII schematic lives in <a href="https://github.com/Clupai8o0/lock-in-complete/blob/master/docs/circuit.md" target="_blank" rel="noopener noreferrer"><code>docs/circuit.md</code></a>.',
+      },
+      {
+        type: 'paragraph',
+        html: 'A few wiring gotchas worth calling out, all of which cost me time on the first attempt:',
+      },
+      {
+        type: 'list',
+        items: [
+          'The DHT22 needs a 10 kΩ pull-up between DATA and VCC. If you bought the AM2302 breakout module it already has one on board, so do not add a second one.',
+          'The HC-SR04 only works at 5 V. Wire it to a 3.3 V rail and it will quietly return zero echoes with no error to tell you why.',
+          'The button does not need an external resistor. The firmware uses the Arduino\'s internal pull-up, so just wire D3 to the button to GND.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'Before you flash the real firmware, upload <code>arduino/lock_in_demo/lock_in_demo.ino</code> and open the Serial Monitor at 115200 baud. It cycles through every peripheral and prints a status line for each one, so you can confirm the wiring is sane before you put the orchestrator on top. This step saved me twice.',
+      },
+      { type: 'heading', level: 2, text: 'Step 2: flash the real firmware' },
+      {
+        type: 'paragraph',
+        html: 'In the Arduino IDE, install the <strong>DHT sensor library</strong> by Adafruit (it will pull in Adafruit Unified Sensor automatically). Then open <code>arduino/lock_in_arduino/lock_in_arduino.ino</code>, pick <strong>Board: Arduino Uno</strong> and the right port, and hit upload.',
+      },
+      { type: 'paragraph', html: 'The firmware does four things on a loop:' },
+      { type: 'paragraph', html: '<strong>1.</strong> Streams a 1 Hz JSON sensor frame to the Pi:' },
+      {
+        type: 'code',
+        lang: 'json',
+        code: '{"t":12345,"type":"frame","presence":true,"dist_cm":62.4,\n"temp_c":22.1,"hum":54.0,"light":418}',
+      },
+      { type: 'paragraph', html: '<strong>2.</strong> Pushes button events the moment they happen, tagged with the gesture (single, double, long):' },
+      {
+        type: 'code',
+        lang: 'json',
+        code: '{"t":12500,"type":"event","event":"button","action":"single"}',
+      },
+      { type: 'paragraph', html: '<strong>3.</strong> Listens for <code>cmd</code> messages from the Pi to drive the LEDs and buzzer:' },
+      {
+        type: 'code',
+        lang: 'json',
+        code: '{"cmd":"led","state":"FOCUS"}\n{"cmd":"buzz","pattern":"confirm"}',
+      },
+      {
+        type: 'paragraph',
+        html: '<strong>4.</strong> Runs the buzzer patterns and LED blinking from a non-blocking <code>millis()</code> loop. No <code>delay()</code> calls anywhere except the 10 µs ultrasonic trigger pulse.',
+      },
+      {
+        type: 'paragraph',
+        html: 'One thing worth knowing if you build your own. The button interrupt does almost nothing. It just records which edge fired and the timestamp, then sets a flag. The main loop reads those timestamps, debounces them, and works out whether it was a single, double, or long press. Keeping the slow work out of the interrupt is what stops the button from feeling janky.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The point of keeping the Arduino dumb is that anything timing-sensitive (button debounce, LED blink cadence, buzzer patterns) lives in the microcontroller. The Pi never has to worry about whether its serial write landed on time, and the Arduino never has to worry about anything the Pi is doing. If you are adapting this, that split is the first design choice to copy.',
+      },
+      { type: 'heading', level: 2, text: 'Step 3: set up the Pi' },
+      {
+        type: 'code',
+        lang: 'bash',
+        code: `sudo apt update && sudo apt install -y python3-venv python3-pip git
+sudo usermod -a -G dialout "$USER"
+# log out and back in for the group change to take effect
+
+git clone https://github.com/clupai8o0/lock-in-complete ~/lock-in
+cd ~/lock-in/pi
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt`,
+      },
+      {
+        type: 'paragraph',
+        html: 'Now copy <code>pi/.env.example</code> to <code>pi/.env</code> and fill in your Gemini API key and the laptop\'s LAN IP (next step).',
+      },
+      { type: 'heading', level: 2, text: 'Step 4: run the camera server on a spare laptop' },
+      {
+        type: 'paragraph',
+        html: 'I first planned to use an ESP32-CAM, but in my room it kept dropping frames over Wi-Fi and the JPEGs came back blurry under desk lamps. The simpler answer was a tiny Flask server on a spare laptop that serves a JPEG on <code>GET /capture</code> whenever it is asked. The Pi pulls a frame on its own schedule.',
+      },
+      {
+        type: 'paragraph',
+        html: 'That swap is a good example of the "keep the pieces swappable" idea. The Pi never cared what was on the other end of that URL, so changing the camera was a one-line config change, not a rewrite. If you want to use a phone or an ESP32-CAM instead, you only have to serve a JPEG at one URL.',
+      },
+      {
+        type: 'code',
+        lang: 'bash',
+        code: 'cd mac_camera\npip install -r requirements.txt\npython mac_camera_server.py --port 8081',
+      },
+      {
+        type: 'paragraph',
+        html: 'Find the laptop\'s IP (<code>ipconfig getifaddr en0</code> on macOS, <code>hostname -I</code> on Linux). From the Pi, confirm it works:',
+      },
+      {
+        type: 'code',
+        lang: 'bash',
+        code: 'curl http://<laptop-ip>:8081/capture --output test.jpg',
+      },
+      {
+        type: 'paragraph',
+        html: 'Set <code>CAMERA_URL=http://&lt;laptop-ip&gt;:8081/capture</code> in the Pi\'s <code>.env</code>.',
+      },
+      { type: 'heading', level: 2, text: 'Step 5: run it' },
+      {
+        type: 'code',
+        lang: 'bash',
+        code: 'cd ~/lock-in/pi\nsource .venv/bin/activate\n./run.sh',
+      },
+      {
+        type: 'paragraph',
+        html: '<code>run.sh</code> starts both the orchestrator and the Flask dashboard. Open <code>http://&lt;pi-ip&gt;:8080/</code> in any browser on your LAN. You will see a state badge, a pomodoro ring, four stat cards, and three "system" pills showing Arduino, Camera, and Vision online status.',
+      },
+      {
+        type: 'paragraph',
+        html: 'Sit at the desk and the state goes to IDLE within five seconds. Single-press the button and the state goes to FOCUS, the buzzer plays the confirm pattern, and the session begins. Pick up your phone in front of the camera and the state goes to DEGRADING while the buzzer nags you back.',
+      },
+      {
+        type: 'paragraph',
+        html: 'To make it persistent across reboots, install the two systemd units in <code>pi/systemd/</code> and enable them. The Pi then becomes a fully autonomous appliance. Power it on and it just works.',
+      },
+      { type: 'heading', level: 2, text: 'How the code is organised' },
+      {
+        type: 'paragraph',
+        html: 'The core of the Pi side is a handful of small Python files, each doing one job. That one rule is what kept the project from sprawling.',
+      },
+      {
+        type: 'code',
+        lang: 'text',
+        code: `pi/
+  config.py          # env vars to a dataclass
+  database.py        # SQLite schema + queries
+  serial_reader.py   # async Arduino bridge, auto-reconnect
+  camera_client.py   # async HTTP /capture client
+  vision_judge.py    # Gemini call + strict JSON parser
+  fsm.py             # the state machine, pure logic
+  orchestrator.py    # wires every module into asyncio tasks
+  main.py            # entry point
+  dashboard/app.py   # Flask, read-only over snapshot.json + SQLite`,
+      },
+      {
+        type: 'paragraph',
+        html: 'There is also a small MQTT bus (<code>mqtt_bus.py</code>) and a watchdog helper (<code>sd_notify.py</code>) if you want the dashboard and orchestrator to talk over MQTT and report health to systemd, but you can ignore both to start with.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The single most important design decision is that <strong>the state machine is pure logic</strong>. No I/O, no threads, no globals, no reading the wall clock inside the logic. The orchestrator pushes events in (<code>on_sensor_frame</code>, <code>on_button</code>, <code>on_vision</code>, <code>tick</code>) and the state machine returns a list of <code>Action</code> records. The orchestrator then turns those actions into side effects.',
+      },
+      {
+        type: 'code',
+        lang: 'python',
+        label: 'pi/fsm.py — the shape of an action',
+        code: `@dataclass
+class Action:
+    kind: ActionKind  # SESSION_START, LED, BUZZ, ...
+    payload: dict = field(default_factory=dict)`,
+      },
+      {
+        type: 'paragraph',
+        html: 'If you are building a similar project, this is the part to copy first, because it is the contract that makes everything else easy to test and reason about. The transitions themselves are simple:',
+      },
+      {
+        type: 'table',
+        headers: ['From', 'What happens', 'To'],
+        rows: [
+          ['AWAY', 'PIR sees someone sit down', 'IDLE'],
+          ['IDLE', 'single button press', 'FOCUS (start session, confirm buzzer)'],
+          ['FOCUS', 'vision says you are not focused', 'DEGRADING (open a distraction, nag buzzer)'],
+          ['DEGRADING', 'vision says you are focused again', 'FOCUS (close the distraction)'],
+          ['FOCUS', 'the pomodoro timer runs out', 'BREAK'],
+          ['any', 'PIR sees nobody for a while', 'AWAY'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'Because the logic is pure, you can test the whole thing with a fake clock and no hardware at all. Here is one test that walks a full distraction-then-recovery cycle:',
+      },
+      {
+        type: 'code',
+        lang: 'python',
+        label: 'pi/test_fsm.py',
+        code: `def test_vision_distraction_then_recovery(self):
+    self.fsm.on_sensor_frame(self._frame())
+    self.clock.advance(6.0); self.fsm.tick()
+    self.fsm.on_button("single")
+    self.assertEqual(self.fsm.state, State.FOCUS)
+
+    actions = self.fsm.on_vision(VisionInput(False, 0.9, "phone in hand"))
+    self.assertEqual(self.fsm.state, State.DEGRADING)
+    self.assertIn(ActionKind.DISTRACTION_OPEN, _kinds(actions))
+
+    self.fsm.on_sensor_frame(self._frame())
+    self.fsm.on_vision(VisionInput(True, 0.9, "looking at screen"))
+    self.clock.advance(70.0)
+    self.fsm.on_sensor_frame(self._frame())
+    actions = self.fsm.tick()
+    self.assertEqual(self.fsm.state, State.FOCUS)
+    self.assertIn(ActionKind.DISTRACTION_CLOSE, _kinds(actions))`,
+      },
+      {
+        type: 'paragraph',
+        html: 'There are 13 of these. Run them with:',
+      },
+      {
+        type: 'code',
+        lang: 'bash',
+        code: 'cd pi && python -m unittest test_fsm.py',
+      },
+      {
+        type: 'paragraph',
+        html: 'The second most important decision is that <strong>everything degrades gracefully</strong>. A failed Gemini call is one log line and a skipped cycle. An unplugged Arduino is a 5-second reconnect loop while the state machine holds whatever state it was in. A missing camera server is the same idea: vision pauses and the sensor logic keeps running. None of these is an error. They are all designed-for code paths.',
+      },
+      {
+        type: 'paragraph',
+        html: 'Here is what that looks like in the camera client:',
+      },
+      {
+        type: 'code',
+        lang: 'python',
+        label: 'pi/camera_client.py',
+        code: `try:
+    async with self._session.get(self.url) as resp:
+        if resp.status != 200:
+            self.online = False
+            return None
+        jpeg = await resp.read()
+        ...
+        self.online = True
+        return CameraCapture(jpeg=jpeg)
+except asyncio.TimeoutError:
+    self.last_error = "timeout"
+    self.online = False
+    return None
+except aiohttp.ClientError as e:
+    self.last_error = f"client error: {e}"
+    self.online = False
+    return None`,
+      },
+      {
+        type: 'paragraph',
+        html: 'No <code>raise</code>, only <code>return None</code>. The orchestrator checks for None and moves on. The dashboard reads the <code>online</code> flag and shows the status to the user. That one convention made the rest of the system simpler to write and reason about.',
+      },
+      { type: 'heading', level: 2, text: 'What you can extend' },
+      {
+        type: 'paragraph',
+        html: 'This setup is small enough to read in one sitting, and it is built so each module can be swapped without touching the others. A few directions if you want to keep going:',
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>Local vision model.</strong> Replace <code>vision_judge.py</code> with an Ollama plus Moondream2 version. Same return type, same <code>judge(jpeg)</code> shape. You would lose the API dependency entirely.',
+          '<strong>More gestures.</strong> The Arduino already decodes single, double, and long press. Adding a quintuple-press for "panic-end-session" is a one-line change in <code>fsm.on_button</code>.',
+          '<strong>Habit graphs.</strong> The dashboard has a <code>/history</code> page and a CSV export but no graphs yet. The data model already records every transition with a timestamp, so a Chart.js view over the last 30 days would be about 20 lines of JavaScript.',
+          '<strong>Mobile dashboard.</strong> It works on a phone but is cramped, since the layout is desktop-first today.',
+        ],
+      },
+      { type: 'heading', level: 2, text: 'Reflection' },
+      {
+        type: 'paragraph',
+        html: 'Writing this article turned out to be the best debugging tool I had on the whole project. Going through it section by section forced me to re-read every module from a stranger\'s point of view. I found a handful of dead imports, one near-duplicate JSON call, and a sensor threshold that had been wrong since the second day, and I cleaned all of them up while drafting.',
+      },
+      {
+        type: 'paragraph',
+        html: 'More importantly, explaining <em>why</em> each decision was made surfaced the real lesson. The cleanest fault-tolerant systems are the ones where failure is part of the normal API of every module, not something bolted on at the end. As soon as <code>camera_client.capture()</code> returned <code>None</code> on any error and the orchestrator treated that as a normal code path, the rest of the system got simpler. No exception flows, no "is this thing still alive?" branching, no special cases. That idea, that handling absence is cheaper than handling exceptions, is the thing I will carry into the next embedded project. Producing a teaching case is what made me notice it, so I found the format genuinely useful for my own learning, not just for the marks.',
+      },
+      { type: 'heading', level: 2, text: 'Disclosure' },
+      {
+        type: 'paragraph',
+        html: 'This article is part of an assignment submitted to <strong>Deakin University, School of IT, Unit SIT210/730 Embedded Systems Development</strong> (Task 10.1D: Project Teaching Case). Repository: <a href="https://github.com/clupai8o0/lock-in-complete" target="_blank" rel="noopener noreferrer">github.com/clupai8o0/lock-in-complete</a>.',
       },
     ],
   },
