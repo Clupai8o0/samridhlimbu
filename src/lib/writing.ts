@@ -2309,6 +2309,7 @@ module.exports = {
         html: 'Here is the wiring laid out in Tinkercad so you can see the whole circuit at once.',
       },
       { type: 'image', src: '/projects/lock-in/circuit.webp', alt: 'Arduino Uno wiring diagram showing all sensors, LEDs, buzzer, and USB serial connection to Raspberry Pi', caption: 'Simulated in Tinkercad. The black TMP part on the breadboard stands in for the DHT22 (Tinkercad has no DHT22 part). In the real build that slot is a DHT22 on D7. The Raspberry Pi is not shown because the Arduino talks to it over USB only.' },
+      { type: 'image', src: '/projects/lock-in/tinkercad.webp', alt: 'Tinkercad breadboard simulation showing HC-SR04, PIR, buzzer, LEDs, TMP (DHT22 stand-in), and LDR wired to an Arduino Uno', caption: 'The same circuit in Tinkercad\'s breadboard view. Colour-coded wires match the pin map below.' },
       {
         type: 'paragraph',
         html: 'This is the pin map I settled on. It groups inputs at the low-numbered end and outputs at the high end, which keeps the breadboard tidy.',
