@@ -1,36 +1,62 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { CodeBlock } from '@/components/code-block'
+import { Shot } from '@/components/case-study/shot'
 import { PROJECTS } from '@/lib/data'
+
+const DESCRIPTION =
+  'CTO and sole developer of hoddle.org, a mentorship platform for international students in Melbourne: 26K+ lines, 51 routes, 23 Postgres tables behind row-level security, weighted mentor matching. 2nd at Study Melbourne Leadership 4Impact.'
+
+export const metadata: Metadata = {
+  title: 'Hoddle Melbourne · mentorship platform',
+  description: DESCRIPTION,
+  alternates: { canonical: '/projects/hoddle' },
+  openGraph: {
+    type: 'article',
+    url: '/projects/hoddle',
+    title: 'Hoddle Melbourne · Samridh Limbu',
+    description: DESCRIPTION,
+    images: [{ url: '/projects/hoddle/dashboard.png', width: 1573, height: 991, alt: 'The Hoddle student dashboard' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hoddle Melbourne · Samridh Limbu',
+    description: DESCRIPTION,
+    images: ['/projects/hoddle/dashboard.png'],
+  },
+}
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
 const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
-const GREEN = '#4ade80'
+const GREEN = 'var(--term-green)'
+
+const PROSE = { fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.65, maxWidth: 640 }
+
+const SCALE = [
+  { k: 'lines', v: '26K+' },
+  { k: 'routes', v: '51' },
+  { k: 'postgres tables', v: '23' },
+  { k: 'migrations', v: '17' },
+  { k: 'server action files', v: '19' },
+]
 
 const TIMELINE = [
-  { date: 'Mar 2026', title: 'Foundation', body: 'Joined as CTO and sole developer. Rejected every third-party auth provider — one Supabase service for auth, Postgres, and RLS. Set up full project scaffold: design tokens, Tailwind v4 theme, route groups, Supabase clients (server, browser, admin), and TypeScript strict mode.' },
-  { date: 'Mar 2026', title: 'Auth & onboarding', body: 'Email magic link auth via admin.auth.admin.generateLink() and nodemailer, bypassing Supabase SMTP entirely. 5-step student wizard — university, country of origin, goals, challenges, fields of interest — Zod-validated on both client and server. Partial saves persist between steps.' },
-  { date: 'Apr 2026', title: 'Matching algorithm', body: 'scoreMentor(): country +30, field overlap +15 each, challenges and goals +10 each. IO-separated — zero database calls in the scoring function. Scores stored in mentor_recommendations, recomputed nightly at 02:00 AEST via Vercel cron and on-demand after onboarding updates. "Why this mentor" reasoning line rendered on the dashboard.' },
-  { date: 'Apr 2026', title: 'Mentor invite system', body: 'Token-gated invite flow: admin sends an email generating a row in mentor_invites with a hashed token, 14-day expiry, and audit columns. Mentor clicks through to /mentor-signup/[token], validated server-side before rendering. After magic-link auth, acceptMentorInvite() sets role=mentor and routes to a 4-step onboarding wizard.' },
-  { date: 'Apr 2026', title: 'Content library', body: 'Mentors author articles with a Tiptap rich-text editor, embed YouTube/Vimeo via URL, and attach downloadable resources stored in Supabase Storage with signed URLs (25 MB limit). Students browse with type filter chips and offset pagination (18 per page). View counts increment atomically via server action on each load.' },
-  { date: 'Apr 2026', title: 'Community forums', body: '5 seeded categories: First Semester Struggles, Career & Internships, Living in Melbourne, Academic Writing, Visa & Admin. Threads with two-level nested replies, 4 reaction types (Helpful, Thanks, Hugs, Insightful), view counter via SECURITY DEFINER RPC, anonymous posting for students, quote-reply and @mention shortcuts. Mentors always post as identified.' },
-  { date: 'Apr 2026', title: 'Live Q&A and sessions', body: 'Mentors schedule sessions with title, description, datetime, duration, capacity, and a meeting URL. Students register (capacity-enforced server-side), submit questions with an anonymous toggle, and receive recordings after. Three Vercel cron jobs handle the full session lifecycle.' },
-  { date: 'Apr 2026', title: 'Notification system', body: 'Single notify(recipientId, type, payload) helper writes to the notifications table and conditionally dispatches email based on per-type, per-channel preference toggles. In-app bell uses a Supabase Realtime subscription — unread count stays live without polling. 6 notification types.' },
-  { date: 'Apr 2026', title: 'Direct messaging', body: 'Private conversations between students and mentors: conversations, messages, and conversation_read_cursors tables. Rate-limited to 30 messages per 10 minutes. new_chat_message notification fires with a 5-minute per-conversation debounce to avoid notification flooding.' },
-  { date: 'Apr 2026', title: 'Google OAuth + feedback pipeline', body: 'Added Google sign-in alongside magic link. Floating feedback widget on all browse pages (Bug / Suggestion / Confusion / Other) forwarded to Airtable via a server action. Auth flows through /auth/confirm client component that handles the implicit-flow hash fragment the server callback route cannot reach.', current: true },
+  { date: 'Mar 2026', title: 'Foundation and auth', body: 'Joined as CTO and sole developer. One Supabase project for auth, Postgres and row-level security. Magic-link sign-in and a 5-step student onboarding wizard, Zod-validated on client and server.' },
+  { date: 'Apr 2026', title: 'Matching and mentor invites', body: 'Weighted mentor matching, recomputed nightly and after onboarding changes. Mentors join through a token-gated invite with a 14-day expiry and a full audit trail.' },
+  { date: 'Apr 2026', title: 'Content and forums', body: 'Mentors publish articles, videos and downloads. Forums have two-level replies, reactions and anonymous posting for students. Mentors always post under their name.' },
+  { date: 'Apr 2026', title: 'Live Q&As, DMs, notifications', body: 'Capacity-limited live sessions, rate-limited direct messages, and one notify() helper behind a realtime in-app bell and per-type email preferences.' },
+  { date: 'Apr 2026', title: 'Google sign-in and feedback', body: 'Google OAuth alongside magic links, and a feedback widget on every browse page that files bugs and suggestions.', current: true },
 ]
 
 const DECISIONS = [
-  ['supabase rls', 'application-layer guards', 'Row Level Security enforces data access at the database layer. A bug in middleware can expose data; a bug in application code cannot bypass RLS. Every table has RLS enabled with explicit policies. The admin client is the only surface that bypasses RLS — used only for system operations like notify() and recommendation recompute.'],
-  ['three supabase clients', 'single shared client', 'Server client is cookie-bound, used in RSCs and server actions. Browser client powers the Realtime notification bell. Admin client uses the service role key and is never imported from app/ or components/ — the key has no NEXT_PUBLIC_ prefix and never ships to the browser.'],
-  ['token table for invites', 'magic link via email provider', 'Owning the invite row means owning the full lifecycle: custom expiry, re-invite without blocking, revocation, reuse prevention, and full audit trail via created_at, expires_at, accepted_at. No dependency on third-party link delivery semantics.'],
-  ['pure scoring function', 'coupled db + score logic', 'scoreMentor() takes two plain objects and returns a score and a reasoning string — zero database calls. computeRecommendationsForProfile() handles all Supabase interaction separately. The scoring function is importable into tests with no mocking required.'],
-  ['nightly precompute', 'on-demand scoring', 'Match scores are read far more often than profiles change. Precomputing nightly keeps the dashboard to a single ORDER BY score DESC query, running at 02:00 AEST. Scores are also recomputed immediately after any profile update — on-demand only when stale.'],
-  ['nodemailer + gmail smtp', 'supabase smtp', 'Generates the magic link server-side via admin.auth.admin.generateLink() and sends via nodemailer. Removes Supabase SMTP config dependency and fixes a production bug where links landed at /?code=… because NEXT_PUBLIC_SITE_URL was missing from Vercel env.'],
-  ['claude.md + arch docs', 'ad-hoc onboarding', 'The repo has a CLAUDE.md master briefing, docs/architecture.md, docs/database-schema.md, docs/component-library.md, and docs/design.md. Future contributors and agents can understand the system without a walkthrough. Claude Code uses these docs on every task before touching a file.'],
+  ['supabase rls', 'application-layer guards', 'Row-level security enforces access in the database, so a bug in middleware cannot leak another user’s data. Every table has explicit policies. Only system jobs, like notify() and the recommendation recompute, use the admin client.'],
+  ['three supabase clients', 'one shared client', 'A cookie-bound server client for server components and actions, a browser client for the realtime bell, and an admin client that is never imported from app/ or components/. The service-role key has no NEXT_PUBLIC_ prefix and never reaches the browser.'],
+  ['pure scoring function', 'scoring mixed with queries', 'scoreMentor() takes two plain objects and returns a score and a reason, with no database calls. A separate function does the Supabase work, so the scoring is tested without mocks.'],
+  ['nightly precompute', 'scoring on every request', 'Scores are read far more often than profiles change. Precomputing at 02:00 AEST keeps the dashboard to one ORDER BY score DESC query, and a profile update recomputes that student straight away.'],
 ]
 
 const SCORE_LINES = [
@@ -38,19 +64,19 @@ const SCORE_LINES = [
   `  <span style="color:#c084fc">let</span> score = <span style="color:#fcd34d">0</span>`,
   `  <span style="color:#c084fc">const</span> reasonParts: <span style="color:#2dd4bf">string</span>[] = []`,
   ``,
-  `  <span style="color:#71717a">// country of origin — strongest signal (+30)</span>`,
+  `  <span style="color:#a1a1aa">// country of origin, the strongest signal (+30)</span>`,
   `  <span style="color:#c084fc">if</span> (student.country_of_origin === mentor.country_of_origin) {`,
   `    score += <span style="color:#fcd34d">30</span>`,
   `    reasonParts.<span style="color:#60a5fa">push</span>(<span style="color:#fbbf24">\`Also from \${mentor.country_of_origin}\`</span>)`,
   `  }`,
   ``,
-  `  <span style="color:#71717a">// field of interest overlap (+15 each)</span>`,
+  `  <span style="color:#a1a1aa">// field of interest overlap (+15 each)</span>`,
   `  <span style="color:#c084fc">const</span> fieldMatches = student.fields_of_interest.<span style="color:#60a5fa">filter</span>(`,
   `    f =&gt; mentor.expertise.<span style="color:#60a5fa">includes</span>(f)`,
   `  )`,
   `  score += fieldMatches.length * <span style="color:#fcd34d">15</span>`,
   ``,
-  `  <span style="color:#71717a">// challenges + goals overlap (+10 each)</span>`,
+  `  <span style="color:#a1a1aa">// challenges + goals overlap (+10 each)</span>`,
   `  score += student.challenges.<span style="color:#60a5fa">filter</span>(c =&gt; mentor.expertise.<span style="color:#60a5fa">includes</span>(c)).length * <span style="color:#fcd34d">10</span>`,
   `  score += student.goals.<span style="color:#60a5fa">filter</span>(g =&gt; mentor.expertise.<span style="color:#60a5fa">includes</span>(g)).length * <span style="color:#fcd34d">10</span>`,
   ``,
@@ -71,245 +97,219 @@ const DB_TABLES = [
 ]
 
 const CRONS: [string, string, string][] = [
-  ['/api/cron/session-reminders', 'hourly', '24h pre-session reminder emails to all registrants'],
-  ['/api/cron/session-starting-soon', 'every 5 min', 'In-app + email push 10–20 min before sessions start'],
-  ['/api/cron/recompute-recommendations', 'nightly 02:00 AEST', 'Recompute match scores for all onboarded students'],
+  ['/api/cron/session-reminders', 'hourly', 'Reminder emails to everyone registered, 24 hours before a session'],
+  ['/api/cron/session-starting-soon', 'every 5 min', 'In-app and email nudge 10 to 20 minutes before a session starts'],
+  ['/api/cron/recompute-recommendations', 'nightly 02:00 AEST', 'Recompute match scores for every onboarded student'],
+]
+
+const NEXT = [
+  ['Mentee to mentor', 'a structured path for students to mentor the next cohort'],
+  ['Matching v2', 'weights tuned from real usage instead of fixed values'],
+  ['PWA', 'installable, with web push notifications'],
 ]
 
 export default function HoddlePage() {
-  const hoddle = PROJECTS.find(p => p.slug === 'hoddle')!
+  const hoddle = PROJECTS.find(p => p.slug === 'hoddle')
 
   return (
     <PageShell>
-      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 20px' }}>
 
         <PageHeader />
 
         {/* breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 16 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/hoddle
         </div>
 
         {/* Banner */}
-        <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
-            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Hoddle Melbourne</h1>
+        <div data-stagger-item style={{ padding: '24px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', columnGap: 12, rowGap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 'var(--text-2xl)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Hoddle Melbourne</h1>
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · CTO</span>
           </div>
-          <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            International mentorship platform connecting first-year students at Melbourne universities with verified senior mentors. Built end-to-end as sole developer — schema, auth, matching algorithm, community layer, and background infrastructure.
+          <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 18px' }}>
+            A mentorship platform that matches first-year international students in Melbourne with verified senior mentors. I built it end to end as the sole developer: schema, auth, matching, the community features and the background jobs.
           </p>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://hoddle.org" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> hoddle.org</a>
-            <a href="https://github.com/clupai8o0/hoddle" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> code</a>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <a href="https://hoddle.org" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> hoddle.org</a>
+            <a href="https://github.com/clupai8o0/hoddle" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> code</a>
           </div>
         </div>
 
-        {/* Demo video */}
-        <div style={{ marginBottom: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <video
-            src="/projects/hoddle/demo.mp4"
-            controls
-            playsInline
-            style={{ width: '100%', display: 'block', maxHeight: 420 }}
+        {/* Hero shot */}
+        <div data-stagger-item style={{ marginBottom: 24 }}>
+          <Shot
+            src="/projects/hoddle/dashboard.png"
+            alt="The Hoddle student dashboard: a greeting, the student's goals and areas of interest, and a checklist of onboarding milestones with progress bars"
+            width={1573}
+            height={991}
+            caption="The student dashboard on hoddle.org."
+            priority
           />
         </div>
 
-        {/* Traction metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
-          {[
-            { k: 'verified mentors', v: '10+' },
-            { k: 'early-access mentees', v: '100+' },
-            { k: 'linkedin impressions', v: '14,040' },
-          ].map((m, i) => (
-            <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
-              <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
-              <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
+        {/* Scale */}
+        <div data-reveal style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 40 }}>
+          {SCALE.map((m) => (
+            <div key={m.k} style={{ padding: '14px 16px 14px 0' }}>
+              <div style={{ fontFamily: DISPLAY, fontSize: 'var(--text-lg)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>{m.v}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.06em', lineHeight: 1.4 }}>{m.k}</div>
             </div>
           ))}
         </div>
 
-        {/* Hero screenshot */}
-        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <video src="/projects/hoddle/dashboard.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
+        {/* Context */}
+        <div style={{ marginBottom: 40 }}>
+          <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
+          <div>
+            <p style={{ ...PROSE, margin: '0 0 12px' }}>
+              CTO and sole developer, Mar 2026 to now. Mentors publish articles, host live Q&amp;As and share their story. Students are matched on shared background and goals, browse the content library and ask questions in the forums.
+            </p>
+            <p style={{ ...PROSE, margin: 0 }}>
+              Built through the Study Melbourne Leadership 4Impact program with co-founders Aarav Verma and Tanvir Kaur Sohi. We placed 2nd at the final pitch in May 2026.
+            </p>
+          </div>
         </div>
 
-        {/* Context */}
-        <div style={{ marginBottom: 28 }}>
-          <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: '0 0 10px' }}>
-            CTO and sole developer, Mar 2026–present. Hoddle is a one-to-many mentorship platform — mentors publish articles, host live Q&As, and tell their story; students get matched based on shared background and goals, browse a content library, and ask questions in forums. Eventually students graduate into mentors themselves.
-          </p>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: '0 0 10px' }}>
-            I owned the full stack from day one: database schema and RLS policies, auth flows, matching algorithm, community features, background jobs, and admin tooling. The codebase sits at 26,000+ lines across 51 routes, 38 components, 19 server action files, and 17 migrations.
-          </p>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
-            Built as part of the Study Melbourne Leadership 4Impact Program alongside co-founders Aarav Verma and Tanvir Kaur Sohi. The team placed 2nd at the final pitch day.
-          </p>
+        {/* Demo video: native aspect ratio, never cropped */}
+        <div data-reveal style={{ marginBottom: 40 }}>
+          <div style={{ border: '1px solid var(--border)', borderRadius: 2, overflow: 'hidden', background: 'var(--bg-2)' }}>
+            <video
+              src="/projects/hoddle/demo.mp4"
+              controls
+              muted
+              playsInline
+              preload="metadata"
+              aria-label="Walkthrough of hoddle.org"
+              style={{ width: '100%', height: 'auto', aspectRatio: '1664 / 1080', objectFit: 'contain', display: 'block' }}
+            />
+          </div>
+          <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8 }}>Walkthrough of hoddle.org.</div>
         </div>
 
         {/* Timeline */}
         <div className="section-label" style={{ fontFamily: MONO }}>Timeline</div>
-        <div style={{ position: 'relative', paddingLeft: 22, marginBottom: 28 }}>
-          <div style={{ position: 'absolute', left: 5, top: 6, bottom: 6, width: 1, background: 'var(--border)' }} />
+        <div style={{ marginBottom: 40 }}>
           {TIMELINE.map((e, i) => (
-            <div key={i} style={{ position: 'relative', paddingBottom: 18 }}>
-              <div style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />
-              <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
-              <div style={{ fontFamily: MONO, fontSize: 12.5, color: 'var(--fg)', marginBottom: 3 }}>{e.title}</div>
-              <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.55, maxWidth: 520 }}>{e.body}</div>
+            <div key={i} style={{ position: 'relative', marginLeft: 5, paddingLeft: 22, paddingBottom: i === TIMELINE.length - 1 ? 0 : 20, borderLeft: '1px solid var(--border)' }}>
+              <div style={{ position: 'absolute', left: -6, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{e.date}</div>
+              <div style={{ fontFamily: SANS, fontSize: 15, fontWeight: 600, color: 'var(--fg)', marginBottom: 4 }}>{e.title}</div>
+              <div style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.6, maxWidth: 560 }}>{e.body}</div>
             </div>
           ))}
         </div>
 
-        {/* Screenshot — matching dashboard */}
-        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <img src="/projects/hoddle/mentor-rec.webp" alt="Mentor matching dashboard" style={{ width: '100%', display: 'block' }} />
+        {/* Matching screenshot */}
+        <div data-reveal style={{ marginBottom: 40 }}>
+          <Shot
+            src="/projects/hoddle/mentor-rec.webp"
+            alt="The Hoddle student dashboard with recommended mentor cards, each showing university, expertise tags and a reason for the match"
+            width={3022}
+            height={1798}
+            caption="Recommended mentors, each with a one-line reason for the match."
+          />
         </div>
 
         {/* Key decisions */}
         <div className="section-label" style={{ fontFamily: MONO }}>Key technical decisions</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
-          {DECISIONS.map(([a, b, note], i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 12 }}>
-              <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
-              <div>
-                <div style={{ fontFamily: MONO, fontSize: 11, marginBottom: 4 }}>
-                  <span style={{ color: GREEN }}>{a}</span>
-                  <span style={{ color: 'var(--muted-2)' }}> › </span>
-                  <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
-                </div>
-                <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 40 }}>
+          {DECISIONS.map(([a, b, note]) => (
+            <div key={a}>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', marginBottom: 6, lineHeight: 1.5 }}>
+                <span style={{ color: GREEN }}>{a}</span>
+                <span style={{ color: 'var(--muted)' }}> over </span>
+                <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
               </div>
+              <div style={{ ...PROSE }}>{note}</div>
             </div>
           ))}
         </div>
 
         {/* Matching algorithm */}
         <div className="section-label" style={{ fontFamily: MONO }}>The matching algorithm</div>
-        <div style={{ marginBottom: 12 }}>
+        <div style={{ marginBottom: 14 }}>
           <CodeBlock lines={SCORE_LINES} filename="lib/matching/score.ts" lang="ts" />
         </div>
-        <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
-          Country is weighted highest because shared migration context — knowing what it&apos;s like to arrive from the same country — matters more than overlapping in the same field. The reasoning string is stored alongside the score and rendered on the student dashboard as a &quot;why this mentor&quot; line. Scores above a threshold of 10 count as real matches; below that, the algorithm backfills from top-ranked verified mentors to always surface five recommendations.
+        <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
+          Country carries the most weight because arriving from the same place matters more than studying the same field. The reason string is stored with the score and shown on the dashboard. A score above 10 counts as a real match; below that, top-ranked verified mentors fill the list so every student sees five.
         </p>
 
-        {/* Screenshot — forums */}
-        <div style={{ marginBottom: 12, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <video src="/projects/hoddle/forum.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
-        </div>
-
-        {/* Mentors */}
-        <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <video src="/projects/hoddle/mentors.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
-        </div>
-
         {/* Database */}
-        <div style={{ marginBottom: 28 }}>
-          <div className="section-label" style={{ fontFamily: MONO }}>Database</div>
-          <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 10 }}>17 migrations · ~1,500 lines of SQL</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 14 }}>
-            {DB_TABLES.map(t => (
-              <span key={t} className="pill" style={{ fontFamily: MONO, fontSize: 9 }}>{t}</span>
-            ))}
-          </div>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>storage buckets</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-            {['content-media (public)', 'content-resources (signed)', 'session-recordings (private)', 'story-images (public)', 'avatars (public)'].map(b => (
-              <span key={b} className="pill" style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted)' }}>{b}</span>
-            ))}
-          </div>
-        </div>
-
-        {/* Background jobs */}
-        <div style={{ marginBottom: 28 }}>
-          <div className="section-label" style={{ fontFamily: MONO }}>Background jobs</div>
+        <div className="section-label" style={{ fontFamily: MONO }}>Database and jobs</div>
+        <div style={{ marginBottom: 40 }}>
+          <details style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', padding: '12px 0', marginBottom: 20 }}>
+            <summary style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg-dim)', cursor: 'pointer' }}>23 tables · 17 migrations · 5 storage buckets</summary>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14 }}>
+              {DB_TABLES.map(t => (
+                <span key={t} className="pill" style={{ fontFamily: MONO }}>{t}</span>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
+              {['content-media (public)', 'content-resources (signed)', 'session-recordings (private)', 'story-images (public)', 'avatars (public)'].map(b => (
+                <span key={b} className="pill" style={{ fontFamily: MONO, color: 'var(--fg-dim)' }}>{b}</span>
+              ))}
+            </div>
+          </details>
           <div style={{ borderTop: '1px solid var(--border)' }}>
-            {CRONS.map(([route, schedule, desc], i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 16, padding: '10px 0', borderBottom: '1px solid var(--border)', alignItems: 'start' }}>
-                <div>
-                  <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--fg)', marginBottom: 3 }}>{route}</div>
-                  <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)' }}>{desc}</div>
+            {CRONS.map(([route, schedule, desc]) => (
+              <div key={route} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', columnGap: 16, rowGap: 4, padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
+                <div style={{ minWidth: 0, flex: '1 1 260px' }}>
+                  <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg)', marginBottom: 4, overflowWrap: 'anywhere' }}>{route}</div>
+                  <div style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.5 }}>{desc}</div>
                 </div>
-                <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', whiteSpace: 'nowrap', paddingTop: 2 }}>{schedule}</div>
+                <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', whiteSpace: 'nowrap' }}>{schedule}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Stack */}
-        <div className="section-label" style={{ fontFamily: MONO }}>Stack</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 28 }}>
-          {Object.entries(hoddle.stack).map(([label, items]) => (
-            <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
-              <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 72, flexShrink: 0 }}>{label}</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{items.join(' · ')}</span>
+        {hoddle ? (
+          <>
+            <div className="section-label" style={{ fontFamily: MONO }}>Stack</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 40 }}>
+              {Object.entries(hoddle.stack).map(([label, items]) => (
+                <div key={label} style={{ display: 'flex', columnGap: 12, rowGap: 2, alignItems: 'baseline', flexWrap: 'wrap' }}>
+                  <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg-dim)', lineHeight: 1.6 }}>{(items as string[]).join(' · ')}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : null}
+
+        {/* Testimonial */}
+        <figure data-reveal style={{ margin: '0 0 40px', borderLeft: '1px solid var(--accent)', paddingLeft: 16 }}>
+          <blockquote style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.65, margin: '0 0 8px', fontStyle: 'italic' }}>
+            &ldquo;They had a really easy time navigating through the UI. The experience matched the promise.&rdquo;
+          </blockquote>
+          <figcaption style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            Early-access cohort · Hoddle Melbourne
+          </figcaption>
+        </figure>
+
+        {/* Roadmap */}
+        <div className="section-label" style={{ fontFamily: MONO }}>What&apos;s next</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 40 }}>
+          {NEXT.map(([label, desc]) => (
+            <div key={label} style={{ display: 'grid', gridTemplateColumns: '16px 1fr', gap: 8, alignItems: 'baseline' }}>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>›</span>
+              <div style={{ lineHeight: 1.6 }}>
+                <span style={{ fontFamily: SANS, fontSize: 15, fontWeight: 600, color: 'var(--fg)' }}>{label}</span>
+                <span style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>: {desc}</span>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Scale */}
-        <div style={{ marginBottom: 28 }}>
-          <div className="section-label" style={{ fontFamily: MONO }}>Scale</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-            {[
-              { k: 'lines', v: '26K+' },
-              { k: 'routes', v: '51' },
-              { k: 'components', v: '38' },
-              { k: 'server actions', v: '19' },
-              { k: 'migrations', v: '17' },
-            ].map((m, i) => (
-              <div key={m.k} style={{ padding: '12px 14px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
-                <div style={{ fontFamily: DISPLAY, fontSize: 18, color: 'var(--fg)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
-                <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Testimonial */}
-        <div style={{ marginBottom: 28, borderLeft: '2px solid var(--accent)', paddingLeft: 16 }}>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: '0 0 8px', fontStyle: 'italic' }}>
-            &ldquo;They had a really easy time navigating through the UI — the experience matched the promise.&rdquo;
-          </p>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            Early-access cohort · Hoddle Melbourne
-          </div>
-        </div>
-
-        {/* Roadmap */}
-        <div style={{ marginBottom: 28 }}>
-          <div className="section-label" style={{ fontFamily: MONO }}>What&apos;s next</div>
-          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 14 }}>
-            Phase 3 starts after two weeks of production telemetry. The platform is designed to extend — every feature boundary is RLS-enforced and IO-separated so new surfaces can be added without touching existing data contracts.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-            {[
-              ['Mentor badges + achievement tiers', 'gamified progression for verified mentors'],
-              ['Mentee → mentor graduation program', 'structured pathway for students to give back to the next cohort'],
-              ['Multi-language UI', 'Mandarin, Hindi, Vietnamese, Korean — the four largest student cohorts'],
-              ['PWA', 'installable shell, offline mode, web push notifications'],
-              ['University calendar integrations', 'Unimelb, Monash, RMIT ICS feeds synced to session scheduling'],
-              ['Matching algorithm v2', 'telemetry-driven collaborative filter replacing the static weight model'],
-              ['AWS backend migration', 'Lambda + RDS for multi-region deployment, reduced cold start latency, and decoupling from Vercel function limits'],
-            ].map(([label, desc], i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 10, alignItems: 'baseline' }}>
-                <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--accent)', paddingTop: 2 }}>›</span>
-                <div>
-                  <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--fg)' }}>{label}</span>
-                  <span style={{ fontFamily: SANS, fontSize: 11, color: 'var(--muted-2)', marginLeft: 8 }}>{desc}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Footer actions */}
-        <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
-          <a href="https://hoddle.org" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="external" size={11} /> hoddle.org</a>
-          <a href="https://github.com/clupai8o0/hoddle" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
-          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
+        <div style={{ display: 'flex', gap: 8, paddingTop: 20, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
+          <a href="https://hoddle.org" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> hoddle.org</a>
+          <a href="https://github.com/clupai8o0/hoddle" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> source</a>
+          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO }}>← back to projects</Link>
         </div>
 
       </div>

@@ -1,31 +1,41 @@
 import type { MetadataRoute } from 'next'
+import { POSTS } from '@/lib/writing'
 
+// Must match metadataBase in src/app/layout.tsx.
 const BASE = 'https://samridhlimbu.com'
 
+// Fixed so the sitemap only changes when the content does. Bump it on a real update.
+const LAST_MODIFIED = new Date('2026-10-24')
+
+// One entry per src/app/projects/<slug>/page.tsx.
+const PROJECT_SLUGS = [
+  'hoddle', 'kairos', 'aria', 'r1gpt', 'dsec', 'tempo',
+  'king-glazing', 'allarkive', 'acknowledgement-force', 'krishnaveni', 'nmmun', 'tapcraft',
+  'lock-in', 'govchat', 'farmers-intuition', 'notes-app', 'load-balancer',
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date()
-
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: BASE,             lastModified: now, changeFrequency: 'weekly',  priority: 1 },
-    { url: `${BASE}/about`,  lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/projects`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${BASE}/resume`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${BASE}/writing`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: BASE, lastModified: LAST_MODIFIED, changeFrequency: 'weekly', priority: 1 },
+    { url: `${BASE}/projects`, lastModified: LAST_MODIFIED, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${BASE}/about`, lastModified: LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/writing`, lastModified: LAST_MODIFIED, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${BASE}/resume`, lastModified: LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.7 },
   ]
 
-  const projectSlugs = [
-    'acknowledgement-force', 'aria', 'r1gpt', 'kairos', 'allarkive',
-    'hoddle', 'tapcraft', 'king-glazing',
-    'nmmun', 'krishnaveni', 'farmers-intuition',
-    'govchat', 'notes-app', 'load-balancer',
-  ]
-
-  const projectRoutes: MetadataRoute.Sitemap = projectSlugs.map(slug => ({
+  const projectRoutes: MetadataRoute.Sitemap = PROJECT_SLUGS.map(slug => ({
     url: `${BASE}/projects/${slug}`,
-    lastModified: now,
+    lastModified: LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 0.7,
   }))
 
-  return [...staticRoutes, ...projectRoutes]
+  const writingRoutes: MetadataRoute.Sitemap = POSTS.map(post => ({
+    url: `${BASE}/writing/${post.slug}`,
+    lastModified: LAST_MODIFIED,
+    changeFrequency: 'yearly',
+    priority: 0.6,
+  }))
+
+  return [...staticRoutes, ...projectRoutes, ...writingRoutes]
 }

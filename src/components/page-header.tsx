@@ -34,7 +34,9 @@ export function PageHeader() {
         display: 'flex',
         justifyContent: 'space-between',
         fontFamily: MONO,
-        fontSize: 10,
+        fontSize: 12,
+        flexWrap: 'wrap',
+        gap: '4px 16px',
         color: 'var(--muted-2)',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
@@ -45,7 +47,9 @@ export function PageHeader() {
         <span style={{ color: 'var(--term-green)' }}>●</span>{' '}
         <Typewriter texts={STATUS_VERBS} speed={70} pauseDuration={2400} />
       </span>
-      <span>samridhlimbu.com{suffix} · v0.1</span>
+      <span style={{ minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <span className={suffix ? 'page-header-host' : undefined}>samridhlimbu.com</span>{suffix} · v0.1
+      </span>
     </div>
   )
 }

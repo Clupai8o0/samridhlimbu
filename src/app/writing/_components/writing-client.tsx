@@ -27,7 +27,7 @@ export function WritingClient({ posts }: { posts: Post[] }) {
             alignItems: 'center',
             gap: 5,
             fontFamily: MONO,
-            fontSize: 10.5,
+            fontSize: 'var(--text-xs)',
             padding: '4px 10px',
             border: '1px solid',
             borderColor: active === 'all' ? 'var(--accent)' : 'var(--border)',
@@ -38,7 +38,7 @@ export function WritingClient({ posts }: { posts: Post[] }) {
             transition: 'all .12s',
           }}
         >
-          {active === 'all' && <span style={{ fontSize: 9 }}>✓</span>}
+          {active === 'all' && <span style={{ fontSize: 'var(--text-xs)' }}>✓</span>}
           all
         </button>
         {ALL_TAGS.map(tag => (
@@ -49,7 +49,7 @@ export function WritingClient({ posts }: { posts: Post[] }) {
               display: 'inline-flex',
               alignItems: 'center',
               fontFamily: MONO,
-              fontSize: 10.5,
+              fontSize: 'var(--text-xs)',
               padding: '4px 10px',
               border: '1px solid',
               borderColor: active === tag ? 'var(--accent)' : 'var(--border)',
@@ -88,7 +88,7 @@ export function WritingClient({ posts }: { posts: Post[] }) {
       )}
 
       {filtered.length === 0 && (
-        <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted-2)', padding: '32px 0' }}>
+        <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', padding: '32px 0' }}>
           {active === 'all' ? 'nothing here yet.' : `no posts tagged #${active}`}
         </div>
       )}
@@ -113,14 +113,14 @@ function PostCard({ post }: { post: Post }) {
           <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 600, color: 'var(--fg)', letterSpacing: '-0.01em' }}>
             {post.title}
           </span>
-          <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', flexShrink: 0 }}>
+          <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', flexShrink: 0 }}>
             {post.date}
           </span>
         </div>
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--fg-dim)', lineHeight: 1.6, margin: '0 0 10px' }}>
           {post.excerpt}
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', flexWrap: 'wrap' }}>
           <span>{post.readMin} min</span>
           <span>·</span>
           {post.tags.map(tag => (

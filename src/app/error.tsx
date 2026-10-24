@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
@@ -20,7 +21,7 @@ export default function Error({
     <PageShell>
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 32px' }}>
         <div style={{ height: 2, background: '#ef4444', marginBottom: 24 }} />
-        <p style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>
+        <p style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>
           error: unhandled exception
         </p>
         <h1 style={{ fontFamily: MONO, fontSize: 52, fontWeight: 700, margin: '0 0 14px', color: 'var(--fg)' }}>
@@ -30,12 +31,12 @@ export default function Error({
           Something went wrong. Try again or go back home.
         </p>
         <div style={{ display: 'flex', gap: 12 }}>
-          <button onClick={reset} className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 11, cursor: 'pointer' }}>
+          <button onClick={reset} className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
             retry
           </button>
-          <a href="/" className="btn" style={{ fontFamily: MONO, fontSize: 11 }}>
+          <Link href="/" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>
             ← home
-          </a>
+          </Link>
         </div>
       </div>
     </PageShell>

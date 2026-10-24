@@ -7,7 +7,7 @@ export default function Loading() {
       alignItems: 'center',
       justifyContent: 'center',
       fontFamily: '"JetBrains Mono", monospace',
-      fontSize: 11,
+      fontSize: 'var(--text-xs)',
       color: 'var(--muted-2)',
       letterSpacing: '0.1em',
     }}>

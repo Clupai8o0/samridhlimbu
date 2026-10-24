@@ -57,7 +57,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
     display: 'block',
     padding: '5px 12px',
     fontFamily: MONO,
-    fontSize: 11,
+    fontSize: 'var(--text-xs)',
     color: isActive ? 'var(--fg)' : 'var(--muted-2)',
     background: isActive ? 'rgba(99,102,241,0.06)' : 'transparent',
     fontWeight: isActive ? 500 : 400,
@@ -69,7 +69,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
 
   const labelStyle: CSSProperties = {
     fontFamily: MONO,
-    fontSize: 10,
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted-2)',
     textTransform: 'uppercase',
     letterSpacing: '0.08em',

@@ -1,13 +1,13 @@
 interface CodeBlockProps {
   lines: string[]
-  filename?: string
-  lang?: string
+  filename: string
+  lang: string
 }
 
-export function CodeBlock({ lines, filename = 'kairos/scheduler.py', lang = 'py' }: CodeBlockProps) {
+export function CodeBlock({ lines, filename, lang }: CodeBlockProps) {
   return (
-    <div style={{ border: '1px solid var(--border)', background: 'var(--bg-2)', fontFamily: 'var(--font-mono, "JetBrains Mono", monospace)', fontSize: 10.5, lineHeight: 1.6 }}>
-      <div style={{ padding: '6px 12px', borderBottom: '1px solid var(--border)', fontSize: 9, color: 'var(--muted-2)', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
+    <div style={{ border: '1px solid var(--border)', background: 'var(--bg-2)', fontFamily: 'var(--font-mono, "JetBrains Mono", monospace)', fontSize: 13, lineHeight: 1.6 }}>
+      <div style={{ padding: '6px 12px', borderBottom: '1px solid var(--border)', fontSize: 'var(--text-xs)', color: 'var(--muted-2)', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
         <span>{filename}</span>
         <span>{lang}</span>
       </div>

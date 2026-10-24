@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -15,6 +16,34 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 
 export async function generateStaticParams() {
   return POSTS.map(p => ({ slug: p.slug }))
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const post = POSTS.find(p => p.slug === slug)
+  if (!post) return {}
+
+  const url = `/writing/${post.slug}`
+  // openGraph replaces the layout's object, so it carries every field.
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      url,
+      title: `${post.title} · Samridh Limbu`,
+      description: post.excerpt,
+      publishedTime: post.date,
+      images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Samridh Limbu · Software Engineer' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${post.title} · Samridh Limbu`,
+      description: post.excerpt,
+      images: ['/og.png'],
+    },
+  }
 }
 
 function slugify(text: string) {
@@ -42,7 +71,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <PageHeader />
 
         {/* Breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 20, letterSpacing: '0.02em' }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 20, letterSpacing: '0.02em' }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd ~/writing/
           <span style={{ color: 'var(--fg)', fontWeight: 500 }}>{post.slug}</span>
@@ -50,7 +79,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
 
         {/* Date + meta row */}
-        <div style={{ fontFamily: MONO, fontSize: 10.5, color: 'var(--muted-2)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap', letterSpacing: '0.04em' }}>
+        <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap', letterSpacing: '0.04em' }}>
           <span>{post.date}</span>
           <span>·</span>
           <span style={{ textTransform: 'uppercase' }}>{post.readMin} MIN</span>
@@ -130,7 +159,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
         {/* Footer */}
         <div style={{ paddingTop: 28, marginTop: 28, borderTop: '1px solid var(--border)' }}>
-          <Link href="/writing" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>
+          <Link href="/writing" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>
             ← back to writing
           </Link>
         </div>
@@ -231,7 +260,7 @@ function renderBlock(block: ContentBlock, key: number) {
         {block.label && (
           <div style={{
             fontFamily: MONO,
-            fontSize: 10,
+            fontSize: 'var(--text-xs)',
             color: 'var(--muted-2)',
             textTransform: 'uppercase',
             letterSpacing: '0.06em',
@@ -298,7 +327,7 @@ function renderBlock(block: ContentBlock, key: number) {
         {block.caption && (
           <figcaption style={{
             fontFamily: MONO,
-            fontSize: 10.5,
+            fontSize: 'var(--text-xs)',
             color: 'var(--muted-2)',
             marginTop: 8,
             letterSpacing: '0.02em',
@@ -356,7 +385,7 @@ function renderBlock(block: ContentBlock, key: number) {
               background: 'var(--bg-3)',
               textDecoration: 'none',
               fontFamily: MONO,
-              fontSize: 11.5,
+              fontSize: 'var(--text-xs)',
               color: 'var(--fg-dim)',
             }}
           >
@@ -365,7 +394,7 @@ function renderBlock(block: ContentBlock, key: number) {
         )}
         <figcaption style={{
           fontFamily: MONO,
-          fontSize: 10.5,
+          fontSize: 'var(--text-xs)',
           color: 'var(--muted-2)',
           marginTop: 8,
           letterSpacing: '0.02em',
@@ -374,7 +403,7 @@ function renderBlock(block: ContentBlock, key: number) {
           gap: 8,
         }}>
           <span style={{ color: 'var(--accent)' }}>▶</span>
-          <span style={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: 10 }}>video</span>
+          <span style={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: 'var(--text-xs)' }}>video</span>
           <span>·</span>
           <span>{block.label}</span>
         </figcaption>
@@ -428,7 +457,7 @@ function renderBlock(block: ContentBlock, key: number) {
         />
         {block.caption && (
           <figcaption style={{
-            fontFamily: MONO, fontSize: 10.5, color: 'var(--muted-2)',
+            fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)',
             marginTop: 6, letterSpacing: '0.02em',
           }}>{block.caption}</figcaption>
         )}
@@ -454,7 +483,7 @@ function renderBlock(block: ContentBlock, key: number) {
                   padding: '8px 12px',
                   borderBottom: '1px solid var(--border-2)',
                   fontFamily: MONO,
-                  fontSize: 10,
+                  fontSize: 'var(--text-xs)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
                   color: 'var(--muted)',

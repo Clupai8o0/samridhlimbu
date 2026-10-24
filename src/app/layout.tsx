@@ -23,18 +23,23 @@ const jetbrainsMono = JetBrains_Mono({
 
 const BASE_URL = 'https://samridhlimbu.com'
 
+const DESCRIPTION =
+  'Software engineer in Melbourne. Final-year CS at Deakin, contract engineer for a US health-tech startup, CTO at Hoddle Melbourne, president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
+
+const SHORT_DESCRIPTION =
+  'Software engineer in Melbourne. Final-year CS at Deakin, CTO at Hoddle Melbourne, president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
     default: 'Samridh Limbu · Software Engineer · Melbourne',
     template: '%s · Samridh Limbu',
   },
-  description:
-    'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL. CTO at Hoddle, founder of Kairos. Seeking SWE internships Nov 2026–Feb 2027.',
+  description: DESCRIPTION,
   keywords: [
-    'Samridh Limbu', 'software engineer Melbourne', 'full-stack developer',
-    'Next.js developer', 'TypeScript', 'React developer', 'Deakin University',
-    'SWE internship Melbourne', 'web developer portfolio',
+    'Samridh Limbu', 'software engineer Melbourne', 'software engineer',
+    'TypeScript', 'React', 'Next.js', 'FastAPI', 'PostgreSQL', 'Deakin University',
+    'software engineering internship Melbourne', 'graduate software engineer Melbourne',
   ],
   authors: [{ name: 'Samridh Limbu', url: BASE_URL }],
   creator: 'Samridh Limbu',
@@ -43,22 +48,21 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large' },
   },
-  alternates: { canonical: BASE_URL },
+  // No canonical here: child pages inherit `alternates`, so a root canonical
+  // would point every case study at the home page. Pages set their own.
   openGraph: {
     type: 'website',
     locale: 'en_AU',
     url: BASE_URL,
     siteName: 'Samridh Limbu',
     title: 'Samridh Limbu · Software Engineer · Melbourne',
-    description:
-      'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL. CTO at Hoddle, founder of Kairos, president of DSEC.',
+    description: DESCRIPTION,
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Samridh Limbu · Software Engineer' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Samridh Limbu · Software Engineer · Melbourne',
-    description:
-      'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL.',
+    description: SHORT_DESCRIPTION,
     images: ['/og.png'],
   },
 }

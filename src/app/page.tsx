@@ -1,194 +1,92 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { PageShell } from '@/components/page-shell'
-import { Icon } from '@/components/icons'
-import { ContactForm } from '@/components/contact-form'
 import { PageHeader } from '@/components/page-header'
-import { PROJECTS } from '@/lib/data'
+import { ContactForm } from '@/components/contact-form'
+import { Hero, EMAIL } from '@/components/home/hero'
+import { FeaturedWork } from '@/components/home/featured-work'
+import { ContractWork } from '@/components/home/contract-work'
+import { ExperienceLog } from '@/components/home/experience-log'
+import { SectionHeading } from '@/components/home/section-heading'
+import styles from '@/components/home/home.module.css'
+
+const DESCRIPTION =
+  'Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer, CTO at Hoddle Melbourne and president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
 
 export const metadata: Metadata = {
+  description: DESCRIPTION,
   alternates: { canonical: 'https://samridhlimbu.com' },
-  openGraph: { url: 'https://samridhlimbu.com' },
+  // openGraph replaces the layout's object, so it carries every field.
+  openGraph: {
+    type: 'website',
+    locale: 'en_AU',
+    siteName: 'Samridh Limbu',
+    url: 'https://samridhlimbu.com',
+    title: 'Samridh Limbu · Software Engineer · Melbourne',
+    description: DESCRIPTION,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Samridh Limbu · Software Engineer' }],
+  },
 }
 
+// The contract client is deliberately absent here (NDA).
 const PERSON_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Samridh Limbu',
   url: 'https://samridhlimbu.com',
+  image: 'https://samridhlimbu.com/sam.jpeg',
   jobTitle: 'Software Engineer',
-  description: 'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL.',
-  email: 'samridh@samridhlimbu.com',
+  description: 'Software engineer in Melbourne. Final-year computer science at Deakin University, CTO at Hoddle Melbourne and president of DSEC.',
+  email: EMAIL,
   sameAs: [
     'https://github.com/clupai8o0',
     'https://linkedin.com/in/samridh-limbu',
   ],
-  worksFor: [
-    { '@type': 'Organization', name: 'Hoddle Melbourne', url: 'https://hoddle.org' },
-  ],
-  alumniOf: { '@type': 'EducationalOrganization', name: 'Deakin University' },
+  worksFor: { '@type': 'Organization', name: 'Hoddle Melbourne', url: 'https://hoddle.org' },
+  memberOf: { '@type': 'Organization', name: 'DSEC (Deakin Software Engineering Club)' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Deakin University' },
+  award: 'GovHack 2025 winner',
   address: { '@type': 'PostalAddress', addressLocality: 'Melbourne', addressCountry: 'AU' },
 }
 
-const MONO = '"JetBrains Mono", var(--font-mono), monospace'
-
-function SectionHeader({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ fontFamily: MONO, fontSize: 12, color: 'var(--fg-dim)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ color: 'var(--accent)' }}>›</span>
-        {children}
-      </div>
-      <div style={{ height: 1, background: 'var(--accent)', opacity: 0.35 }} />
-    </div>
-  )
-}
-
-const CONTACTS = [
-  { icon: 'mail',     text: 'samridh@samridhlimbu.com', href: 'mailto:samridh@samridhlimbu.com' },
-  { icon: 'github',   text: 'github.com/clupai8o0',     href: 'https://github.com/clupai8o0' },
-  { icon: 'linkedin', text: 'in/samridh-limbu',          href: 'https://linkedin.com/in/samridh-limbu' },
-  { icon: 'file',     text: 'resume.pdf',                href: '/resume' },
-]
-
 export default function HomePage() {
-  const featured = PROJECTS.filter(p => p.featured)
-
   return (
     <PageShell>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }}
       />
-      <div data-stagger style={{ maxWidth: 740, margin: '0 auto', padding: '48px 32px' }}>
-
-        {/* Top accent rule */}
-        <div data-stagger-item style={{ height: 2, background: 'var(--accent)', marginBottom: 24 }} />
-
+      <div data-stagger className={styles.wrap}>
         <PageHeader />
+        <Hero />
 
-        {/* Hero: photo above name */}
-        <div data-stagger-item style={{ marginBottom: 14 }}>
-          <div style={{ position: 'relative', width: 96, height: 96, border: '1px solid var(--border-2)', borderRadius: 2, overflow: 'hidden', marginBottom: 18 }}>
-            <Image src="/sam.jpeg" alt="Samridh Limbu" fill style={{ objectFit: 'cover', objectPosition: 'center top' }} priority sizes="96px" />
-          </div>
-          <h1 style={{ fontFamily: MONO, fontSize: 52, fontWeight: 700, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
-            <span style={{ color: 'var(--fg)' }}>samridh </span>
-            <span style={{ color: 'var(--accent)' }}>limbu</span>
-          </h1>
-        </div>
+        <FeaturedWork />
 
-        {/* Tagline */}
-        <p data-stagger-item style={{ fontFamily: MONO, fontSize: 14, color: 'var(--fg-dim)', margin: '0 0 36px', lineHeight: 1.65 }}>
-          full-stack <span style={{ color: 'var(--accent)' }}>software engineer</span> in melbourne. next.js · python · postgres.
-        </p>
+        <ContractWork />
 
-        <div data-stagger-item style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
-
-        {/* whoami */}
-        <div data-reveal style={{ marginBottom: 36 }}>
-          <SectionHeader>whoami</SectionHeader>
-          <p style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg-dim)', margin: '0 0 12px', lineHeight: 1.75 }}>
-            3rd-year BCS (IoT) at Deakin, graduating June 2027. CTO at Hoddle Melbourne (sole developer), solo founder of Kairos, previously co-founder at TapCraft Studio, and president of DSEC — 190+ members.
+        <section data-reveal className={styles.section} aria-labelledby="whoami-heading">
+          <SectionHeading id="whoami-heading">whoami</SectionHeading>
+          <p className={styles.prose}>
+            I&apos;m Sam, in my final year of computer science at Deakin, graduating in June 2027. Since July 2026 I&apos;ve been a contract software engineer for a US health-tech startup (under NDA), where I took search from seconds to under 200 ms and have shipped dozens of production deploys. I&apos;m also CTO and sole developer of{' '}
+            <Link href="/projects/hoddle" className="t2-link">Hoddle Melbourne</Link>, and president of{' '}
+            <Link href="/projects/dsec" className="t2-link">DSEC</Link>, a software club of 190+ members.
           </p>
-          <p style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg-dim)', margin: '0 0 20px', lineHeight: 1.75 }}>
-            Seeking SWE internships for <span style={{ color: 'var(--fg)' }}>Nov 2026–Feb 2027</span> — Australia&apos;s summer semester break, when my Subclass 500 student visa permits unlimited work hours. Graduate roles open from <span style={{ color: 'var(--fg)' }}>June 2027</span>. No sponsorship required; Subclass 500 converts to Subclass 485 post-study automatically.
+          <p className={styles.prose}>
+            A lot of what&apos;s here started as something that annoyed me. I got tired of time-blocking tools, so I built{' '}
+            <Link href="/projects/kairos" className="t2-link">Kairos</Link>, and I still use it every day. Claude kept losing my workout history between sessions, so I built{' '}
+            <Link href="/projects/tempo" className="t2-link">Tempo</Link>, a workout app it can read and log to through an MCP server. I care a lot about UI, and I want to own what sits behind it too: schema, API, tests, deploys.
           </p>
-          <div style={{
-            border: '1px dashed var(--border-2)', borderRadius: 4,
-            padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            fontFamily: MONO, fontSize: 11, color: 'var(--muted)',
-          }}>
-            <span>
-              <span style={{ color: 'var(--term-green)' }}>●</span>
-              {' '}internship: nov 2026–feb 2027 · grad: from jun 2027
-            </span>
-            <span style={{ color: 'var(--muted-2)' }}>last_updated: 2026-04-23</span>
+          <div className={styles.meta}>last_updated: 2026-10-24</div>
+        </section>
+
+        <ExperienceLog />
+
+        <section data-reveal className={styles.section} aria-labelledby="contact-heading">
+          <SectionHeading id="contact-heading">get_in_touch()</SectionHeading>
+          <div style={{ maxWidth: 640 }}>
+            <ContactForm />
           </div>
-        </div>
-
-        <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
-
-        {/* contact */}
-        <div data-reveal style={{ marginBottom: 36 }}>
-          <SectionHeader>contact --list</SectionHeader>
-          <div
-            className="t2-contact-grid"
-            style={{ display: 'grid', border: '1px solid var(--border)', borderRadius: 4, overflow: 'hidden' }}
-          >
-            {CONTACTS.map((c) => (
-              <a
-                key={c.icon}
-                href={c.href}
-                target={c.href.startsWith('http') ? '_blank' : undefined}
-                rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="contact-item"
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '15px 18px',
-                  fontFamily: MONO, fontSize: 11, color: 'var(--fg-dim)', textDecoration: 'none',
-                }}
-              >
-                <span style={{ color: 'var(--accent)', flexShrink: 0, display: 'flex' }}>
-                  <Icon name={c.icon} size={13} />
-                </span>
-                {c.text}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
-
-        {/* projects */}
-        <div data-reveal style={{ marginBottom: 36 }}>
-          <SectionHeader>projects --featured</SectionHeader>
-          {featured.slice(0, 3).map((p, i) => (
-            <Link
-              key={p.slug}
-              href={`/projects/${p.slug}`}
-              className="row-hover"
-              style={{
-                display: 'grid', gridTemplateColumns: '40px 1fr 20px', gap: 16,
-                padding: '16px 0', borderBottom: '1px solid var(--border)',
-                alignItems: 'center', textDecoration: 'none', color: 'inherit',
-              }}
-            >
-              <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)' }}>0{i + 1}</span>
-              <div>
-                <div style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg)', marginBottom: 3 }}>
-                  {p.name.toLowerCase()}
-                </div>
-                <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{p.pitchShort}</div>
-              </div>
-              <span className="row-arrow" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Icon name="arrow-up-right" size={12} />
-              </span>
-            </Link>
-          ))}
-          <Link
-            href="/projects"
-            className="row-hover"
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '13px 0', textDecoration: 'none',
-              fontFamily: MONO, fontSize: 10.5, color: 'var(--muted-2)',
-            }}
-          >
-            <span>view all projects</span>
-            <Icon name="arrow-up-right" size={11} />
-          </Link>
-        </div>
-
-        <div style={{ height: 1, background: 'var(--border)', marginBottom: 36 }} />
-
-        {/* get in touch */}
-        <div data-reveal style={{ marginBottom: 16 }}>
-          <SectionHeader>get_in_touch()</SectionHeader>
-          <ContactForm />
-        </div>
-
+        </section>
       </div>
     </PageShell>
   )

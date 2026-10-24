@@ -1,8 +1,31 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { CodeBlock } from '@/components/code-block'
+
+const DESCRIPTION =
+  'A Next.js and MongoDB notes app wrapped in a 10-stage Jenkins pipeline with SonarCloud and Snyk gates, a manual-approval deploy to AWS EC2, Prometheus checks and automatic rollback.'
+
+export const metadata: Metadata = {
+  title: 'notes-app',
+  description: DESCRIPTION,
+  alternates: { canonical: '/projects/notes-app' },
+  openGraph: {
+    type: 'article',
+    locale: 'en_AU',
+    siteName: 'Samridh Limbu',
+    url: '/projects/notes-app',
+    title: 'notes-app · Samridh Limbu',
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary',
+    title: 'notes-app · Samridh Limbu',
+    description: DESCRIPTION,
+  },
+}
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
@@ -50,7 +73,7 @@ export default function NotesAppPage() {
         <PageHeader />
 
         {/* breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 14 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/notes-app
         </div>
@@ -61,24 +84,24 @@ export default function NotesAppPage() {
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>notes-app</h1>
             <span className="pill" style={{ color: '#60a5fa', borderColor: 'rgba(96,165,250,0.3)', fontFamily: MONO }}>● CI/CD showcase</span>
           </div>
-          <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Full-stack notes app — Next.js client, Express + MongoDB server — wrapped in a 10-stage Jenkins pipeline that runs lint, tests, SonarCloud, Snyk, release tagging, manual-approval SSH deploy to AWS EC2, smoke test, and Prometheus target check, with auto-rollback on failure. The pipeline is the product.
+          <p style={{ fontFamily: SANS, fontSize: 'var(--text-base)', color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
+            A Next.js and MongoDB notes app, wrapped in a 10-stage Jenkins pipeline that runs lint, tests, SonarCloud, Snyk, release tagging, manual-approval SSH deploy to AWS EC2, smoke test, and Prometheus target check, with auto-rollback on failure. The pipeline is the product.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://github.com/clupai8o0/notes-app" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> github</a>
+            <a href="https://github.com/clupai8o0/notes-app" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> github</a>
           </div>
         </div>
 
         {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
           {[
             { k: 'pipeline stages', v: '10' },
             { k: 'quality gates', v: '2' },
             { k: 'auto-rollback', v: 'on' },
-          ].map((m, i) => (
-            <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
+          ].map(m => (
+            <div key={m.k} style={{ padding: '14px 16px', marginLeft: -1, marginTop: -1, borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
               <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
-              <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
             </div>
           ))}
         </div>
@@ -86,7 +109,7 @@ export default function NotesAppPage() {
         {/* Context */}
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
+          <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
             Built to demonstrate end-to-end DevOps practice. The app itself is deliberately simple — register/login with JWT cookies, notes CRUD in MongoDB, Next.js middleware guarding routes — because the point is the pipeline. Every commit moves through lint, tests, versioned Docker builds, SonarCloud, Snyk, automated release tagging, a manual approval gate, SSH deploy via docker-compose to AWS EC2, a /server/ping smoke test, and a post-deploy Prometheus target check. If any stage fails, the post block rolls back to the last successful build.
           </p>
         </div>
@@ -98,9 +121,9 @@ export default function NotesAppPage() {
           {TIMELINE.map((e, i) => (
             <div key={i} style={{ position: 'relative', paddingBottom: 18 }}>
               <div style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />
-              <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
               <div style={{ fontFamily: MONO, fontSize: 12.5, color: 'var(--fg)', marginBottom: 3 }}>{e.title}</div>
-              <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.55, maxWidth: 460 }}>{e.body}</div>
+              <div style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.6, maxWidth: 460 }}>{e.body}</div>
             </div>
           ))}
         </div>
@@ -110,14 +133,14 @@ export default function NotesAppPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
           {DECISIONS.map(([a, b, note], i) => (
             <div key={i} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 12 }}>
-              <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
               <div>
-                <div style={{ fontFamily: MONO, fontSize: 11, marginBottom: 4 }}>
+                <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', marginBottom: 4 }}>
                   <span style={{ color: GREEN }}>{a}</span>
                   <span style={{ color: 'var(--muted-2)' }}> › </span>
                   <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
                 </div>
-                <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
+                <div style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
               </div>
             </div>
           ))}
@@ -126,9 +149,9 @@ export default function NotesAppPage() {
         {/* The pipeline */}
         <div className="section-label" style={{ fontFamily: MONO }}>The pipeline</div>
         <div style={{ marginBottom: 12 }}>
-          <CodeBlock lines={PIPELINE_LINES} />
+          <CodeBlock lines={PIPELINE_LINES} filename="Jenkinsfile" lang="groovy" />
         </div>
-        <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
+        <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
           Jenkins Declarative Pipeline. SonarCloud runs static analysis on both apps; Snyk scans dependencies on both apps. Release tagging bumps package.json versions and pushes a git tag automatically. Deploy waits on a manual approval input, then ssh-pulls the versioned images and runs docker-compose on EC2.
         </p>
 
@@ -137,23 +160,23 @@ export default function NotesAppPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 28 }}>
           {[
             { label: 'Frontend', items: 'Next.js 15 · React 19 · Tailwind 4 · Radix UI · Lucide' },
-            { label: 'Backend', items: 'Express 5 · MongoDB · Mongoose · JWT · bcrypt · express-prometheus-middleware' },
+            { label: 'Backend', items: 'MongoDB · Mongoose · JWT · bcrypt · Prometheus metrics middleware' },
             { label: 'Testing', items: 'Jest + jsdom (client) · ts-jest + MongoMemoryServer (server)' },
             { label: 'CI/CD', items: 'Jenkins · Docker · DockerHub · AWS EC2 · docker-compose' },
             { label: 'Quality', items: 'SonarCloud · Snyk · ESLint' },
             { label: 'Observability', items: 'Prometheus · Grafana · Node Exporter · Alertmanager' },
           ].map(({ label, items }) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
-              <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{items}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{items}</span>
             </div>
           ))}
         </div>
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
-          <a href="https://github.com/clupai8o0/notes-app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
-          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
+          <a href="https://github.com/clupai8o0/notes-app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> source</a>
+          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>← back to projects</Link>
         </div>
 
       </div>

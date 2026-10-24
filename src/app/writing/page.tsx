@@ -22,7 +22,7 @@ export default function WritingPage() {
         <PageHeader />
 
         {/* Breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cat ~/writing/index.md<span className="t2-cursor thin" />
         </div>
@@ -32,7 +32,7 @@ export default function WritingPage() {
           <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: '-0.02em', color: 'var(--fg)' }}>
             Writing
           </h1>
-          <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)' }}>
+          <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)' }}>
             {POSTS.length} {POSTS.length === 1 ? 'entry' : 'entries'}
           </span>
         </div>

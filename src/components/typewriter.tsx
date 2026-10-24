@@ -1,6 +1,22 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+
+const REDUCED_QUERY = '(prefers-reduced-motion: reduce)'
+
+function subscribeReduced(onChange: () => void) {
+  const mq = window.matchMedia?.(REDUCED_QUERY)
+  mq?.addEventListener('change', onChange)
+  return () => mq?.removeEventListener('change', onChange)
+}
+
+function getReduced() {
+  return window.matchMedia?.(REDUCED_QUERY).matches ?? false
+}
+
+function getReducedServer() {
+  return false
+}
 
 type Props = {
   texts: string[]
@@ -19,15 +35,15 @@ export function Typewriter({
   className,
   cursorClassName,
 }: Props) {
-  const longest = useRef(texts.reduce((a, b) => (a.length > b.length ? a : b), '')).current
+  const longest = useMemo(() => texts.reduce((a, b) => (a.length > b.length ? a : b), ''), [texts])
   const [display, setDisplay] = useState(texts[0] ?? '')
+  // The server snapshot is false, so SSR and hydration render the first word
+  // with a caret. Under reduced motion the client then shows the first word
+  // statically, with no typing and no caret.
+  const reduced = useSyncExternalStore(subscribeReduced, getReduced, getReducedServer)
 
   useEffect(() => {
-    if (!texts.length) return
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      setDisplay(texts[0] ?? '')
-      return
-    }
+    if (!texts.length || reduced) return
 
     let textIndex = 0
     let charIndex = texts[0]?.length ?? 0
@@ -61,7 +77,7 @@ export function Typewriter({
     const initialDelay = (texts[0]?.length ?? 0) > 0 ? startDelay + pauseDuration : startDelay
     timer = setTimeout(step, initialDelay)
     return () => clearTimeout(timer)
-  }, [texts, speed, pauseDuration, startDelay])
+  }, [texts, speed, pauseDuration, startDelay, reduced])
 
   return (
     <span style={{ display: 'inline-grid' }}>
@@ -69,8 +85,8 @@ export function Typewriter({
         {longest}
       </span>
       <span style={{ gridArea: '1 / 1' }} className={className}>
-        {display}
-        <span className={cursorClassName ?? 't2-cursor thin'} />
+        {reduced ? texts[0] ?? '' : display}
+        {!reduced && <span aria-hidden="true" className={cursorClassName ?? 't2-cursor thin'} />}
       </span>
     </span>
   )

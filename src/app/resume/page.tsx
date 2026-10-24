@@ -1,6 +1,29 @@
+import type { Metadata } from 'next'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { DownloadPdfButton } from '@/components/download-pdf-button'
+
+const DESCRIPTION =
+  'Resume of Samridh Limbu, a software engineer in Melbourne: final-year CS at Deakin, contract engineer for a US health-tech startup, CTO of Hoddle and GovHack 2025 winner.'
+
+export const metadata: Metadata = {
+  title: 'Resume',
+  description: DESCRIPTION,
+  alternates: { canonical: '/resume' },
+  openGraph: {
+    type: 'profile',
+    locale: 'en_AU',
+    siteName: 'Samridh Limbu',
+    url: '/resume',
+    title: 'Resume · Samridh Limbu',
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Resume · Samridh Limbu',
+    description: DESCRIPTION,
+  },
+}
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
@@ -177,7 +200,7 @@ export default function ResumePage() {
         <div className="no-print"><PageHeader /></div>
 
         {/* Breadcrumb */}
-        <div data-stagger-item className="no-print" style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
+        <div data-stagger-item className="no-print" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cat ~/resume.md<span className="t2-cursor thin" />
         </div>
@@ -187,7 +210,7 @@ export default function ResumePage() {
           <div>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: '-0.02em', color: 'var(--fg)' }}>Samridh Limbu</h1>
             <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>Software Engineer · Melbourne</div>
-            <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginTop: 4 }}>samridh@samridhlimbu.com · samridhlimbu.com</div>
+            <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 4 }}>samridh@samridhlimbu.com · samridhlimbu.com</div>
           </div>
           <DownloadPdfButton />
         </div>
@@ -206,9 +229,9 @@ export default function ResumePage() {
                 <div key={i}>
                   <div className="t2-resume-row">
                     <div style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 12.5, color: 'var(--fg)' }}>{r.head}</div>
-                    {r.meta && <div className="t2-resume-meta" style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)' }}>{r.meta}</div>}
+                    {r.meta && <div className="t2-resume-meta" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)' }}>{r.meta}</div>}
                   </div>
-                  <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', marginTop: 4, lineHeight: 1.55 }}>{r.body}</div>
+                  <div style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: 4, lineHeight: 1.6 }}>{r.body}</div>
                 </div>
               ))}
             </div>
@@ -216,7 +239,7 @@ export default function ResumePage() {
         ))}
 
         {/* Footer hint — hidden in PDF */}
-        <div className="no-print" style={{ marginTop: 20, fontSize: 10, color: 'var(--muted-2)', fontFamily: MONO }}>
+        <div className="no-print" style={{ marginTop: 20, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', fontFamily: MONO }}>
           <span style={{ color: 'var(--accent)' }}>❯</span> end of file · press <kbd>q</kbd> to quit
         </div>
 

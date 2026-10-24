@@ -5,6 +5,13 @@ import { CommandPalette } from './command-palette'
 
 const MONO = 'var(--font-mono, "JetBrains Mono", monospace)'
 
+/** Dispatch this on window to open the palette from anywhere (e.g. the mobile drawer). */
+export const OPEN_CMD_EVENT = 't2:open-cmd'
+
+export function openCommandPalette() {
+  window.dispatchEvent(new Event(OPEN_CMD_EVENT))
+}
+
 export function CmdProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
 
@@ -18,8 +25,15 @@ export function CmdProvider({ children }: { children: React.ReactNode }) {
         setOpen(false)
       }
     }
+    function handleOpen() {
+      setOpen(true)
+    }
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    window.addEventListener(OPEN_CMD_EVENT, handleOpen)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener(OPEN_CMD_EVENT, handleOpen)
+    }
   }, [])
 
   return (
@@ -28,6 +42,7 @@ export function CmdProvider({ children }: { children: React.ReactNode }) {
 
       {/* Floating ⌘K trigger */}
       <button
+        className="t2-cmd-fab"
         onClick={() => setOpen(true)}
         aria-label="Open command palette"
         style={{
@@ -41,27 +56,12 @@ export function CmdProvider({ children }: { children: React.ReactNode }) {
           padding: '8px 13px',
           background: 'var(--bg-2)',
           border: '1px solid var(--border-2)',
-          borderRadius: 4,
+          borderRadius: 2,
           fontFamily: MONO,
-          fontSize: 11,
+          fontSize: 12,
           color: 'var(--muted)',
           cursor: 'pointer',
           boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-          transition: 'border-color .12s, color .12s, transform .1s',
-        }}
-        onMouseEnter={e => {
-          ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--accent)'
-          ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--fg)'
-        }}
-        onMouseLeave={e => {
-          ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-2)'
-          ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--muted)'
-        }}
-        onMouseDown={e => {
-          ;(e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.96)'
-        }}
-        onMouseUp={e => {
-          ;(e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)'
         }}
       >
         <span style={{ color: 'var(--accent)', fontSize: 13, lineHeight: 1 }}>❯_</span>
@@ -74,7 +74,7 @@ export function CmdProvider({ children }: { children: React.ReactNode }) {
         </kbd>
       </button>
 
-      <CommandPalette open={open} onClose={() => setOpen(false)} />
+      {open && <CommandPalette open onClose={() => setOpen(false)} />}
     </>
   )
 }

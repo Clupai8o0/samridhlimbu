@@ -34,7 +34,7 @@ export function DownloadPdfButton() {
       onClick={handleDownload}
       disabled={loading}
       className="btn btn-primary"
-      style={{ fontFamily: MONO, fontSize: 10, opacity: loading ? 0.65 : 1, cursor: loading ? 'wait' : 'pointer' }}
+      style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', opacity: loading ? 0.65 : 1, cursor: loading ? 'wait' : 'pointer' }}
     >
       <Icon name="download" size={11} />
       {loading ? 'generating...' : 'PDF'}

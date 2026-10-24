@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export function CopyButton({ code }: { code: string }) {
+export function CopyButton({ code, label = 'Copy to clipboard' }: { code: string; label?: string }) {
   const [copied, setCopied] = useState(false)
 
   function handleCopy() {
@@ -15,14 +15,16 @@ export function CopyButton({ code }: { code: string }) {
   return (
     <button
       onClick={handleCopy}
-      title="Copy to clipboard"
+      type="button"
+      title={label}
+      aria-label={label}
       style={{
         position: 'absolute',
         top: 8,
         right: 8,
         background: 'rgba(255,255,255,0.04)',
-        border: '1px solid #2a2a2e',
-        borderRadius: 4,
+        border: '1px solid var(--border-2)',
+        borderRadius: 2,
         cursor: 'pointer',
         padding: '5px 6px',
         display: 'flex',
@@ -35,13 +37,13 @@ export function CopyButton({ code }: { code: string }) {
       onMouseEnter={e => {
         const btn = e.currentTarget as HTMLButtonElement
         btn.style.background = 'rgba(255,255,255,0.08)'
-        btn.style.borderColor = '#3f3f46'
+        btn.style.borderColor = 'var(--muted-2)'
         if (!copied) btn.style.color = '#e5e5e7'
       }}
       onMouseLeave={e => {
         const btn = e.currentTarget as HTMLButtonElement
         btn.style.background = 'rgba(255,255,255,0.04)'
-        btn.style.borderColor = '#2a2a2e'
+        btn.style.borderColor = 'var(--border-2)'
         if (!copied) btn.style.color = '#71717a'
       }}
     >

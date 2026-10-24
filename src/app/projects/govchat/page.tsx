@@ -1,8 +1,31 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { CodeBlock } from '@/components/code-block'
+
+const DESCRIPTION =
+  'A GovHack 2025-winning RAG platform that answers questions about Australian government information with chunk-level citations, and declines when no source clears the threshold.'
+
+export const metadata: Metadata = {
+  title: 'GovChat',
+  description: DESCRIPTION,
+  alternates: { canonical: '/projects/govchat' },
+  openGraph: {
+    type: 'article',
+    locale: 'en_AU',
+    siteName: 'Samridh Limbu',
+    url: '/projects/govchat',
+    title: 'GovChat · Samridh Limbu',
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary',
+    title: 'GovChat · Samridh Limbu',
+    description: DESCRIPTION,
+  },
+}
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
@@ -40,7 +63,7 @@ export default function GovchatPage() {
         <PageHeader />
 
         {/* breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 14 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/govchat
         </div>
@@ -51,25 +74,25 @@ export default function GovchatPage() {
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>GovChat</h1>
             <span className="pill" style={{ color: '#60a5fa', borderColor: 'rgba(96,165,250,0.3)', fontFamily: MONO }}>● RAG · 2025</span>
           </div>
-          <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
+          <p style={{ fontFamily: SANS, fontSize: 'var(--text-base)', color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
             Retrieval-Augmented Generation platform for natural-language querying of government information. Ask a policy question, get a grounded answer with source citations — no hallucination, explicit fallback when the answer isn&apos;t in the corpus.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> frontend</a>
-            <a href="https://github.com/Clupai8o0/govchat-api" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> api</a>
+            <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> frontend</a>
+            <a href="https://github.com/Clupai8o0/govchat-api" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> api</a>
           </div>
         </div>
 
         {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
           {[
             { k: 'retrieval strategy', v: 'RAG' },
             { k: 'hallucination guard', v: 'threshold' },
             { k: 'citations', v: 'chunk-level' },
-          ].map((m, i) => (
-            <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
+          ].map(m => (
+            <div key={m.k} style={{ padding: '14px 16px', marginLeft: -1, marginTop: -1, borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
               <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
-              <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
             </div>
           ))}
         </div>
@@ -77,7 +100,7 @@ export default function GovchatPage() {
         {/* Context */}
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
+          <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
             Built in 2025. The problem: government information is accurate but structurally inaccessible — spread across PDF documents, department portals, and static pages with no search layer that understands intent. GovChat ingests the documents, indexes them into a vector store, and answers questions with grounded, cited responses. The retrieval threshold means the model declines to answer rather than guessing when confidence is low — critical for policy queries where a wrong answer has real consequences.
           </p>
         </div>
@@ -89,9 +112,9 @@ export default function GovchatPage() {
           {TIMELINE.map((e, i) => (
             <div key={i} style={{ position: 'relative', paddingBottom: 18 }}>
               <div style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />
-              <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
               <div style={{ fontFamily: MONO, fontSize: 12.5, color: 'var(--fg)', marginBottom: 3 }}>{e.title}</div>
-              <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.55, maxWidth: 460 }}>{e.body}</div>
+              <div style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.6, maxWidth: 460 }}>{e.body}</div>
             </div>
           ))}
         </div>
@@ -101,14 +124,14 @@ export default function GovchatPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
           {DECISIONS.map(([a, b, note], i) => (
             <div key={i} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 12 }}>
-              <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
               <div>
-                <div style={{ fontFamily: MONO, fontSize: 11, marginBottom: 4 }}>
+                <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', marginBottom: 4 }}>
                   <span style={{ color: GREEN }}>{a}</span>
                   <span style={{ color: 'var(--muted-2)' }}> › </span>
                   <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
                 </div>
-                <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
+                <div style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
               </div>
             </div>
           ))}
@@ -117,9 +140,9 @@ export default function GovchatPage() {
         {/* Query pipeline */}
         <div className="section-label" style={{ fontFamily: MONO }}>Query pipeline</div>
         <div style={{ marginBottom: 12 }}>
-          <CodeBlock lines={RAG_LINES} />
+          <CodeBlock lines={RAG_LINES} filename="query pipeline" lang="py" />
         </div>
-        <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
+        <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
           The similarity threshold is the critical gate. If retrieved chunks don&apos;t clear 0.75 cosine similarity, the model returns a decline rather than attempting an answer from low-confidence context. For government policy, that&apos;s the right trade-off — a non-answer is less harmful than a confident wrong one.
         </p>
 
@@ -132,17 +155,17 @@ export default function GovchatPage() {
             { label: 'Ingestion', items: 'document parser · chunking pipeline' },
           ].map(({ label, items }) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
-              <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 72, flexShrink: 0 }}>{label}</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{items}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 72, flexShrink: 0 }}>{label}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{items}</span>
             </div>
           ))}
         </div>
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
-          <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> frontend</a>
-          <a href="https://github.com/Clupai8o0/govchat-api" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> api</a>
-          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
+          <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> frontend</a>
+          <a href="https://github.com/Clupai8o0/govchat-api" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> api</a>
+          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>← back to projects</Link>
         </div>
 
       </div>

@@ -1,8 +1,35 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
+import { Shot } from '@/components/case-study/shot'
 import { PROJECTS } from '@/lib/data'
+
+const DESCRIPTION =
+  'A native Swift macOS app that blocks the screen until you read your own rules and name the one action that matters today, with opt-in web sync.'
+const OG_IMAGE = { url: '/projects/acknowledgement-force/preview.webp', width: 2788, height: 1717, alt: 'Acknowledgement Force on macOS' }
+
+export const metadata: Metadata = {
+  title: 'Acknowledgement Force',
+  description: DESCRIPTION,
+  alternates: { canonical: '/projects/acknowledgement-force' },
+  openGraph: {
+    type: 'article',
+    locale: 'en_AU',
+    siteName: 'Samridh Limbu',
+    url: '/projects/acknowledgement-force',
+    title: 'Acknowledgement Force · Samridh Limbu',
+    description: DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Acknowledgement Force · Samridh Limbu',
+    description: DESCRIPTION,
+    images: [OG_IMAGE.url],
+  },
+}
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
@@ -67,7 +94,7 @@ export default function AcknowledgementForcePage() {
         <PageHeader />
 
         {/* breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 14 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/acknowledgement-force
         </div>
@@ -78,12 +105,12 @@ export default function AcknowledgementForcePage() {
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Acknowledgement Force</h1>
             <span className="pill" style={{ color: 'var(--accent)', borderColor: 'rgba(77,163,255,0.3)', fontFamily: MONO }}>● open source · v0.3.0</span>
           </div>
-          <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
+          <p style={{ fontFamily: SANS, fontSize: 'var(--text-base)', color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
             A macOS app that blocks your screen until you read your personal rules, tick the box, and name your single highest-leverage action for the day. Most goal failures are identity failures — not laziness. The rule you set last week vanishes in moments of stress. This makes forgetting structurally impossible.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://github.com/clupai8o0/force" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> clupai8o0/force</a>
-            <a href="https://force.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>force.clupai.com →</a>
+            <a href="https://github.com/clupai8o0/force" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> clupai8o0/force</a>
+            <a href="https://force.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>force.clupai.com →</a>
           </div>
         </div>
 
@@ -100,11 +127,11 @@ export default function AcknowledgementForcePage() {
         </div>
 
         {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
-          {project.metrics!.map((m, i) => (
-            <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
+          {project.metrics!.map(m => (
+            <div key={m.k} style={{ padding: '14px 16px', marginLeft: -1, marginTop: -1, borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
               <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
-              <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
             </div>
           ))}
         </div>
@@ -112,9 +139,33 @@ export default function AcknowledgementForcePage() {
         {/* Context */}
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
+          <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
             Built solo, 2026. The premise: you know what you should do. You built the habit, set the rule, wrote the intention. Then a stressful week hits and the rule is nowhere near the surface. Acknowledgement Force is not a productivity app — it is an identity reinforcement tool. It physically blocks your computer at the start of each day until you re-commit to who you decided to be. The mechanism is simple: repetition moves rules from working memory to identity. You cannot skip the ritual.
           </p>
+        </div>
+
+        {/* Screenshots */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Screenshots</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'flex-start', justifyContent: 'center', marginBottom: 28 }}>
+          <div style={{ flex: '1 1 360px', minWidth: 0 }}>
+            <Shot
+              src="/projects/acknowledgement-force/desktop.webp"
+              alt="force.clupai.com landing page on desktop: serif 'Acknowledgement Force' heading with demo and GitHub buttons"
+              width={2400}
+              height={1500}
+              caption="force.clupai.com · desktop"
+            />
+          </div>
+          <div style={{ flex: '0 1 200px', minWidth: 0 }}>
+            <Shot
+              src="/projects/acknowledgement-force/mobile.webp"
+              alt="force.clupai.com landing page on a phone"
+              width={1170}
+              height={2532}
+              caption="mobile · 390px"
+              variant="mobile"
+            />
+          </div>
         </div>
 
         {/* Timeline */}
@@ -124,9 +175,9 @@ export default function AcknowledgementForcePage() {
           {TIMELINE.map((e, i) => (
             <div key={i} style={{ position: 'relative', paddingBottom: 18 }}>
               <div style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.highlight ? 'var(--accent)' : e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />
-              <div style={{ fontFamily: MONO, fontSize: 9.5, color: e.highlight ? 'var(--accent)' : 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: e.highlight ? 'var(--accent)' : 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
               <div style={{ fontFamily: MONO, fontSize: 12.5, color: 'var(--fg)', marginBottom: 3 }}>{e.title}</div>
-              <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.55, maxWidth: 460 }}>{e.body}</div>
+              <div style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.6, maxWidth: 460 }}>{e.body}</div>
             </div>
           ))}
         </div>
@@ -136,14 +187,14 @@ export default function AcknowledgementForcePage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
           {DECISIONS.map(([a, b, note], i) => (
             <div key={i} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 12 }}>
-              <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
               <div>
-                <div style={{ fontFamily: MONO, fontSize: 11, marginBottom: 4 }}>
+                <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', marginBottom: 4 }}>
                   <span style={{ color: GREEN }}>{a}</span>
                   <span style={{ color: 'var(--muted-2)' }}> › </span>
                   <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
                 </div>
-                <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
+                <div style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
               </div>
             </div>
           ))}
@@ -163,17 +214,17 @@ export default function AcknowledgementForcePage() {
             { label: 'Sync', items: 'Supabase · RLS · opt-in · self-hostable' },
           ].map(({ label, items }) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
-              <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{items}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{items}</span>
             </div>
           ))}
         </div>
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
-          <a href="https://github.com/clupai8o0/force" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 10 }}><Icon name="github" size={11} /> source</a>
-          <a href="https://force.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>force.clupai.com →</a>
-          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 10 }}>← back to projects</Link>
+          <a href="https://github.com/clupai8o0/force" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> source</a>
+          <a href="https://force.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>force.clupai.com →</a>
+          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>← back to projects</Link>
         </div>
 
       </div>

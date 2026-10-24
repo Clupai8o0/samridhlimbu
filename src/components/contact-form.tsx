@@ -1,28 +1,68 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useId, useState } from 'react'
 import { sendContact } from '@/app/actions'
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
+const SANS = 'Inter, var(--font-inter), sans-serif'
 
 type Status = 'idle' | 'sending' | 'sent' | 'error'
 
+const ROW: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '76px minmax(0, 1fr)',
+  alignItems: 'start',
+}
+
+const LABEL: React.CSSProperties = {
+  fontFamily: MONO,
+  fontSize: 'var(--text-xs)',
+  lineHeight: '24px',
+  color: 'var(--accent)',
+  padding: '12px 0 12px 14px',
+  cursor: 'pointer',
+}
+
+// The global :focus-visible ring draws on the field itself; the negative
+// offset keeps it inside the row's hairline border.
+const FIELD: React.CSSProperties = {
+  width: '100%',
+  minWidth: 0,
+  background: 'transparent',
+  border: 'none',
+  borderRadius: 2,
+  outlineOffset: -2,
+  padding: '12px 14px 12px 4px',
+  fontFamily: SANS,
+  fontSize: 'var(--text-base)',
+  lineHeight: '24px',
+  color: 'var(--fg)',
+  caretColor: 'var(--accent)',
+}
+
 export function ContactForm() {
+  const id = useId()
   const [name, setName]       = useState('')
   const [email, setEmail]     = useState('')
   const [message, setMessage] = useState('')
   const [status, setStatus]   = useState<Status>('idle')
   const [errMsg, setErrMsg]   = useState('')
-  const formRef = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (status === 'sending' || status === 'sent') return
+    if (status === 'sending' || status === 'sent') {
+      return
+    }
 
     setStatus('sending')
     setErrMsg('')
 
-    const result = await sendContact({ name, email, message })
+    let result: Awaited<ReturnType<typeof sendContact>>
+    try {
+      result = await sendContact({ name, email, message })
+    } catch {
+      result = { ok: false, error: 'send failed, try samridh@samridhlimbu.com' }
+    }
 
     if (result.ok) {
       setStatus('sent')
@@ -37,121 +77,96 @@ export function ContactForm() {
   const isSending = status === 'sending'
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} style={{ marginTop: 0 }}>
+    <form onSubmit={handleSubmit} style={{ marginTop: 0 }}>
 
-      {/* Input rows */}
-      <div style={{ border: '1px solid var(--border)', borderRadius: 2 }}>
+      <div style={{ border: '1px solid var(--border-2)', borderRadius: 2 }}>
 
-        {/* name */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          padding: '10px 14px', borderBottom: '1px solid var(--border)',
-        }}>
-          <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)', flexShrink: 0, width: 56 }}>
-            --name
-          </span>
+        <div style={{ ...ROW, borderBottom: '1px solid var(--border)' }}>
+          <label htmlFor={`${id}-name`} style={LABEL}>--name</label>
           <input
+            id={`${id}-name`}
+            name="name"
             type="text"
+            autoComplete="name"
             value={name}
             onChange={e => setName(e.target.value)}
             placeholder="your name"
             required
             disabled={isSent}
             className="t2-contact-input"
-            style={{
-              flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              fontFamily: MONO, fontSize: 12, color: 'var(--fg)',
-              caretColor: 'var(--accent)',
-            }}
+            style={FIELD}
           />
         </div>
 
-        {/* email */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          padding: '10px 14px', borderBottom: '1px solid var(--border)',
-        }}>
-          <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)', flexShrink: 0, width: 56 }}>
-            --email
-          </span>
+        <div style={{ ...ROW, borderBottom: '1px solid var(--border)' }}>
+          <label htmlFor={`${id}-email`} style={LABEL}>--email</label>
           <input
+            id={`${id}-email`}
+            name="email"
             type="email"
+            autoComplete="email"
+            inputMode="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            placeholder="your@email.com"
+            placeholder="you@example.com"
             required
             disabled={isSent}
             className="t2-contact-input"
-            style={{
-              flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              fontFamily: MONO, fontSize: 12, color: 'var(--fg)',
-              caretColor: 'var(--accent)',
-            }}
+            style={FIELD}
           />
         </div>
 
-        {/* message */}
-        <div style={{
-          display: 'flex', alignItems: 'flex-start', gap: 10,
-          padding: '10px 14px',
-        }}>
-          <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--accent)', flexShrink: 0, width: 56, paddingTop: 2 }}>
-            --msg
-          </span>
+        <div style={ROW}>
+          <label htmlFor={`${id}-message`} style={LABEL}>--msg</label>
           <textarea
+            id={`${id}-message`}
+            name="message"
             value={message}
             onChange={e => setMessage(e.target.value)}
             placeholder="what's on your mind?"
             required
-            rows={4}
+            rows={5}
             disabled={isSent}
             className="t2-contact-textarea"
-            style={{
-              flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              fontFamily: MONO, fontSize: 12, color: 'var(--fg)',
-              resize: 'none', lineHeight: 1.65,
-              caretColor: 'var(--accent)',
-            }}
+            style={{ ...FIELD, resize: 'vertical', minHeight: 120 }}
           />
         </div>
       </div>
 
-      {/* Footer row: status + submit */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        marginTop: 10, gap: 12,
+        flexWrap: 'wrap', marginTop: 12, gap: 12,
       }}>
-        {/* Status feedback */}
-        <div style={{ fontFamily: MONO, fontSize: 10.5, lineHeight: 1.5 }}>
+        <div id={`${id}-status`} aria-live="polite" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', lineHeight: 1.5 }}>
           {isSent && (
             <span style={{ color: 'var(--term-green)' }}>
-              ✓ sent — i&apos;ll get back to you soon.
+              ✓ sent. I&apos;ll get back to you soon.
             </span>
           )}
           {status === 'error' && (
-            <span style={{ color: '#ef4444' }}>
+            <span role="alert" style={{ color: '#f87171' }}>
               ✗ {errMsg}
             </span>
           )}
           {status === 'idle' && (
             <span style={{ color: 'var(--muted-2)' }}>
-              press enter or click send
+              all fields required
             </span>
           )}
           {isSending && (
             <span style={{ color: 'var(--muted-2)' }}>
-              sending<span className="t2-cursor thin" />
+              sending<span className="t2-cursor thin" aria-hidden="true" />
             </span>
           )}
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={isSending || isSent}
           className="btn btn-primary"
           style={{
-            fontFamily: MONO, fontSize: 10,
+            fontFamily: MONO, fontSize: 'var(--text-xs)',
+            height: 40, padding: '0 16px',
             opacity: isSending ? 0.6 : 1,
             cursor: isSending || isSent ? 'default' : 'pointer',
             flexShrink: 0,

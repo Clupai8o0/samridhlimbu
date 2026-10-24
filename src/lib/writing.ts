@@ -905,7 +905,7 @@ open-webui:
 const ALLARKIVE_BOOTSTRAP = `# Clone and run one command.
 # The script detects your platform, checks disk space, fetches the bundle,
 # starts the stack, pulls the AI model, and prints a status summary.
-git clone https://github.com/allarkive/allarkive && cd allarkive
+git clone https://github.com/clupai8o0/allarkive && cd allarkive
 
 scripts/bootstrap.sh                         # balanced bundle (~24 GB)
 scripts/bootstrap.sh --bundle minimal --pi   # minimal (~5 GB) on Raspberry Pi

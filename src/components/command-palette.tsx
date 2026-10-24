@@ -20,8 +20,11 @@ const ITEMS: Item[] = [
   { k: '/writing',  label: 'writing',                      hint: 'gw', href: '/writing',   group: 'navigate' },
 
   // Projects
-  { k: '/projects/kairos',            label: 'kairos · ai-native scheduling',        hint: '', href: '/projects/kairos',            group: 'projects' },
   { k: '/projects/hoddle',            label: 'hoddle · mentorship platform',          hint: '', href: '/projects/hoddle',            group: 'projects' },
+  { k: '/projects/kairos',            label: 'kairos · ai-native scheduling',        hint: '', href: '/projects/kairos',            group: 'projects' },
+  { k: '/projects/aria',              label: 'aria · multi-agent home-energy brain',  hint: '', href: '/projects/aria',              group: 'projects' },
+  { k: '/projects/tempo',             label: 'tempo · workout app + mcp server',      hint: '', href: '/projects/tempo',             group: 'projects' },
+  { k: '/projects/dsec',              label: 'dsec · deakin software engineering club', hint: '', href: '/projects/dsec',            group: 'projects' },
   { k: '/projects/tapcraft',          label: 'tapcraft · headless shopify + 3d',     hint: '', href: '/projects/tapcraft',          group: 'projects' },
   { k: '/projects/king-glazing',      label: 'king glazing · next.js + seo',         hint: '', href: '/projects/king-glazing',      group: 'projects' },
   { k: '/projects/nmmun',             label: 'nmmun · conference platform',           hint: '', href: '/projects/nmmun',             group: 'projects' },
@@ -80,14 +83,14 @@ export function CommandPalette({ open, onClose }: Props) {
 
   const flatFiltered = groups.flatMap(g => g.items)
 
-  useEffect(() => { if (idx >= flatFiltered.length) setIdx(0) }, [flatFiltered.length, idx])
-  useEffect(() => { if (!open) { setQ(''); setIdx(0) } }, [open])
+  // CmdProvider mounts the palette only while open, so state starts fresh each time.
+  const activeIdx = idx < flatFiltered.length ? idx : 0
 
   // Scroll active item into view
   useEffect(() => {
     const el = listRef.current?.querySelector('[data-active="true"]') as HTMLElement | null
     el?.scrollIntoView({ block: 'nearest' })
-  }, [idx])
+  }, [activeIdx])
 
   function run(item: Item) {
     if (item.k === '_mail') {
@@ -120,7 +123,7 @@ export function CommandPalette({ open, onClose }: Props) {
         className="t2-cmd-panel"
         onClick={e => e.stopPropagation()}
         style={{
-          width: 500, background: 'var(--bg)',
+          width: 500, maxWidth: 'calc(100vw - 32px)', background: 'var(--bg)',
           border: '1px solid var(--border-2)',
           boxShadow: '0 24px 80px rgba(0,0,0,.75)',
         }}
@@ -133,18 +136,20 @@ export function CommandPalette({ open, onClose }: Props) {
           <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: 13 }}>❯</span>
           <input
             autoFocus
+            aria-label="Search commands"
             value={q}
             onChange={e => { setQ(e.target.value); setIdx(0) }}
             onKeyDown={e => {
               if (e.key === 'Escape') { onClose(); return }
-              if (e.key === 'ArrowDown') { e.preventDefault(); setIdx((idx + 1) % flatFiltered.length) }
-              if (e.key === 'ArrowUp') { e.preventDefault(); setIdx((idx - 1 + flatFiltered.length) % flatFiltered.length) }
-              if (e.key === 'Enter' && flatFiltered[idx]) run(flatFiltered[idx])
+              if (!flatFiltered.length) return
+              if (e.key === 'ArrowDown') { e.preventDefault(); setIdx((activeIdx + 1) % flatFiltered.length) }
+              if (e.key === 'ArrowUp') { e.preventDefault(); setIdx((activeIdx - 1 + flatFiltered.length) % flatFiltered.length) }
+              if (e.key === 'Enter' && flatFiltered[activeIdx]) run(flatFiltered[activeIdx])
             }}
             placeholder="search commands…"
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              color: 'var(--fg)', fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 13,
+              color: 'var(--fg)', fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 14,
             }}
           />
           <span className="t2-key">esc</span>
@@ -153,7 +158,7 @@ export function CommandPalette({ open, onClose }: Props) {
         {/* Results */}
         <div ref={listRef} style={{ maxHeight: 340, overflowY: 'auto' }}>
           {flatFiltered.length === 0 ? (
-            <div style={{ padding: '14px 16px', color: 'var(--muted-2)', fontSize: 11, fontFamily: 'var(--font-mono)' }}>
+            <div style={{ padding: '14px 16px', color: 'var(--muted-2)', fontSize: 12, fontFamily: 'var(--font-mono)' }}>
               no matches.
             </div>
           ) : (
@@ -164,7 +169,7 @@ export function CommandPalette({ open, onClose }: Props) {
                   {!isSearching && (
                     <div style={{
                       padding: '7px 14px 4px',
-                      fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase',
+                      fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase',
                       color: 'var(--muted-2)', fontFamily: 'var(--font-mono)',
                     }}>
                       {GROUP_LABELS[group.id] ?? group.id}
@@ -172,7 +177,7 @@ export function CommandPalette({ open, onClose }: Props) {
                   )}
                   {group.items.map(item => {
                     const itemI = globalI++
-                    const isActive = itemI === idx
+                    const isActive = itemI === activeIdx
                     const isMail = item.k === '_mail'
                     return (
                       <div
@@ -184,7 +189,7 @@ export function CommandPalette({ open, onClose }: Props) {
                       >
                         <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', width: 10, flexShrink: 0 }}>›</span>
                         <span style={{
-                          flex: 1, fontFamily: 'var(--font-mono)', fontSize: 11.5,
+                          flex: 1, fontFamily: 'var(--font-mono)', fontSize: 12,
                           color: copied && isMail ? 'var(--term-green)' : undefined,
                         }}>
                           {copied && isMail ? '✓ copied to clipboard' : item.label}
@@ -202,7 +207,7 @@ export function CommandPalette({ open, onClose }: Props) {
         {/* Footer */}
         <div style={{
           padding: '7px 14px', borderTop: '1px solid var(--border)',
-          fontSize: 9.5, color: 'var(--muted-2)',
+          fontSize: 12, color: 'var(--muted-2)',
           display: 'flex', gap: 12, fontFamily: 'var(--font-mono)',
           alignItems: 'center',
         }}>
