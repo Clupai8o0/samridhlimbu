@@ -32,7 +32,7 @@ const ITEMS: Item[] = [
 
   // Archive
   { k: '/projects/farmers-intuition', label: 'farmers intuition · hack48 winner',   hint: '', href: '/projects/farmers-intuition', group: 'archive' },
-  { k: '/projects/govchat',           label: 'govchat · rag platform',               hint: '', href: '/projects/govchat',           group: 'archive' },
+  { k: '/projects/govchat',           label: 'govchat · govhack 2025 winner',       hint: '', href: '/projects/govchat',           group: 'archive' },
   { k: '/projects/notes-app',         label: 'notes-app · ci/cd showcase',           hint: '', href: '/projects/notes-app',         group: 'archive' },
   { k: '/projects/load-balancer',     label: 'load-balancer · go + prometheus',      hint: '', href: '/projects/load-balancer',     group: 'archive' },
 

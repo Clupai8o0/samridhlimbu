@@ -96,7 +96,7 @@ const SECTIONS = [
       {
         head: 'Winner · GovHack 2025 · GovChat',
         meta: 'Dec 2025',
-        body: 'Won with GovChat, a RAG platform that answers plain-English questions about Australian government datasets and scores every answer on five trust factors: grounding, provenance, retrieval, verification and recency. A FastAPI crawler with a Playwright fallback feeds OpenAI embeddings into ChromaDB.',
+        body: 'Won with GovChat, a RAG platform that answers plain-English questions about Australian government datasets and gives every answer a trust score for grounding, provenance and retrieval strength, with an audit record. Python crawlers (Playwright for JS pages) feed OpenAI embeddings into ChromaDB behind a FastAPI API.',
       },
       {
         head: '2nd place · Study Melbourne Leadership 4Impact',

@@ -37,14 +37,14 @@ const GREEN = '#4ade80'
 
 const TIMELINE = [
   { date: 'Aug 2025', title: 'Problem framing', body: 'Australian government data is spread across the ABS and dozens of department sites. Finding a dataset means knowing which agency holds it and what it is called. GovChat lets you ask in plain English instead.' },
-  { date: 'Aug 2025', title: 'Catalogue and embeddings', body: 'Two crawlers walk *.gov.au. One collects CSV, XLS, PDF and ZIP links and respects robots.txt; the other pulls page text, using Playwright for pages that need JavaScript. ABS dataflow metadata is flattened into one catalogue, embedded with OpenAI and loaded into ChromaDB.' },
-  { date: 'Aug 2025', title: 'Trust layer', body: 'Each answer returns the top four datasets, a trust score from five factors and an audit id. The frontend shows the factors, the sources with similarity badges and the full audit record. A React Flow graph lets you browse related datasets.' },
+  { date: 'Aug 2025', title: 'Catalogue and embeddings', body: 'Two crawlers, both respecting robots.txt. One walks *.gov.au for CSV, XLS, PDF and ZIP links; the other pulls page text from seed sites, with optional Playwright for pages that need JavaScript. ABS dataflow metadata is flattened into one catalogue, embedded with OpenAI and loaded into ChromaDB.' },
+  { date: 'Aug 2025', title: 'Trust layer', body: 'Each answer returns the top four datasets, a trust score from five factors and an audit id. The frontend shows the factors, the sources with similarity badges and an audit view; the API stores the full record under that id. A React Flow graph lets you browse related datasets.' },
   { date: 'Dec 2025', title: 'Won GovHack 2025', body: 'GovChat was named a GovHack 2025 winner.', current: true },
 ]
 
 const DECISIONS = [
-  ['metadata-only answers', 'answers from the raw data', 'The model sees dataset descriptions, not the data itself, so any figure it writes would be made up. A grounding pass swaps figures like "4.2 million" for "[data available]", and the trust score drops to zero if one slips through.'],
-  ['geometric trust score', 'weighted average', 'The score multiplies each factor raised to its weight. If one factor is zero, such as an answer with no sources, the whole score is zero. A weighted average would still show 0.8 and look safe.'],
+  ['metadata-only answers', 'answers from the raw data', 'The model sees only dataset titles and agencies, not the data itself, so any figure it writes would be made up. A grounding pass swaps figures like "4.2 million" for "[data available]", and the trust score drops to zero when a leftover figure is detected.'],
+  ['geometric trust score', 'weighted average', 'The score multiplies each factor raised to its weight. If one factor is zero, such as an answer with an invented figure, the whole score is zero. A weighted average would still show 0.7 and look safe.'],
   ['an audit record per answer', 'a bare answer', 'Each response saves the query, the raw matches, the answer and the trust factors under an audit id, so anyone can see why a dataset came back.'],
 ]
 
@@ -81,7 +81,7 @@ export default function GovchatPage() {
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● winner · GovHack 2025</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 'var(--text-base)', color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Search Australian government datasets in plain English. GovChat returns the closest datasets from the ABS and *.gov.au sites, a short answer that never invents figures, and a five-factor trust score backed by an audit record.
+            Search Australian government datasets in plain English. GovChat returns the closest datasets from the ABS and *.gov.au sites, a short answer checked for made-up figures, and a five-factor trust score backed by an audit record.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> frontend</a>
@@ -161,7 +161,7 @@ export default function GovchatPage() {
           <CodeBlock lines={TRUST_LINES} filename="retrieval.py (simplified)" lang="py" />
         </div>
         <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
-          Grounding carries the most weight because invented figures are the worst failure. Retrieval reaches 1.0 only when the best match clears 0.90 similarity. Two factors are placeholders for now: recency and verification sit at 1.0 until freshness tracking and checks on figures are built.
+          Grounding carries the most weight because invented figures are the worst failure. Retrieval reaches 1.0 only when the best match clears 0.90 similarity. The figure check is a pattern match, so it catches forms like &ldquo;4.2 million&rdquo; or &ldquo;5 percent&rdquo;, not every number. Two factors are placeholders for now: recency and verification sit at 1.0 until freshness tracking and checks on figures are built.
         </p>
 
         {/* Stack */}
