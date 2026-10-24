@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: '%s · Samridh Limbu',
   },
   description:
-    'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL. CTO at Hoddle, founder of Kairos, co-founder of TapCraft Studio. Seeking SWE internships Nov 2026–Feb 2027.',
+    'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL. CTO at Hoddle, founder of Kairos. Seeking SWE internships Nov 2026–Feb 2027.',
   keywords: [
     'Samridh Limbu', 'software engineer Melbourne', 'full-stack developer',
     'Next.js developer', 'TypeScript', 'React developer', 'Deakin University',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     siteName: 'Samridh Limbu',
     title: 'Samridh Limbu · Software Engineer · Melbourne',
     description:
-      'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL. CTO at Hoddle, founder of Kairos, co-founder of TapCraft Studio.',
+      'Full-stack software engineer in Melbourne. Next.js, TypeScript, PostgreSQL. CTO at Hoddle, founder of Kairos, president of DSEC.',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Samridh Limbu · Software Engineer' }],
   },
   twitter: {

@@ -10,8 +10,8 @@ const BORDER = '#d0d0d0'
 const s = StyleSheet.create({
   page: {
     backgroundColor: '#ffffff',
-    paddingTop: 42,
-    paddingBottom: 42,
+    paddingTop: 34,
+    paddingBottom: 30,
     paddingHorizontal: 50,
     fontSize: 8.5,
     fontFamily: 'Helvetica',
@@ -64,7 +64,7 @@ const s = StyleSheet.create({
 
   /* ── Section ──────────────────────────────────────────── */
   section: {
-    marginBottom: 11,
+    marginBottom: 9,
   },
   sectionLabel: {
     fontFamily: 'Helvetica-Bold',
@@ -80,7 +80,7 @@ const s = StyleSheet.create({
 
   /* ── Entry ────────────────────────────────────────────── */
   entry: {
-    marginBottom: 8,
+    marginBottom: 6,
   },
   entryHeader: {
     flexDirection: 'row',
@@ -171,82 +171,81 @@ export function ResumeDocument() {
 
         {/* ── Summary ─────────────────────────────────────── */}
         <Text style={s.summary}>
-          Penultimate-year CS (IoT) at Deakin (graduating Jun 2027). Building production-grade full-stack
-          applications across scheduling, edtech, and e-commerce as both sole developer and technical
-          co-founder. Strong in Next.js / TypeScript / Postgres. Available for SWE internships
-          Nov 2026–Feb 2027 and grad roles from mid-2027.
+          Final-year CS (IoT) at Deakin, graduating Jun 2027. Contract engineer on a production
+          health-tech data platform, CTO of a live mentorship platform, and President of a
+          190+ member software club. Ships full-stack TypeScript / Python systems end to end, from schema
+          design to production deploys. GovHack 2025 winner. Open to SWE internships for summer
+          2026–27 and graduate roles from mid-2027.
         </Text>
 
         {/* ── Experience ──────────────────────────────────── */}
         <View style={s.section}>
           <Text style={s.sectionLabel}>Experience</Text>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
+            <View style={s.entryHeader}>
+              <Text style={s.entryHead}>Contract Software Engineer · Independent (remote)</Text>
+              <Text style={s.entryMeta}>Jul 2026–present</Text>
+            </View>
+            <Text style={s.entryBody}>
+              Production data platform for a US health-tech startup (under NDA): React / TypeScript, FastAPI and
+              PostgreSQL on Google Cloud. Owned frontend integration, new data-source integrations and a production
+              hardening pass, then dozens of production deploys. Cut search latency from seconds to under 200 ms.
+            </Text>
+          </View>
+
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>CTO · Hoddle Melbourne</Text>
               <Text style={s.entryMeta}>Mar 2026–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Sole developer. Built auth, 5-step onboarding wizard, and a weighted matching algorithm
-              (country +30 / field +15 / expertise +10) with nightly recompute. Mentor invite system uses
-              a token table with email validation, 14-day expiry, and full audit trail.
+              Sole developer of hoddle.org, an international-student mentorship platform: weighted mentor matching,
+              forums, live Q&As, DMs, realtime notifications. 26K+ lines, 51 routes, 23 Postgres tables with RLS.
+              2nd place, Study Melbourne Leadership 4Impact.
             </Text>
           </View>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>President · Deakin Software Engineering Club (DSEC)</Text>
               <Text style={s.entryMeta}>Jun 2025–present</Text>
             </View>
             <Text style={s.entryBody}>
-              190+ member club. Built tiered sponsorship prospectus ($150 Bronze → $1,000+ Platinum);
-              initiated outreach to VicRoads, Zuum, AustralianSuper. Delivered "My First Australian Offer"
-              workshop (30–80 attendees). Co-ran ACUCyS × DSEC Hackathon (5 project submissions).
+              190+ member club. Lead developer of the club platform (site, hub, member portal) on a FastAPI API with
+              ~24 routers and an MCP server; security audit triaged 212 findings into 121 tickets. Ran T2 2026 workshops and a hackathon.
             </Text>
           </View>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Technical Lead & SEO Consultant · King Double Glazing (Freelance)</Text>
-              <Text style={s.entryMeta}>Mar 2026–present</Text>
+              <Text style={s.entryHead}>Technical Lead & SEO · King Double Glazing (Freelance)</Text>
+              <Text style={s.entryMeta}>Mar–Aug 2026</Text>
             </View>
             <Text style={s.entryBody}>
-              Evaluated and rejected WordPress before building Next.js 15 + Tailwind v4 + Neon + Drizzle +
-              Resend from scratch. Instant Estimate Tool surfaces price before requesting contact details.
-              Full SEO strategy: five keyword verticals, suburb page template, LLM/GEO schema optimisation.
+              Rebrand and rebuild on Next.js 16, TinaCMS, Neon and Resend after ruling out WordPress. Instant Estimate
+              Tool shows a price before asking for contact details. Desktop Lighthouse Performance 99, SEO 100.
             </Text>
           </View>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>Co-founder · TapCraft Studio</Text>
-              <Text style={s.entryMeta}>Feb 2026–present</Text>
+              <Text style={s.entryMeta}>Feb–Oct 2026</Text>
             </View>
             <Text style={s.entryBody}>
-              Built headless Shopify + Next.js 16 frontend from scratch. 3D product viewer with real-time
-              colour variant switching via Three.js material updates (no GLB swaps). Led full B2C → B2B
-              migration including catalogue restructure and affiliate tracking via UpPromote.
+              Built the headless Shopify + Next.js 16 storefront with a real-time 3D colour-variant viewer (no GLB
+              swaps) and headless affiliate tracking. Led the B2C-to-B2B migration.
             </Text>
           </View>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Residential Leader · DeakinRes</Text>
-              <Text style={s.entryMeta}>Oct 2025–present</Text>
+              <Text style={s.entryHead}>Deakin University · campus roles</Text>
+              <Text style={s.entryMeta}>2025–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Residential community support and facilitation for international and domestic student
-              accommodation.
-            </Text>
-          </View>
-
-          <View style={s.entry}>
-            <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Sessional IT Support · Deakin Law School</Text>
-              <Text style={s.entryMeta}>Mar 2026–present</Text>
-            </View>
-            <Text style={s.entryBody}>
-              Technical support for Law School academics; scope expanded to lecture material preparation.
+              Residential Leader, DeakinRes (Oct 2025–) · Open Day Ambassador (Aug 2026) · Sessional IT Support, Law School (Mar–May 2026)
             </Text>
           </View>
         </View>
@@ -255,15 +254,31 @@ export function ResumeDocument() {
         <View style={s.section}>
           <Text style={s.sectionLabel}>Education</Text>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>Deakin University · B. Computer Science (IoT Major)</Text>
-              <Text style={s.entryMeta}>2024–2027 (expected)</Text>
+              <Text style={s.entryMeta}>Jun 2024–Jun 2027 (expected)</Text>
             </View>
             <Text style={s.entryBody}>
-              WAM ~87 · Vice-Chancellor's International Scholarship (100% tuition){'\n'}
-              Relevant: SIT221 Data Structures & Algorithms · SIT331 Secure Backend Development ·
-              SIT215 Computational Intelligence · SIT210 Embedded Systems
+              WAM ~87 · Vice-Chancellor’s International Scholarship (100% tuition) · VCPEP scholar{'\n'}
+              Capstone: Thoth Tech / OnTrack, leading the Notifications sub-team{'\n'}
+              Relevant: Data Structures & Algorithms · Concurrent & Distributed Programming · Advanced Algorithms ·
+              Software Architecture & Scalability · Secure Backend Development · Embedded Systems
+            </Text>
+          </View>
+        </View>
+
+        {/* ── Awards ──────────────────────────────────────── */}
+        <View style={s.section}>
+          <Text style={s.sectionLabel}>Awards</Text>
+
+          <View style={s.entry} wrap={false}>
+            <View style={s.entryHeader}>
+              <Text style={s.entryHead}>Winner · GovHack 2025 — GovChat</Text>
+              <Text style={s.entryMeta}>Dec 2025</Text>
+            </View>
+            <Text style={s.entryBody}>
+              RAG search over Australian government datasets with a 5-factor trust score on every answer (FastAPI, ChromaDB).
             </Text>
           </View>
         </View>
@@ -272,124 +287,78 @@ export function ResumeDocument() {
         <View style={s.section}>
           <Text style={s.sectionLabel}>Projects</Text>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>ARIA · multi-agent home-energy brain</Text>
               <Link src="https://github.com/Clupai8o0/aria" style={s.entryMetaLink}>github.com/clupai8o0/aria</Link>
             </View>
-            <Text style={s.projectStack}>
-              Next.js · TypeScript · Claude / OpenAI (ReAct) · IBM Carbon
-            </Text>
+            <Text style={s.projectStack}>Next.js · TypeScript · Claude / OpenAI (ReAct) · IBM Carbon</Text>
             <Text style={s.entryBody}>
-              Hierarchical multi-agent system — one orchestrator coordinating five specialists (forecasting,
-              battery scheduling, load shifting, grid monitoring, peer-to-peer trading), each a ReAct loop that
-              explains its decisions. Backtested on the real 13 Feb 2024 AEMO VIC1 price-cap day: ~$120 day
-              credit, ~$61 ahead of an unmanaged home. Whole engine recomputes client-side in a browser sandbox.
+              One orchestrator coordinating five ReAct specialists (forecasting, battery scheduling, load shifting,
+              grid monitoring, P2P trading) that explain their decisions. Backtested on the real 13 Feb 2024 AEMO VIC1
+              price-cap day: ~$120 day credit, ~$61 ahead of an unmanaged home.
             </Text>
           </View>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
-              <Text style={s.entryHead}>R1GPT · NEM connection-approval audit engine</Text>
-              <Link src="https://github.com/Aarav261/R1gpt" style={s.entryMetaLink}>github.com/Aarav261/R1gpt</Link>
+              <Text style={s.entryHead}>Tempo · workout app with an MCP server</Text>
+              <Link src="https://tempo.clupai.com" style={s.entryMetaLink}>tempo.clupai.com</Link>
             </View>
-            <Text style={s.projectStack}>
-              Next.js 14 · TypeScript (strict) · OpenAI gpt-4o · Zod · pdf-parse
-            </Text>
+            <Text style={s.projectStack}>Next.js · FastAPI · Neon · OAuth · MCP</Text>
             <Text style={s.entryBody}>
-              Built with Aarav. Audits R1 grid-connection submission packages clause-by-clause against AEMO PSMG v3.0 and NER S5.2.
-              Six deterministic assessors yield a readiness index (95 − Sigma severity weights, capped at 95), with
-              every finding traced to its regulatory section, plus predicted RFIs and rectification plans.
-              24/24 deterministic cases pass; no database.
+              One FastAPI service powers REST, an OAuth-protected MCP server and the Next.js client, so Claude or
+              ChatGPT can read and log workouts. 70 passing API tests at the phase checkpoint.
             </Text>
           </View>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Kairos · AI-native scheduling app</Text>
-              <Link src="https://kairos.clupai.com" style={s.entryMetaLink}>kairos.clupai.com</Link>
-            </View>
-            <Text style={s.projectStack}>
-              Next.js 16 · Drizzle ORM · PostgreSQL · Vercel AI SDK · Better Auth
-            </Text>
-            <Text style={s.entryBody}>
-              Rewrote a 1,051-line Python/FastAPI prototype into a clean Next.js monorepo. Pure-function
-              scheduler pipeline across 7 modules; plugin system with Zod-validated I/O contract; theme +
-              plugin marketplaces shipped in Phase 4. ~$1/mo infra cost.
-            </Text>
-          </View>
-
-          <View style={s.entry}>
-            <View style={s.entryHeader}>
-              <Text style={s.entryHead}>TapCraft Studio · headless commerce</Text>
-              <Link src="https://tapcraft.shop" style={s.entryMetaLink}>tapcraft.shop</Link>
-            </View>
-            <Text style={s.projectStack}>
-              Next.js 16 · React Three Fiber · Shopify Storefront API (GraphQL) · Tailwind v4
-            </Text>
-            <Text style={s.entryBody}>
-              Real-time 3D colour variant switching via Three.js material updates (no GLB swaps). Headless
-              affiliate tracking (UpPromote + Web Pixel). Led B2C → B2B migration.
-            </Text>
-          </View>
-
-          <View style={s.entry}>
-            <View style={s.entryHeader}>
-              <Text style={s.entryHead}>NMMUN · conference website + operations toolkit</Text>
-              <Link src="https://nmmun.vercel.app" style={s.entryMetaLink}>nmmun.vercel.app</Link>
-            </View>
-            <Text style={s.projectStack}>Next.js · TypeScript · Tailwind CSS · Vercel</Text>
-            <Text style={s.entryBody}>
-              Production-ready conference website used live by 500+ participants at a Model United Nations
-              event. Built for reliability and fast iteration under real event deadlines.
-            </Text>
-          </View>
-
-          <View style={s.entry}>
-            <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Krishnaveni · headless CMS (freelance)</Text>
-              <Link src="https://krishnavenischool.co.in" style={s.entryMetaLink}>krishnavenischool.co.in</Link>
-            </View>
-            <Text style={s.projectStack}>Sanity Studio · TypeScript · Vercel</Text>
-            <Text style={s.entryBody}>
-              Headless CMS for a real client — enables non-technical staff to independently update pages,
-              announcements, and media without developer involvement.
-            </Text>
-          </View>
-
-          <View style={s.entry}>
-            <View style={s.entryHeader}>
-              <Text style={s.entryHead}>notes-app · CI/CD showcase</Text>
-              <Text style={s.entryMeta}>2025</Text>
-            </View>
-            <Text style={s.projectStack}>Next.js · MongoDB · Docker · Jenkins · AWS · Prometheus · Grafana</Text>
-            <Text style={s.entryBody}>
-              Full-stack app with complete CI/CD pipeline, containerisation, AWS deployment, and
-              observability via Prometheus + Grafana.
-            </Text>
-          </View>
-
-          <View style={s.entry}>
-            <View style={s.entryHeader}>
-              <Text style={s.entryHead}>load-balancer · systems engineering</Text>
+              <Text style={s.entryHead}>load-balancer · concurrent HTTP load balancer</Text>
               <Text style={s.entryMeta}>2025</Text>
             </View>
             <Text style={s.projectStack}>Go · Prometheus</Text>
             <Text style={s.entryBody}>
-              Adaptive concurrent HTTP load balancer in Go — fault tolerance, feedback control, and
-              observability under real-world traffic patterns.
+              21 iterations: round-robin, least-connections and power-of-two-choices with EWMA latency; AIMD
+              concurrency limits, rate limiting, circuit breakers and outlier ejection, with Prometheus metrics.
             </Text>
           </View>
 
-          <View style={s.entry}>
+          <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Farmers Intuition · Hack48</Text>
-              <Text style={s.entryMeta}>Mar 2026 · 48h</Text>
+              <Text style={s.entryHead}>Kairos · AI-native scheduling app</Text>
+              <Link src="https://kairos.clupai.com" style={s.entryMetaLink}>kairos.clupai.com</Link>
             </View>
-            <Text style={s.projectStack}>FastAPI · Google Gemini · ElevenLabs</Text>
+            <Text style={s.projectStack}>Next.js 16 · Drizzle ORM · PostgreSQL · Vercel AI SDK</Text>
             <Text style={s.entryBody}>
-              AI precision irrigation advisory platform built in 48 hours. Two-layer ML engine + voice
-              assistant ("Sage") for natural-language farm advisory.
+              Live and in daily use. Rewrote a 1,051-line Python prototype into a pure-function scheduler pipeline
+              across 7 modules (sub-3 s placement); Oct 2026 rebuild adds a 14-day planner that learns how long
+              tasks really take, with Google Calendar sync.
+            </Text>
+          </View>
+
+          <View style={s.entry} wrap={false}>
+            <View style={s.entryHeader}>
+              <Text style={s.entryHead}>R1GPT · NEM connection-approval audit engine</Text>
+              <Link src="https://github.com/Aarav261/R1gpt" style={s.entryMetaLink}>github.com/Aarav261/R1gpt</Link>
+            </View>
+            <Text style={s.projectStack}>Next.js 14 · TypeScript (strict) · OpenAI gpt-4o · Zod</Text>
+            <Text style={s.entryBody}>
+              Built with Aarav. Audits grid-connection packages clause-by-clause against AEMO PSMG v3.0 and NER S5.2.
+              Six deterministic assessors yield a readiness index with every finding traced to its regulatory
+              section. 24/24 deterministic cases pass.
+            </Text>
+          </View>
+
+          <View style={s.entry} wrap={false}>
+            <View style={s.entryHeader}>
+              <Text style={s.entryHead}>Lock-In · embedded focus tracker</Text>
+              <Text style={s.entryMeta}>2026</Text>
+            </View>
+            <Text style={s.projectStack}>Arduino C++ · Raspberry Pi 5 · Python asyncio · MQTT · Gemini</Text>
+            <Text style={s.entryBody}>
+              Arduino sensors plus a Raspberry Pi 5 running a 5-state FSM across 8 asyncio tasks, Gemini vision and an
+              MQTT + SSE dashboard; each subsystem degrades on its own. 51 tests, systemd watchdog.
             </Text>
           </View>
         </View>
@@ -400,26 +369,24 @@ export function ResumeDocument() {
 
           <View style={s.skillRow}>
             <Text style={s.skillLabel}>Languages</Text>
-            <Text style={s.skillValue}>TypeScript · Python · JavaScript · SQL · C#</Text>
+            <Text style={s.skillValue}>TypeScript · Python · Go · SQL · C# · C/C++ (embedded)</Text>
           </View>
           <View style={s.skillRow}>
             <Text style={s.skillLabel}>Frameworks</Text>
             <Text style={s.skillValue}>
-              Next.js · React · FastAPI · Tailwind CSS · Drizzle ORM · React Three Fiber · TanStack Query
+              Next.js · React · Vite · FastAPI · SQLAlchemy · Drizzle ORM · Tailwind CSS · React Three Fiber
             </Text>
           </View>
           <View style={s.skillRow}>
-            <Text style={s.skillLabel}>Databases</Text>
-            <Text style={s.skillValue}>PostgreSQL · Supabase · Neon</Text>
-          </View>
-          <View style={s.skillRow}>
-            <Text style={s.skillLabel}>Infra & tools</Text>
-            <Text style={s.skillValue}>Vercel · Cloudflare · Docker · n8n · Claude Code</Text>
-          </View>
-          <View style={s.skillRow}>
-            <Text style={s.skillLabel}>APIs</Text>
+            <Text style={s.skillLabel}>Data & infra</Text>
             <Text style={s.skillValue}>
-              Shopify Storefront API (GraphQL) · Google Calendar API · Vercel AI SDK · Supabase Auth/RLS · Resend
+              PostgreSQL (pgvector) · Redis · Firebase · GCP (Cloud Run, Cloud SQL) · Vercel · Docker · Linux · Prometheus
+            </Text>
+          </View>
+          <View style={s.skillRow}>
+            <Text style={s.skillLabel}>AI & APIs</Text>
+            <Text style={s.skillValue}>
+              MCP servers (OAuth) · Claude / OpenAI / Gemini APIs · RAG (ChromaDB) · Playwright · MQTT · Shopify GraphQL
             </Text>
           </View>
         </View>

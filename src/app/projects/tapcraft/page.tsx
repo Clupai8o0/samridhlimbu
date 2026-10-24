@@ -14,7 +14,7 @@ const TIMELINE = [
   { date: 'Feb 2026', title: 'Co-founder, day one', body: 'Rejected WordPress + Shopify theme. Built the full headless Shopify + Next.js 16 frontend from scratch — full control over layout, 3D viewer, and checkout flow.' },
   { date: 'Feb 2026', title: '3D product viewer', body: 'React Three Fiber viewer for 3D-printed NFC keychains. Colour variants switch by updating Three.js material properties on the loaded model — no GLB swap, no reload, no delay.' },
   { date: 'Mar 2026', title: 'Affiliate tracking in headless', body: 'UpPromote hooks into native Shopify checkout. In headless mode those hooks are gone. Solved via Shopify Web Pixel API + cart context events to attribute affiliate clicks correctly.' },
-  { date: 'Mar 2026', title: 'B2C → B2B migration', body: 'Full site pivot: catalogue restructure, 301 redirect mapping, and 3D customiser repositioned as a bulk-quote tool. UpPromote affiliate tracking carried over.', current: true },
+  { date: 'Mar 2026', title: 'B2C → B2B migration', body: 'Full site pivot: catalogue restructure, 301 redirect mapping, and 3D customiser repositioned as a bulk-quote tool. UpPromote affiliate tracking carried over.', current: false },
 ]
 
 const DECISIONS = [
@@ -55,8 +55,7 @@ export default function TapcraftPage() {
         <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>TapCraft Studio</h1>
-            <span className="pill" style={{ color: '#fb923c', borderColor: 'rgba(251,146,60,0.3)', fontFamily: MONO }}>● shipping · co-founder</span>
-            <span style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', border: '1px dashed var(--border)', padding: '2px 6px', letterSpacing: 0.04 }}>updating</span>
+            <span className="pill" style={{ color: '#fb923c', borderColor: 'rgba(251,146,60,0.3)', fontFamily: MONO }}>○ inactive · co-founder</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
             Headless Shopify storefront for 3D-printed NFC keychains — real-time 3D colour variant switching via Three.js material updates (no GLB swaps), headless affiliate tracking via Web Pixel, and a full B2C → B2B site migration.
@@ -85,7 +84,7 @@ export default function TapcraftPage() {
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
-            Co-founder, Feb 2026–present. TapCraft sells 3D-printed NFC keychains — tap the keychain to a phone and it opens a link. The product is physical but the UX problem is digital: show people exactly what their custom keychain will look like before they order. I built the full headless Shopify frontend, solved two non-trivial headless problems (3D variant switching, affiliate tracking), and led the pivot from consumer to B2B.
+            Co-founder, Feb–Oct 2026. TapCraft sells 3D-printed NFC keychains — tap the keychain to a phone and it opens a link. The product is physical but the UX problem is digital: show people exactly what their custom keychain will look like before they order. I built the full headless Shopify frontend, solved two non-trivial headless problems (3D variant switching, affiliate tracking), and led the pivot from consumer to B2B.
           </p>
         </div>
 

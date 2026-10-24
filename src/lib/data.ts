@@ -166,7 +166,7 @@ export const PROJECTS: Project[] = [
     name: 'TapCraft Studio',
     tag: 'Headless Shopify · 3D-printed NFC keychains',
     year: '2026',
-    status: 'Shipping',
+    status: 'Ended · Feb–Oct 2026',
     pitch: 'Co-founder. Built the full headless Shopify + Next.js 16 frontend from scratch. 3D product viewer with real-time colour variant switching via Three.js material updates (no GLB swaps). Led full B2C → B2B migration including catalogue restructure and affiliate tracking via UpPromote.',
     pitchShort: 'Headless Shopify + React Three Fiber. Real-time 3D colour variants.',
     stack: {
@@ -175,7 +175,7 @@ export const PROJECTS: Project[] = [
       Infra: ['Vercel', 'Cloudflare R2'],
     },
     featured: true,
-    updating: true,
+    updating: false,
   },
   {
     slug: 'king-glazing',
@@ -268,7 +268,7 @@ export const EXPERIENCE: ExperienceItem[] = [
   { when: '2026–', role: 'CTO', org: 'Hoddle Melbourne', detail: 'Sole developer. Full-stack platform: auth, onboarding wizards, weighted matching algorithm, content library, forums, live Q&As, DMs, Realtime notifications. 26K+ lines, 51 routes, 23 tables. Placed 2nd at Study Melbourne Leadership 4Impact.' },
   { when: '2025–', role: 'President', org: 'DSEC · Deakin Software Engineering Club', detail: '190+ members. Tiered sponsorship prospectus ($150–$1,000+). "My First Australian Offer" workshop.' },
   { when: '2026', role: 'Technical Lead', org: 'King Double Glazing (Freelance)', detail: 'Full rebrand + rebuild from The Glass Discounters. Next.js 16, TinaCMS, Neon, Resend. Instant Estimate Tool. Desktop Performance 99 · SEO 100.' },
-  { when: '2026–', role: 'Co-founder', org: 'TapCraft Studio', detail: 'Headless Shopify + React Three Fiber. NFC products. Led B2C → B2B migration.' },
+  { when: '2026', role: 'Co-founder (ended Oct 2026)', org: 'TapCraft Studio', detail: 'Headless Shopify + React Three Fiber. NFC products. Led B2C → B2B migration.' },
   { when: '2025–', role: 'Residential Leader', org: 'DeakinRes', detail: 'Community support for international and domestic student accommodation.' },
   { when: '2026–', role: 'Sessional IT Support', org: 'Deakin Law School', detail: 'Technical support for academics; scope expanded to lecture material preparation.' },
 ]

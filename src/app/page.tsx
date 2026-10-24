@@ -90,7 +90,7 @@ export default function HomePage() {
         <div data-reveal style={{ marginBottom: 36 }}>
           <SectionHeader>whoami</SectionHeader>
           <p style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg-dim)', margin: '0 0 12px', lineHeight: 1.75 }}>
-            3rd-year BCS (IoT) at Deakin, graduating June 2027. CTO at Hoddle Melbourne (sole developer), solo founder of Kairos, co-founder at TapCraft Studio, and president of DSEC — 190+ members.
+            3rd-year BCS (IoT) at Deakin, graduating June 2027. CTO at Hoddle Melbourne (sole developer), solo founder of Kairos, previously co-founder at TapCraft Studio, and president of DSEC — 190+ members.
           </p>
           <p style={{ fontFamily: MONO, fontSize: 13, color: 'var(--fg-dim)', margin: '0 0 20px', lineHeight: 1.75 }}>
             Seeking SWE internships for <span style={{ color: 'var(--fg)' }}>Nov 2026–Feb 2027</span> — Australia&apos;s summer semester break, when my Subclass 500 student visa permits unlimited work hours. Graduate roles open from <span style={{ color: 'var(--fg)' }}>June 2027</span>. No sponsorship required; Subclass 500 converts to Subclass 485 post-study automatically.
