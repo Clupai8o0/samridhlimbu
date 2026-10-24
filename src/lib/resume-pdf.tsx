@@ -171,11 +171,10 @@ export function ResumeDocument() {
 
         {/* ── Summary ─────────────────────────────────────── */}
         <Text style={s.summary}>
-          Final-year CS (IoT) at Deakin, graduating Jun 2027. Contract engineer on a production
-          health-tech data platform, CTO of a live mentorship platform, and President of a
-          190+ member software club. Ships full-stack TypeScript / Python systems end to end, from schema
-          design to production deploys. GovHack 2025 winner. Open to SWE internships for summer
-          2026–27 and graduate roles from mid-2027.
+          Final-year CS at Deakin (WAM ~87), graduating Jun 2027. Contract engineer for a
+          health-tech startup (search latency cut to under 200 ms), CTO and sole developer of a live
+          mentorship platform, President of a 190+ member software club. GovHack 2025 winner. Open
+          to SWE internships for summer 2026–27 and graduate roles from mid-2027.
         </Text>
 
         {/* ── Experience ──────────────────────────────────── */}
@@ -188,9 +187,9 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Jul 2026–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Production data platform for a US health-tech startup (under NDA): React / TypeScript, FastAPI and
-              PostgreSQL on Google Cloud. Owned frontend integration, new data-source integrations and a production
-              hardening pass, then dozens of production deploys. Cut search latency from seconds to under 200 ms.
+              Cut search latency from seconds to under 200 ms on a US health-tech startup’s data
+              platform (under NDA). Owned frontend integration, data-source integrations and hardening.
+              Dozens of production deploys. React/TypeScript, FastAPI, PostgreSQL.
             </Text>
           </View>
 
@@ -200,9 +199,9 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Mar 2026–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Sole developer of hoddle.org, an international-student mentorship platform: weighted mentor matching,
-              forums, live Q&As, DMs, realtime notifications. 26K+ lines, 51 routes, 23 Postgres tables with RLS.
-              2nd place, Study Melbourne Leadership 4Impact.
+              Built hoddle.org, an international-student mentorship platform, as sole developer. 26K+
+              lines, 51 routes, 23 Postgres tables with RLS. Weighted mentor matching, forums, DMs,
+              real-time notifications. 2nd place, Study Melbourne Leadership 4Impact.
             </Text>
           </View>
 
@@ -212,19 +211,21 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Jun 2025–present</Text>
             </View>
             <Text style={s.entryBody}>
-              190+ member club. Lead developer of the club platform (site, hub, member portal) on a FastAPI API with
-              ~24 routers and an MCP server; security audit triaged 212 findings into 121 tickets. Ran T2 2026 workshops and a hackathon.
+              Run a 190+ member club across five committees. Led development of the club platform
+              (FastAPI, MCP server). Triaged a 212-finding security audit into 121 tickets. Hosted T2
+              2026 workshops and a hackathon.
             </Text>
           </View>
 
           <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Technical Lead & SEO · King Double Glazing (Freelance)</Text>
+              <Text style={s.entryHead}>Technical Lead & SEO · King Double Glazing (freelance)</Text>
               <Text style={s.entryMeta}>Mar–Aug 2026</Text>
             </View>
             <Text style={s.entryBody}>
-              Rebrand and rebuild on Next.js 16, TinaCMS, Neon and Resend after ruling out WordPress. Instant Estimate
-              Tool shows a price before asking for contact details. Desktop Lighthouse Performance 99, SEO 100.
+              Led the rebrand and a Next.js 16 rebuild after ruling out WordPress. Desktop Lighthouse:
+              Performance 99, SEO 100. Built an Instant Estimate Tool that shows a price before asking
+              for contact details.
             </Text>
           </View>
 
@@ -234,8 +235,9 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Feb–Oct 2026</Text>
             </View>
             <Text style={s.entryBody}>
-              Built the headless Shopify + Next.js 16 storefront with a real-time 3D colour-variant viewer (no GLB
-              swaps) and headless affiliate tracking. Led the B2C-to-B2B migration.
+              Built the headless Shopify + Next.js 16 storefront for 3D-printed NFC keychains, with a
+              real-time 3D colour-variant viewer and headless affiliate tracking. Led the B2C to B2B
+              migration.
             </Text>
           </View>
 
@@ -245,7 +247,7 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>2025–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Residential Leader, DeakinRes (Oct 2025–) · Open Day Ambassador (Aug 2026) · Sessional IT Support, Law School (Mar–May 2026)
+              Residential Leader, DeakinRes (Oct 2025–present) · Open Day Ambassador (Aug 2026)
             </Text>
           </View>
         </View>
@@ -261,9 +263,9 @@ export function ResumeDocument() {
             </View>
             <Text style={s.entryBody}>
               WAM ~87 · Vice-Chancellor’s International Scholarship (100% tuition) · VCPEP scholar{'\n'}
-              Capstone: Thoth Tech / OnTrack, leading the Notifications sub-team{'\n'}
-              Relevant: Data Structures & Algorithms · Concurrent & Distributed Programming · Advanced Algorithms ·
-              Software Architecture & Scalability · Secure Backend Development · Embedded Systems
+              Capstone: Notifications sub-team lead, Thoth Tech / OnTrack{'\n'}
+              Relevant: Data Structures & Algorithms · Advanced Algorithms · Concurrent & Distributed
+              Programming · Software Architecture · Secure Backend · Embedded Systems
             </Text>
           </View>
         </View>
@@ -274,11 +276,12 @@ export function ResumeDocument() {
 
           <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
-              <Text style={s.entryHead}>Winner · GovHack 2025 — GovChat</Text>
+              <Text style={s.entryHead}>Winner · GovHack 2025 · GovChat</Text>
               <Text style={s.entryMeta}>Dec 2025</Text>
             </View>
             <Text style={s.entryBody}>
-              RAG search over Australian government datasets with a 5-factor trust score on every answer (FastAPI, ChromaDB).
+              RAG search over Australian government datasets, with a 5-factor trust score on every
+              answer (FastAPI, ChromaDB).
             </Text>
           </View>
         </View>
@@ -294,9 +297,9 @@ export function ResumeDocument() {
             </View>
             <Text style={s.projectStack}>Next.js · TypeScript · Claude / OpenAI (ReAct) · IBM Carbon</Text>
             <Text style={s.entryBody}>
-              One orchestrator coordinating five ReAct specialists (forecasting, battery scheduling, load shifting,
-              grid monitoring, P2P trading) that explain their decisions. Backtested on the real 13 Feb 2024 AEMO VIC1
-              price-cap day: ~$120 day credit, ~$61 ahead of an unmanaged home.
+              Backtested on the real 13 Feb 2024 AEMO VIC1 price-cap day: ~$120 day credit, ~$61 ahead
+              of an unmanaged home. One orchestrator coordinates five ReAct specialists that explain
+              their decisions.
             </Text>
           </View>
 
@@ -307,8 +310,9 @@ export function ResumeDocument() {
             </View>
             <Text style={s.projectStack}>Next.js · FastAPI · Neon · OAuth · MCP</Text>
             <Text style={s.entryBody}>
-              One FastAPI service powers REST, an OAuth-protected MCP server and the Next.js client, so Claude or
-              ChatGPT can read and log workouts. 70 passing API tests at the phase checkpoint.
+              Lets Claude or ChatGPT read and log workouts. One FastAPI service powers REST, an
+              OAuth-protected MCP server and the Next.js client. 70 passing API tests at the phase
+              checkpoint.
             </Text>
           </View>
 
@@ -319,8 +323,9 @@ export function ResumeDocument() {
             </View>
             <Text style={s.projectStack}>Go · Prometheus</Text>
             <Text style={s.entryBody}>
-              21 iterations: round-robin, least-connections and power-of-two-choices with EWMA latency; AIMD
-              concurrency limits, rate limiting, circuit breakers and outlier ejection, with Prometheus metrics.
+              Implemented round-robin, least-connections and power-of-two-choices (EWMA latency) routing
+              over 21 iterations. Added AIMD concurrency limits, rate limiting, circuit breakers and
+              outlier ejection, with Prometheus metrics.
             </Text>
           </View>
 
@@ -331,9 +336,9 @@ export function ResumeDocument() {
             </View>
             <Text style={s.projectStack}>Next.js 16 · Drizzle ORM · PostgreSQL · Vercel AI SDK</Text>
             <Text style={s.entryBody}>
-              Live and in daily use. Rewrote a 1,051-line Python prototype into a pure-function scheduler pipeline
-              across 7 modules (sub-3 s placement); Oct 2026 rebuild adds a 14-day planner that learns how long
-              tasks really take, with Google Calendar sync.
+              Rewrote a 1,051-line Python prototype as a scheduler in daily use: seven pure-function
+              modules, side effects isolated in one file, sub-3 s placement. Oct 2026 rebuild adds a
+              14-day planner.
             </Text>
           </View>
 
@@ -344,9 +349,9 @@ export function ResumeDocument() {
             </View>
             <Text style={s.projectStack}>Next.js 14 · TypeScript (strict) · OpenAI gpt-4o · Zod</Text>
             <Text style={s.entryBody}>
-              Built with Aarav. Audits grid-connection packages clause-by-clause against AEMO PSMG v3.0 and NER S5.2.
-              Six deterministic assessors yield a readiness index with every finding traced to its regulatory
-              section. 24/24 deterministic cases pass.
+              Audits grid-connection packages clause by clause against AEMO PSMG v3.0 and NER S5.2. Six
+              deterministic assessors score readiness and trace every finding to its regulatory section.
+              24/24 cases pass. Built with Aarav.
             </Text>
           </View>
 
@@ -357,8 +362,9 @@ export function ResumeDocument() {
             </View>
             <Text style={s.projectStack}>Arduino C++ · Raspberry Pi 5 · Python asyncio · MQTT · Gemini</Text>
             <Text style={s.entryBody}>
-              Arduino sensors plus a Raspberry Pi 5 running a 5-state FSM across 8 asyncio tasks, Gemini vision and an
-              MQTT + SSE dashboard; each subsystem degrades on its own. 51 tests, systemd watchdog.
+              Wired Arduino sensors to a Raspberry Pi 5 running a 5-state FSM across eight asyncio
+              tasks, with Gemini vision and an MQTT + SSE dashboard. Subsystems degrade independently.
+              51 tests, systemd watchdog.
             </Text>
           </View>
         </View>
