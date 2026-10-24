@@ -39,6 +39,11 @@ const SECTIONS = [
         body: "Cut search latency from seconds to under 200 ms on a US health-tech startup's data platform (under NDA), using database indexing and response compression. Owned frontend integration, new data-source integrations and a production hardening pass. Shipped dozens of production deploys. React/TypeScript, FastAPI, PostgreSQL, Google Cloud.",
       },
       {
+        head: 'Founder · morgue',
+        meta: 'Aug 2026–present',
+        body: 'Opened the waitlist (morgue.clupai.com) for a SaaS that records repeatable video previews of UI animations, keeps the code and exports bundles for coding agents. Built around measured browser limits (16 of 40 WebGL contexts survive); multi-user phases 1–2 deployed. Node, Playwright, ffmpeg, Cloudflare R2.',
+      },
+      {
         head: 'CTO · Hoddle Melbourne',
         meta: 'Mar 2026–present',
         body: 'Built hoddle.org, a mentorship platform for international students, as its sole developer: 26K+ lines, 51 routes, 23 Postgres tables behind row-level security. Designed weighted mentor matching with nightly recompute. Shipped forums, live Q&As, DMs and real-time notifications. Placed 2nd at Study Melbourne Leadership 4Impact.',
@@ -47,6 +52,11 @@ const SECTIONS = [
         head: 'President · Deakin Software Engineering Club (DSEC)',
         meta: 'Jun 2025–present',
         body: 'Run a 190+ member club across five committees. Led development of its site, committee hub and member portal on a FastAPI backend with ~24 routers and an MCP server. Triaged a 212-finding security audit into 121 tickets. Hosted T2 2026 workshops and a hackathon.',
+      },
+      {
+        head: 'Software Engineer · MyMor',
+        meta: 'Aug–Sep 2026',
+        body: "Took a beta rebuild of a startup's university student app to a release candidate: new design system, clubs, events, deals and claim moderation. Improved onboarding, accessibility and the mobile build; built a Firebase emulator stack with a 442-case security-rules test matrix. 400+ commits across five repos. React Native, React, Cloud Functions, Firebase.",
       },
       {
         head: 'Technical Lead & SEO · King Double Glazing (freelance)',
@@ -127,11 +137,6 @@ const SECTIONS = [
         head: 'Lock-In · embedded focus tracker',
         meta: 'Arduino C++ · Raspberry Pi 5 · Python asyncio · MQTT · Gemini',
         body: 'Wired Arduino sensors to a Raspberry Pi 5 running a 5-state FSM across eight asyncio tasks, with Gemini vision every 75 s and an MQTT + SSE dashboard. Subsystems degrade independently: MQTT falls back to snapshot files. 51 tests across four suites, plus a systemd watchdog.',
-      },
-      {
-        head: 'morgue · UI-animation library',
-        meta: 'Node · Playwright · ffmpeg · Cloudflare R2',
-        body: 'Built a local-first library that records repeatable video previews of UI animations, tags them with a fixed vocabulary and exports bundles for coding agents. Designed around measured browser limits: of 40 WebGL contexts created, only 16 survive. Multi-user phases 1–2 deployed.',
       },
       {
         head: 'cstack · shared layer for coding agents',
