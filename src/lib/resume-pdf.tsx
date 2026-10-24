@@ -105,6 +105,10 @@ const s = StyleSheet.create({
     textDecoration: 'none',
     marginLeft: 8,
   },
+  inlineLink: {
+    color: ACCENT,
+    textDecoration: 'none',
+  },
   entryBody: {
     fontSize: 8,
     color: MUTED,
@@ -195,6 +199,19 @@ export function ResumeDocument() {
 
           <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
+              <Text style={s.entryHead}>Founder · morgue</Text>
+              <Text style={s.entryMeta}>Aug 2026–present</Text>
+            </View>
+            <Text style={s.entryBody}>
+              Opened the waitlist (<Link src="https://morgue.clupai.com" style={s.inlineLink}>morgue.clupai.com</Link>)
+              for a SaaS that records repeatable video previews of UI animations, keeps the code and
+              exports bundles for coding agents. Built around measured browser limits (16 of 40 WebGL
+              contexts survive); multi-user phases 1–2 deployed. Node, Playwright, ffmpeg, Cloudflare R2.
+            </Text>
+          </View>
+
+          <View style={s.entry} wrap={false}>
+            <View style={s.entryHeader}>
               <Text style={s.entryHead}>CTO · Hoddle Melbourne</Text>
               <Text style={s.entryMeta}>Mar 2026–present</Text>
             </View>
@@ -214,6 +231,20 @@ export function ResumeDocument() {
               Run a 190+ member club across five committees. Led development of the club platform
               (FastAPI, MCP server). Triaged a 212-finding security audit into 121 tickets. Hosted T2
               2026 workshops and a hackathon.
+            </Text>
+          </View>
+
+          <View style={s.entry} wrap={false}>
+            <View style={s.entryHeader}>
+              <Text style={s.entryHead}>Software Engineer · MyMor</Text>
+              <Text style={s.entryMeta}>Aug–Sep 2026</Text>
+            </View>
+            <Text style={s.entryBody}>
+              Took a beta rebuild of a startup’s university student app to a release candidate: new
+              design system, clubs, events, deals and claim moderation. Improved onboarding,
+              accessibility and the mobile build; built a Firebase emulator stack with a 442-case
+              security-rules test matrix. 400+ commits across five repos. React Native, React, Cloud
+              Functions, Firebase.
             </Text>
           </View>
 
