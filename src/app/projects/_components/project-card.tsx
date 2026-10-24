@@ -81,7 +81,7 @@ export function ProjectCard({ project: p, hasDetailPage }: Props) {
               color: 'var(--muted-2)',
               border: '1px dashed var(--border)',
               padding: '1px 4px',
-              letterSpacing: 0.04,
+              letterSpacing: '0.04em',
             }}>
               updating
             </span>

@@ -25,7 +25,7 @@ export default function AboutPage() {
         <PageHeader />
 
         {/* Breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: 0.02 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cat ~/about.md<span className="t2-cursor thin" />
         </div>
@@ -34,7 +34,7 @@ export default function AboutPage() {
         <div data-stagger-item style={{ display: 'flex', gap: 18, alignItems: 'flex-start', marginBottom: 24 }}>
           <MonoPortrait size={72} />
           <div>
-            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: -0.02, color: 'var(--fg)' }}>Samridh Limbu</h1>
+            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: '-0.02em', color: 'var(--fg)' }}>Samridh Limbu</h1>
             <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>full-stack software engineer · melbourne · he/him</div>
           </div>
         </div>

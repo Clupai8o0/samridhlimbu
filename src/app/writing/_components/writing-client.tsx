@@ -110,7 +110,7 @@ function PostCard({ post }: { post: Post }) {
         className="row-hover"
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8, gap: 16 }}>
-          <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 600, color: 'var(--fg)', letterSpacing: -0.01 }}>
+          <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 600, color: 'var(--fg)', letterSpacing: '-0.01em' }}>
             {post.title}
           </span>
           <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', flexShrink: 0 }}>

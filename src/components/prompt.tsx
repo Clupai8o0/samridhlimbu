@@ -7,7 +7,7 @@ export function Prompt({ children }: { children: ReactNode }) {
         fontFamily: 'var(--font-mono, "JetBrains Mono", monospace)',
         fontSize: 10.5,
         color: 'var(--muted-2)',
-        letterSpacing: 0.02,
+        letterSpacing: '0.02em',
       }}
     >
       <span style={{ color: 'var(--accent)' }}>❯</span> {children}

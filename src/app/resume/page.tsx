@@ -177,7 +177,7 @@ export default function ResumePage() {
         <div className="no-print"><PageHeader /></div>
 
         {/* Breadcrumb */}
-        <div data-stagger-item className="no-print" style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: 0.02 }}>
+        <div data-stagger-item className="no-print" style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cat ~/resume.md<span className="t2-cursor thin" />
         </div>
@@ -185,7 +185,7 @@ export default function ResumePage() {
         {/* Header */}
         <div data-stagger-item style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 16, borderBottom: '1px solid var(--accent)', marginBottom: 24 }}>
           <div>
-            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: -0.02, color: 'var(--fg)' }}>Samridh Limbu</h1>
+            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: '-0.02em', color: 'var(--fg)' }}>Samridh Limbu</h1>
             <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>Software Engineer · Melbourne</div>
             <div style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginTop: 4 }}>samridh@samridhlimbu.com · samridhlimbu.com</div>
           </div>

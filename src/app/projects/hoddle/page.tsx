@@ -94,7 +94,7 @@ export default function HoddlePage() {
         {/* Banner */}
         <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
-            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: -0.025, color: 'var(--fg)' }}>Hoddle Melbourne</h1>
+            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Hoddle Melbourne</h1>
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · CTO</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
@@ -124,8 +124,8 @@ export default function HoddlePage() {
             { k: 'linkedin impressions', v: '14,040' },
           ].map((m, i) => (
             <div key={m.k} style={{ padding: '14px 16px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
-              <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: -0.02 }}>{m.v}</div>
-              <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.08 }}>{m.k}</div>
+              <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
+              <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
             </div>
           ))}
         </div>
@@ -156,7 +156,7 @@ export default function HoddlePage() {
           {TIMELINE.map((e, i) => (
             <div key={i} style={{ position: 'relative', paddingBottom: 18 }}>
               <div style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />
-              <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: 0.1 }}>{e.date}</div>
+              <div style={{ fontFamily: MONO, fontSize: 9.5, color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
               <div style={{ fontFamily: MONO, fontSize: 12.5, color: 'var(--fg)', marginBottom: 3 }}>{e.title}</div>
               <div style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.55, maxWidth: 520 }}>{e.body}</div>
             </div>
@@ -214,7 +214,7 @@ export default function HoddlePage() {
               <span key={t} className="pill" style={{ fontFamily: MONO, fontSize: 9 }}>{t}</span>
             ))}
           </div>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: 0.08, marginBottom: 6 }}>storage buckets</div>
+          <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>storage buckets</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
             {['content-media (public)', 'content-resources (signed)', 'session-recordings (private)', 'story-images (public)', 'avatars (public)'].map(b => (
               <span key={b} className="pill" style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted)' }}>{b}</span>
@@ -243,7 +243,7 @@ export default function HoddlePage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 28 }}>
           {Object.entries(hoddle.stack).map(([label, items]) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
-              <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: 0.08, width: 72, flexShrink: 0 }}>{label}</span>
+              <span style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 72, flexShrink: 0 }}>{label}</span>
               <span style={{ fontFamily: MONO, fontSize: 11, color: 'var(--muted)' }}>{items.join(' · ')}</span>
             </div>
           ))}
@@ -261,8 +261,8 @@ export default function HoddlePage() {
               { k: 'migrations', v: '17' },
             ].map((m, i) => (
               <div key={m.k} style={{ padding: '12px 14px', borderLeft: i === 0 ? 'none' : '1px solid var(--border)' }}>
-                <div style={{ fontFamily: DISPLAY, fontSize: 18, color: 'var(--fg)', fontWeight: 700, letterSpacing: -0.02 }}>{m.v}</div>
-                <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.08 }}>{m.k}</div>
+                <div style={{ fontFamily: DISPLAY, fontSize: 18, color: 'var(--fg)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
+                <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
               </div>
             ))}
           </div>
@@ -273,7 +273,7 @@ export default function HoddlePage() {
           <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.7, margin: '0 0 8px', fontStyle: 'italic' }}>
             &ldquo;They had a really easy time navigating through the UI — the experience matched the promise.&rdquo;
           </p>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: 0.1 }}>
+          <div style={{ fontFamily: MONO, fontSize: 9, color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             Early-access cohort · Hoddle Melbourne
           </div>
         </div>

@@ -29,7 +29,7 @@ export default function ProjectsPage() {
 
         {/* Header */}
         <div data-stagger-item style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 24 }}>
-          <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: -0.02, color: 'var(--fg)' }}>Projects</h1>
+          <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: '-0.02em', color: 'var(--fg)' }}>Projects</h1>
           <Prompt>ls -la projects/</Prompt>
         </div>
 
@@ -51,7 +51,7 @@ export default function ProjectsPage() {
         <div data-reveal>
         <div className="section-label" style={{ fontFamily: MONO }}>Archive</div>
         <div style={{ fontFamily: MONO }}>
-          <div className="t2-archive-grid" style={{ display: 'grid', gap: 12, padding: '6px 0', fontSize: 9, color: 'var(--muted-2)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: 0.08 }}>
+          <div className="t2-archive-grid" style={{ display: 'grid', gap: 12, padding: '6px 0', fontSize: 9, color: 'var(--muted-2)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             <span className="t2-archive-year">year</span><span>name</span><span>tech</span><span style={{ textAlign: 'right' }}>link</span>
           </div>
           {ARCHIVE.map((r, i) => (

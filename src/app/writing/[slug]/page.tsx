@@ -42,7 +42,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <PageHeader />
 
         {/* Breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 20, letterSpacing: 0.02 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 20, letterSpacing: '0.02em' }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd ~/writing/
           <span style={{ color: 'var(--fg)', fontWeight: 500 }}>{post.slug}</span>
@@ -50,20 +50,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
 
         {/* Date + meta row */}
-        <div style={{ fontFamily: MONO, fontSize: 10.5, color: 'var(--muted-2)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap', letterSpacing: 0.04 }}>
+        <div style={{ fontFamily: MONO, fontSize: 10.5, color: 'var(--muted-2)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap', letterSpacing: '0.04em' }}>
           <span>{post.date}</span>
           <span>·</span>
           <span style={{ textTransform: 'uppercase' }}>{post.readMin} MIN</span>
           <span>·</span>
           {post.tags.map(tag => (
-            <span key={tag} style={{ color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 0.06 }}>
+            <span key={tag} style={{ color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               #{tag}
             </span>
           ))}
         </div>
 
         {/* Title */}
-        <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 42, margin: '0 0 14px', letterSpacing: -0.025, color: 'var(--fg)', lineHeight: 1.1 }}>
+        <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 42, margin: '0 0 14px', letterSpacing: '-0.025em', color: 'var(--fg)', lineHeight: 1.1 }}>
           {post.title}
         </h1>
 
@@ -199,7 +199,7 @@ function renderBlock(block: ContentBlock, key: number) {
           fontSize: 15,
           fontWeight: 600,
           color: 'var(--fg)',
-          letterSpacing: -0.015,
+          letterSpacing: '-0.015em',
           margin: '28px 0 10px',
         }}
       >
@@ -214,7 +214,7 @@ function renderBlock(block: ContentBlock, key: number) {
           fontSize: 20,
           fontWeight: 700,
           color: 'var(--fg)',
-          letterSpacing: -0.02,
+          letterSpacing: '-0.02em',
           margin: '36px 0 14px',
           scrollMarginTop: 90,
         }}
@@ -234,7 +234,7 @@ function renderBlock(block: ContentBlock, key: number) {
             fontSize: 10,
             color: 'var(--muted-2)',
             textTransform: 'uppercase',
-            letterSpacing: 0.06,
+            letterSpacing: '0.06em',
             marginBottom: 6,
           }}>
             {block.label}
@@ -301,7 +301,7 @@ function renderBlock(block: ContentBlock, key: number) {
             fontSize: 10.5,
             color: 'var(--muted-2)',
             marginTop: 8,
-            letterSpacing: 0.02,
+            letterSpacing: '0.02em',
             lineHeight: 1.5,
           }}>
             {block.caption}
@@ -368,13 +368,13 @@ function renderBlock(block: ContentBlock, key: number) {
           fontSize: 10.5,
           color: 'var(--muted-2)',
           marginTop: 8,
-          letterSpacing: 0.02,
+          letterSpacing: '0.02em',
           display: 'flex',
           alignItems: 'center',
           gap: 8,
         }}>
           <span style={{ color: 'var(--accent)' }}>▶</span>
-          <span style={{ textTransform: 'uppercase', letterSpacing: 0.08, fontSize: 10 }}>video</span>
+          <span style={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: 10 }}>video</span>
           <span>·</span>
           <span>{block.label}</span>
         </figcaption>
@@ -420,7 +420,7 @@ function renderBlock(block: ContentBlock, key: number) {
             fontSize: 15,
             color: 'var(--fg)',
             lineHeight: 1.7,
-            letterSpacing: 0.02,
+            letterSpacing: '0.02em',
             maxWidth: '100%',
             overflowX: 'auto',
           }}
@@ -429,7 +429,7 @@ function renderBlock(block: ContentBlock, key: number) {
         {block.caption && (
           <figcaption style={{
             fontFamily: MONO, fontSize: 10.5, color: 'var(--muted-2)',
-            marginTop: 6, letterSpacing: 0.02,
+            marginTop: 6, letterSpacing: '0.02em',
           }}>{block.caption}</figcaption>
         )}
       </figure>
@@ -456,7 +456,7 @@ function renderBlock(block: ContentBlock, key: number) {
                   fontFamily: MONO,
                   fontSize: 10,
                   textTransform: 'uppercase',
-                  letterSpacing: 0.08,
+                  letterSpacing: '0.08em',
                   color: 'var(--muted)',
                   fontWeight: 500,
                 }}>{h}</th>

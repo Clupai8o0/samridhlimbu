@@ -22,14 +22,14 @@ export default function WritingPage() {
         <PageHeader />
 
         {/* Breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: 0.02 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cat ~/writing/index.md<span className="t2-cursor thin" />
         </div>
 
         {/* Header */}
         <div data-stagger-item style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 24 }}>
-          <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: -0.02, color: 'var(--fg)' }}>
+          <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: '-0.02em', color: 'var(--fg)' }}>
             Writing
           </h1>
           <span style={{ fontFamily: MONO, fontSize: 10, color: 'var(--muted-2)' }}>
