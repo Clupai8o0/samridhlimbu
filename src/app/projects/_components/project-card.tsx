@@ -55,7 +55,7 @@ export function ProjectCard({ project: p, hasDetailPage, preload = false }: Prop
           ? (
             <Image
               src={p.cover}
-              alt={p.coverAlt ?? `${p.name} screenshot`}
+              alt=""
               fill
               sizes={COVER_SIZES}
               preload={preload}

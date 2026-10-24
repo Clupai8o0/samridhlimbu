@@ -28,7 +28,7 @@ export function FeaturedWork() {
                   <div className={styles.cover}>
                     <Image
                       src={p.cover}
-                      alt={p.coverAlt ?? `${p.name} screenshot`}
+                      alt=""
                       fill
                       sizes={lead ? '(max-width: 760px) 100vw, 560px' : '(max-width: 760px) 100vw, 450px'}
                       style={{ objectFit: 'cover', objectPosition: 'left top' }}

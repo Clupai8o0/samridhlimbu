@@ -23,13 +23,14 @@ const STATUS_VERBS = [
  * Left: green dot + typewriter status verb.
  * Right: samridhlimbu.com[/path] · v0.1
  */
-export function PageHeader() {
+export function PageHeader({ className }: { className?: string }) {
   const pathname = usePathname() ?? '/'
   const suffix = pathname === '/' ? '' : pathname
 
   return (
     <div
       data-stagger-item
+      className={className}
       style={{
         display: 'flex',
         justifyContent: 'space-between',

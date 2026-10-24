@@ -4,9 +4,10 @@ import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { CodeBlock } from '@/components/code-block'
+import { Shot } from '@/components/case-study/shot'
 
 const DESCRIPTION =
-  'A GovHack 2025-winning RAG platform that answers questions about Australian government information with chunk-level citations, and declines when no source clears the threshold.'
+  'GovHack 2025 winner. Ask in plain English and GovChat finds matching Australian government datasets, with sources and a five-factor trust score on every answer.'
 
 export const metadata: Metadata = {
   title: 'GovChat',
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
     url: '/projects/govchat',
     title: 'GovChat · Samridh Limbu',
     description: DESCRIPTION,
+    images: [{ url: '/projects/govchat/home.webp', width: 2400, height: 1500, alt: 'The GovChat search screen' }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'GovChat · Samridh Limbu',
     description: DESCRIPTION,
+    images: ['/projects/govchat/home.webp'],
   },
 }
 
@@ -33,26 +36,29 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 const GREEN = '#4ade80'
 
 const TIMELINE = [
-  { date: '2025', title: 'Problem framing', body: 'Government information is fragmented across PDF documents, static pages, and department portals. Finding a specific ruling, policy, or eligibility condition means navigating bureaucratic structure instead of asking a question.' },
-  { date: '2025', title: 'RAG pipeline', body: 'Ingest pipeline: scrape and parse government documents → chunk → embed → store in vector DB. Query pipeline: embed question → retrieve top-k chunks → pass to LLM with context → return grounded answer.' },
-  { date: '2025', title: 'Grounding and citation', body: 'Answers cite the source document and section. If the retrieved chunks don\'t contain an answer, the model says so — no hallucination of policy details.', current: true },
+  { date: 'Aug 2025', title: 'Problem framing', body: 'Australian government data is spread across the ABS and dozens of department sites. Finding a dataset means knowing which agency holds it and what it is called. GovChat lets you ask in plain English instead.' },
+  { date: 'Aug 2025', title: 'Catalogue and embeddings', body: 'Two crawlers walk *.gov.au. One collects CSV, XLS, PDF and ZIP links and respects robots.txt; the other pulls page text, using Playwright for pages that need JavaScript. ABS dataflow metadata is flattened into one catalogue, embedded with OpenAI and loaded into ChromaDB.' },
+  { date: 'Aug 2025', title: 'Trust layer', body: 'Each answer returns the top four datasets, a trust score from five factors and an audit id. The frontend shows the factors, the sources with similarity badges and the full audit record. A React Flow graph lets you browse related datasets.' },
+  { date: 'Dec 2025', title: 'Won GovHack 2025', body: 'GovChat was named a GovHack 2025 winner.', current: true },
 ]
 
 const DECISIONS = [
-  ['rag over fine-tuning', 'fine-tuned llm', 'Government policy changes. A fine-tuned model is a snapshot; a RAG system with a re-indexed document store stays current. Retrieval also gives you source citations — essential for policy queries.'],
-  ['chunk-level citations', 'document-level citations', 'Citing the document is not enough — government documents are long and dense. Chunk-level retrieval lets the answer point to the specific section, so users can verify without reading hundreds of pages.'],
-  ['explicit "i don\'t know"', 'best-effort answer', 'For government policy, a confident wrong answer is worse than no answer. The retrieval threshold filters low-confidence chunks; if nothing clears the bar, the model declines to answer.'],
+  ['metadata-only answers', 'answers from the raw data', 'The model sees dataset descriptions, not the data itself, so any figure it writes would be made up. A grounding pass swaps figures like "4.2 million" for "[data available]", and the trust score drops to zero if one slips through.'],
+  ['geometric trust score', 'weighted average', 'The score multiplies each factor raised to its weight. If one factor is zero, such as an answer with no sources, the whole score is zero. A weighted average would still show 0.8 and look safe.'],
+  ['an audit record per answer', 'a bare answer', 'Each response saves the query, the raw matches, the answer and the trust factors under an audit id, so anyone can see why a dataset came back.'],
 ]
 
-const RAG_LINES = [
-  `<span style="color:#71717a"># query pipeline</span>`,
-  `query_embedding = embedder.<span style="color:#60a5fa">encode</span>(user_question)`,
-  `chunks = vector_db.<span style="color:#60a5fa">similarity_search</span>(`,
-  `    query_embedding, k=<span style="color:#fcd34d">5</span>, threshold=<span style="color:#fcd34d">0.75</span>`,
-  `)`,
-  `<span style="color:#c084fc">if not</span> chunks:`,
-  `    <span style="color:#c084fc">return</span> <span style="color:#86efac">"I don't have a reliable source for that."</span>`,
-  `answer = llm.<span style="color:#60a5fa">generate</span>(context=chunks, question=user_question)`,
+const TRUST_LINES = [
+  `<span style="color:#71717a"># trust score: weighted geometric blend of five factors</span>`,
+  `weights = {<span style="color:#86efac">"grounding"</span>: <span style="color:#fcd34d">0.30</span>, <span style="color:#86efac">"provenance"</span>: <span style="color:#fcd34d">0.20</span>, <span style="color:#86efac">"retrieval"</span>: <span style="color:#fcd34d">0.20</span>,`,
+  `           <span style="color:#86efac">"verification"</span>: <span style="color:#fcd34d">0.20</span>, <span style="color:#86efac">"recency"</span>: <span style="color:#fcd34d">0.10</span>}`,
+  ``,
+  `factors[<span style="color:#86efac">"grounding"</span>] = <span style="color:#fcd34d">0.0</span> <span style="color:#c084fc">if</span> <span style="color:#60a5fa">detect_numeric_claims</span>(answer) <span style="color:#c084fc">else</span> <span style="color:#fcd34d">1.0</span>`,
+  `factors[<span style="color:#86efac">"retrieval"</span>] = <span style="color:#fcd34d">1.0</span> <span style="color:#c084fc">if</span> max_sim &gt;= <span style="color:#fcd34d">0.90</span> <span style="color:#c084fc">else</span> max_sim`,
+  ``,
+  `score = <span style="color:#fcd34d">1.0</span>`,
+  `<span style="color:#c084fc">for</span> name, w <span style="color:#c084fc">in</span> weights.<span style="color:#60a5fa">items</span>():`,
+  `    score *= factors[name] ** w`,
 ]
 
 export default function GovchatPage() {
@@ -72,10 +78,10 @@ export default function GovchatPage() {
         <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>GovChat</h1>
-            <span className="pill" style={{ color: '#60a5fa', borderColor: 'rgba(96,165,250,0.3)', fontFamily: MONO }}>● RAG · 2025</span>
+            <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● winner · GovHack 2025</span>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 'var(--text-base)', color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Retrieval-Augmented Generation platform for natural-language querying of government information. Ask a policy question, get a grounded answer with source citations — no hallucination, explicit fallback when the answer isn&apos;t in the corpus.
+            Search Australian government datasets in plain English. GovChat returns the closest datasets from the ABS and *.gov.au sites, a short answer that never invents figures, and a five-factor trust score backed by an audit record.
           </p>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <a href="https://github.com/Clupai8o0/govchat" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> frontend</a>
@@ -86,9 +92,9 @@ export default function GovchatPage() {
         {/* Metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
           {[
-            { k: 'retrieval strategy', v: 'RAG' },
-            { k: 'hallucination guard', v: 'threshold' },
-            { k: 'citations', v: 'chunk-level' },
+            { k: 'GovHack 2025', v: 'winner' },
+            { k: 'trust factors per answer', v: '5' },
+            { k: 'datasets per query', v: 'top 4' },
           ].map(m => (
             <div key={m.k} style={{ padding: '14px 16px', marginLeft: -1, marginTop: -1, borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
               <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
@@ -97,11 +103,23 @@ export default function GovchatPage() {
           ))}
         </div>
 
+        {/* Screenshot */}
+        <div style={{ marginBottom: 28 }}>
+          <Shot
+            src="/projects/govchat/home.webp"
+            alt="The GovChat search screen: a question box on the left and a side panel with Trust, Datasets, Explore and Tree View tabs"
+            width={2400}
+            height={1500}
+            caption="Ask on the left. Trust factors, sources and the dataset graph sit in the side panel."
+            priority
+          />
+        </div>
+
         {/* Context */}
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
-            Built in 2025. The problem: government information is accurate but structurally inaccessible — spread across PDF documents, department portals, and static pages with no search layer that understands intent. GovChat ingests the documents, indexes them into a vector store, and answers questions with grounded, cited responses. The retrieval threshold means the model declines to answer rather than guessing when confidence is low — critical for policy queries where a wrong answer has real consequences.
+            A team project for GovHack 2025; the frontend and most of the API commits are mine. Public data is only useful if people can find it, and a wrong answer about government data does real harm. So GovChat answers from dataset metadata only, cites every source, and shows a trust score you can check against the audit record.
           </p>
         </div>
 
@@ -137,25 +155,26 @@ export default function GovchatPage() {
           ))}
         </div>
 
-        {/* Query pipeline */}
-        <div className="section-label" style={{ fontFamily: MONO }}>Query pipeline</div>
+        {/* Trust score */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Trust score</div>
         <div style={{ marginBottom: 12 }}>
-          <CodeBlock lines={RAG_LINES} filename="query pipeline" lang="py" />
+          <CodeBlock lines={TRUST_LINES} filename="retrieval.py (simplified)" lang="py" />
         </div>
         <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
-          The similarity threshold is the critical gate. If retrieved chunks don&apos;t clear 0.75 cosine similarity, the model returns a decline rather than attempting an answer from low-confidence context. For government policy, that&apos;s the right trade-off — a non-answer is less harmful than a confident wrong one.
+          Grounding carries the most weight because invented figures are the worst failure. Retrieval reaches 1.0 only when the best match clears 0.90 similarity. Two factors are placeholders for now: recency and verification sit at 1.0 until freshness tracking and checks on figures are built.
         </p>
 
         {/* Stack */}
         <div className="section-label" style={{ fontFamily: MONO }}>Stack</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 28 }}>
           {[
-            { label: 'Language', items: 'Python' },
-            { label: 'RAG', items: 'embedding model · vector database · LLM' },
-            { label: 'Ingestion', items: 'document parser · chunking pipeline' },
+            { label: 'Frontend', items: 'Next.js 15 · React 19 · TypeScript · Tailwind v4 · React Flow' },
+            { label: 'API', items: 'Python · FastAPI · pandas' },
+            { label: 'Retrieval', items: 'OpenAI embeddings · ChromaDB' },
+            { label: 'Ingestion', items: 'Python crawlers · Playwright for JS pages · ABS dataflow metadata' },
           ].map(({ label, items }) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
-              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 72, flexShrink: 0 }}>{label}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 84, flexShrink: 0 }}>{label}</span>
               <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{items}</span>
             </div>
           ))}

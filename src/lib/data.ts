@@ -12,8 +12,6 @@ export interface Project {
   /** 1, 2, 3 = shown on the home page in that order. */
   homeOrder?: number
   cover?: string
-  /** Plain description of what the cover screenshot shows. */
-  coverAlt?: string
   updating?: boolean
   github?: string
 }
@@ -43,7 +41,6 @@ export const PROJECTS: Project[] = [
     year: '2026',
     status: 'Live · hoddle.org',
     cover: '/projects/hoddle/dashboard.png',
-    coverAlt: 'Hoddle student dashboard: a greeting, the student\'s goals and areas of interest, and a checklist of onboarding milestones with progress bars.',
     pitch: 'CTO and sole developer. Built the full platform for a Study Melbourne 4Impact startup (placed 2nd): magic-link auth, 5-step student onboarding wizard, weighted matching algorithm (country_origin +30 / field_overlap +15 / expertise +10) with nightly cron recompute. Tiptap content library, category forums with two-level nesting and anonymous posting, live Q&A sessions with capacity limits, direct messaging with rate limiting, Supabase Realtime notifications. Token-gated mentor invite system with 14-day expiry and full audit trail. 26K+ lines across 51 routes, 23 tables, 17 migrations.',
     pitchShort: 'Mentorship platform for international students, built solo. Weighted matching, forums, live Q&As. 4Impact 2nd.',
     stack: {
@@ -65,7 +62,7 @@ export const PROJECTS: Project[] = [
     tag: 'AI-native scheduling app',
     year: '2025–26',
     status: 'Live · in daily use · kairos.clupai.com',
-    pitch: 'Rewrote a 1,051-line Python/FastAPI prototype as a Next.js app that is now in daily use. The scheduler is a pure-function pipeline across seven modules, with every database and Google Calendar side effect held in one file, so the scheduling logic is fully unit-testable and places tasks in under 3 s. The plugin host keeps core free of LLM imports: every provider call routes through one module. The Oct 2026 rebuild adds a 14-day planner, check-ins that learn how long tasks really take, goals and habits, and Google Calendar sync.',
+    pitch: 'Rewrote a 7,000+ line Python/FastAPI prototype as a Next.js app that is now in daily use. The scheduler is a pure-function pipeline across seven modules, with every database and Google Calendar side effect held in one file, so the scheduling logic is fully unit-testable and places tasks in under 3 s. The plugin host keeps core free of LLM imports: every provider call routes through one module. The Oct 2026 rebuild adds a 14-day planner, check-ins that learn how long tasks really take, goals and habits, and Google Calendar sync.',
     pitchShort: 'AI scheduling with a pure-function scheduler, in daily use. Oct 2026 rebuild: 14-day planner and check-ins that learn task durations.',
     stack: {
       Frontend: ['Next.js 16', 'TypeScript'],
@@ -78,7 +75,6 @@ export const PROJECTS: Project[] = [
       { k: 'planner window', v: '14 days' },
     ],
     cover: '/projects/kairos/tasks.webp',
-    coverAlt: 'Kairos task list with tags, priorities and due dates, next to a sidebar for the schedule, scratchpad, collections and marketplace.',
     featured: true,
     homeOrder: 2,
   },
@@ -101,7 +97,6 @@ export const PROJECTS: Project[] = [
       { k: 'agents', v: '6' },
     ],
     cover: '/projects/aria/dashboard.webp',
-    coverAlt: 'ARIA home dashboard: live solar, battery, grid and price readings, a plain-English note on what ARIA is doing now, and a chart of the day\'s wholesale price.',
     featured: true,
     homeOrder: 3,
     github: 'https://github.com/Clupai8o0/aria',
@@ -125,7 +120,6 @@ export const PROJECTS: Project[] = [
       { k: 'cases passing', v: '24/24' },
     ],
     cover: '/projects/r1gpt/overview.webp',
-    coverAlt: 'R1GPT project overview for a sample grid connection: a submission readiness score of 72 out of 100, days in stage, the AEMO 60-day clock and the connection pipeline.',
     featured: true,
     github: 'https://github.com/Aarav261/R1gpt',
   },
@@ -148,7 +142,6 @@ export const PROJECTS: Project[] = [
       { k: 'audit findings triaged', v: '212' },
     ],
     cover: '/projects/dsec/desktop.webp',
-    coverAlt: 'DSEC public home page: the pixel-art headline "We build real software" above a row of cartoon ducks with laptops and pizza.',
     featured: true,
     github: 'https://github.com/dsec-hub/dsec',
   },
@@ -171,7 +164,6 @@ export const PROJECTS: Project[] = [
       { k: 'live since', v: 'Aug 2026' },
     ],
     cover: '/projects/tempo/desktop.webp',
-    coverAlt: 'Tempo landing page: the headline "Six months, one honest picture." under orange wave line art, with Start training and See the dashboard buttons.',
     featured: true,
     github: 'https://github.com/Clupai8o0/tempo',
   },
@@ -182,7 +174,6 @@ export const PROJECTS: Project[] = [
     year: '2026',
     status: 'Live · kingdoubleglazing.com.au',
     cover: '/projects/kdg/homepage.webp',
-    coverAlt: 'King Double Glazing home page: the yellow and white headline "Quieter home. Lower bills." with quote buttons and a 10-year warranty badge.',
     github: 'https://github.com/clupai8o0/kingdoubleglazing',
     pitch: 'Freelance. Full rebrand and rebuild from The Glass Discounters (57 Lighthouse mobile, 13.1s LCP) to King Double Glazing. Next.js 16 + Tailwind v4 + TinaCMS + Neon + Drizzle + Resend. Instant Estimate Tool surfaces price before lead capture, which is the core conversion differentiator. Desktop performance 99 · SEO 100 · Best Practices 100. Full ecosystem handed to client.',
     pitchShort: 'Rebrand + rebuild. Instant Estimate Tool. Performance 99 · SEO 100.',
@@ -213,7 +204,6 @@ export const PROJECTS: Project[] = [
       { k: 'default bundle', v: '~24 GB' },
     ],
     cover: '/projects/allarkive/preview.png',
-    coverAlt: 'AllArkive local dashboard: an archive search box and a table of the installed offline archives with their sizes.',
     featured: true,
     github: 'https://github.com/clupai8o0/allarkive',
   },
@@ -236,7 +226,6 @@ export const PROJECTS: Project[] = [
       { k: 'platform', v: 'macOS 14+' },
     ],
     cover: '/projects/acknowledgement-force/preview.webp',
-    coverAlt: 'Acknowledgement Force start screen: the app name in serif capitals on a dark background, above the line "Welcome, Samridh. Take a deep breath."',
     featured: true,
     github: 'https://github.com/clupai8o0/force',
   },
@@ -247,7 +236,6 @@ export const PROJECTS: Project[] = [
     year: '2026',
     status: 'Live · krishnavenischool.co.in',
     cover: '/projects/krishnaveni/homepage.webp',
-    coverAlt: 'Krishnaveni School home page: the headline "Affordable, Values Driven Education in Peerzadiguda" over a photo of students, with Apply Now and Contact Us buttons.',
     pitch: 'Freelance. End-to-end school marketing website for Krishnaveni School, India. Monorepo: Next.js 15 + Sanity v5. 10 public pages driven by a polymorphic section architecture: 13 section types rendered by SectionRenderer with zero routing changes per page. Content baked into the bundle via a custom pipeline (fetch-sanity.mjs → generate-data.mjs → lib/data/index.ts) so the site runs without a live CMS connection at runtime. GSAP scroll animations, bento grid gallery, video testimonial lightbox, keyboard-navigable media lightbox. Delivered with a full handover doc.',
     pitchShort: 'Full school website + Sanity v5 CMS. Section-driven architecture. Delivered with handover doc.',
     stack: {
@@ -269,7 +257,6 @@ export const PROJECTS: Project[] = [
     year: '2024',
     status: 'Live · nmmun.vercel.app',
     cover: '/projects/nmmun/homepage.webp',
-    coverAlt: 'NMMUN conference site home page: the event name in large serif type over a photo of a speaker at a lectern.',
     pitch: 'Production-ready conference website and operations toolkit used live by 500+ participants during a Model United Nations event. Built for reliability and fast iteration under real event deadlines.',
     pitchShort: 'Conference platform used live by 500+ participants at a MUN event.',
     stack: {
@@ -292,7 +279,6 @@ export const PROJECTS: Project[] = [
       Infra: ['Vercel', 'Cloudflare R2'],
     },
     cover: '/projects/tapcraft/desktop.webp',
-    coverAlt: 'TapCraft Studio storefront home page: the blue headline "Tap Into the Future" on a dark background, with Explore Catalogue and Get in Touch buttons.',
     featured: true,
   },
   {
@@ -314,7 +300,6 @@ export const PROJECTS: Project[] = [
       { k: 'parts cost', v: 'AU$70' },
     ],
     cover: '/projects/lock-in/dashboard.webp',
-    coverAlt: 'Lock-In dashboard: an idle status face, focus, session and distraction counters, pomodoro controls, and Arduino and camera status.',
     featured: false,
     github: 'https://github.com/clupai8o0/lock-in-complete',
   },
@@ -323,7 +308,7 @@ export const PROJECTS: Project[] = [
 export const ARCHIVE: ArchiveItem[] = [
   { year: '2026', name: 'Farmers Intuition · Hack48', tech: 'FastAPI · Gemini · ElevenLabs', link: 'github', slug: 'farmers-intuition' },
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
-  { year: '2025', name: 'GovChat · RAG platform', tech: 'Python · RAG', link: 'github', slug: 'govchat' },
+  { year: '2025', name: 'GovChat · GovHack 2025 winner', tech: 'FastAPI · ChromaDB · Next.js', link: 'github', slug: 'govchat' },
   { year: '2025', name: 'notes-app · CI/CD showcase', tech: 'Next.js · MongoDB · Docker · Jenkins · AWS · Prometheus · Grafana', link: 'github', slug: 'notes-app' },
   { year: '2025', name: 'load-balancer', tech: 'Go · Prometheus', link: 'github', slug: 'load-balancer' },
 ]
@@ -339,18 +324,18 @@ export const EXPERIENCE: ExperienceItem[] = [
     when: 'Aug 2026–present',
     role: 'Founder',
     org: 'morgue',
-    detail: 'Opened the waitlist for a SaaS that records repeatable video previews of UI animations, keeps the code and exports bundles for coding agents. Multi-user phases 1–2 deployed.',
+    detail: 'Opened the waitlist for a SaaS that records repeatable video previews of UI animations, keeps the code and exports bundles for coding agents. Multi-user accounts are built and deployed ahead of launch.',
     href: 'https://morgue.clupai.com',
   },
   {
-    when: '2026–',
+    when: 'Mar 2026–present',
     role: 'CTO',
     org: 'Hoddle Melbourne',
     detail: 'Sole developer of hoddle.org, a mentorship platform for international students: 26K+ lines, 51 routes, 23 Postgres tables. Placed 2nd at Study Melbourne Leadership 4Impact.',
     href: '/projects/hoddle',
   },
   {
-    when: '2025–',
+    when: 'Jun 2025–present',
     role: 'President',
     org: 'DSEC (Deakin Software Engineering Club)',
     detail: 'Run a 190+ member club across five committees. Lead development of its site, committee hub and member portal on a FastAPI backend.',
@@ -383,7 +368,7 @@ export const EXPERIENCE: ExperienceItem[] = [
     href: '/projects/tapcraft',
   },
   {
-    when: 'Oct 2025–',
+    when: 'Oct 2025–present',
     role: 'Residential Leader',
     org: 'DeakinRes',
     detail: 'Support residents and build community among international and domestic students in Deakin accommodation.',

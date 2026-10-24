@@ -30,7 +30,14 @@ export function ExperienceLog() {
       <ol className={styles.log}>
         {EXPERIENCE.map(e => (
           <li key={`${e.role}-${e.org}`}>
-            {e.href ? (
+            {e.href?.startsWith('http') ? (
+              <a href={e.href} target="_blank" rel="noopener noreferrer" className={`${styles.logRow} row-hover`}>
+                <RowBody e={e} />
+                <span className={`${styles.logArrow} row-arrow`} aria-hidden="true">
+                  <Icon name="external" size={12} />
+                </span>
+              </a>
+            ) : e.href ? (
               <Link href={e.href} className={`${styles.logRow} row-hover`}>
                 <RowBody e={e} />
                 <span className={`${styles.logArrow} row-arrow`} aria-hidden="true">

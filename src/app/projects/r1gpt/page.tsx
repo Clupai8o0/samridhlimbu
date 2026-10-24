@@ -111,7 +111,7 @@ export default function R1GptPage() {
 
         {/* Hero image */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
-          <img src="/projects/r1gpt/overview.webp" alt="R1GPT project overview dashboard" style={{ width: '100%', display: 'block' }} />
+          <img src="/projects/r1gpt/overview.webp" alt="R1GPT audit overview: a readiness score of 72 on a 100-point display (the index tops out at 95), with the blockers to clear" style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Metrics */}

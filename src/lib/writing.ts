@@ -2217,7 +2217,7 @@ module.exports = {
       },
       {
         type: 'paragraph',
-        html: 'We need people to break our installer on weird hardware. We need translators and librarians to help curate non-English bundles. We need security people to tear apart our threat model. If you find something wrong, we want to know. The repository is at <a href="https://github.com/allarkive/allarkive" target="_blank" rel="noopener noreferrer">github.com/allarkive/allarkive</a>.',
+        html: 'We need people to break our installer on weird hardware. We need translators and librarians to help curate non-English bundles. We need security people to tear apart our threat model. If you find something wrong, we want to know. The repository is at <a href="https://github.com/clupai8o0/allarkive" target="_blank" rel="noopener noreferrer">github.com/clupai8o0/allarkive</a>.',
       },
       {
         type: 'blockquote',

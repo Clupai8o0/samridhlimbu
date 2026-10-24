@@ -206,7 +206,7 @@ export function ResumeDocument() {
               Opened the waitlist (<Link src="https://morgue.clupai.com" style={s.inlineLink}>morgue.clupai.com</Link>)
               for a SaaS that records repeatable video previews of UI animations, keeps the code and
               exports bundles for coding agents. Built around measured browser limits (16 of 40 WebGL
-              contexts survive); multi-user phases 1–2 deployed. Node, Playwright, ffmpeg, Cloudflare R2.
+              contexts survive); multi-user accounts deployed ahead of launch. Node, Playwright, ffmpeg, Cloudflare R2.
             </Text>
           </View>
 
@@ -367,7 +367,7 @@ export function ResumeDocument() {
             </View>
             <Text style={s.projectStack}>Next.js 16 · Drizzle ORM · PostgreSQL · Vercel AI SDK</Text>
             <Text style={s.entryBody}>
-              Rewrote a 1,051-line Python prototype as a scheduler in daily use: seven pure-function
+              Rewrote a 7,000+ line Python prototype as a scheduler in daily use: seven pure-function
               modules, side effects isolated in one file, sub-3 s placement. Oct 2026 rebuild adds a
               14-day planner.
             </Text>

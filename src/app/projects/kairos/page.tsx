@@ -40,7 +40,7 @@ const METRICS = [
   { k: 'task placement', v: '<3 s' },
   { k: 'scheduler modules', v: '7' },
   { k: 'file with side effects', v: '1' },
-  { k: 'line prototype replaced', v: '1,051' },
+  { k: 'line prototype replaced', v: '7,000+' },
 ]
 
 const TIMELINE = [
@@ -93,7 +93,7 @@ export default function KairosPage() {
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · in daily use</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 18px' }}>
-            Paste messy notes and Kairos turns them into tasks and places them on your Google Calendar in under 3 s. I rewrote a 1,051-line Python prototype as a Next.js 16 app that I use every day. The scheduler is seven pure-function modules, with every side effect in one file.
+            Paste messy notes and Kairos turns them into tasks and places them on your Google Calendar in under 3 s. I rewrote a 7,000+ line Python prototype as a Next.js 16 app that I use every day. The scheduler is seven pure-function modules, with every side effect in one file.
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <a href="https://kairos.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> kairos.clupai.com</a>

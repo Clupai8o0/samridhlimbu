@@ -128,8 +128,8 @@ export function CommandPalette({ open, onClose }: Props) {
           boxShadow: '0 24px 80px rgba(0,0,0,.75)',
         }}
       >
-        {/* Search input */}
-        <div style={{
+        {/* Search input. The row shows focus, since the input itself has no outline. */}
+        <div className="cmdk-input-row" style={{
           padding: '11px 14px', borderBottom: '1px solid var(--border)',
           display: 'flex', alignItems: 'center', gap: 8,
         }}>

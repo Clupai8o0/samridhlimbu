@@ -41,7 +41,7 @@ const SECTIONS = [
       {
         head: 'Founder · morgue',
         meta: 'Aug 2026–present',
-        body: 'Opened the waitlist (morgue.clupai.com) for a SaaS that records repeatable video previews of UI animations, keeps the code and exports bundles for coding agents. Built around measured browser limits (16 of 40 WebGL contexts survive); multi-user phases 1–2 deployed. Node, Playwright, ffmpeg, Cloudflare R2.',
+        body: 'Opened the waitlist (morgue.clupai.com) for a SaaS that records repeatable video previews of UI animations, keeps the code and exports bundles for coding agents. Built around measured browser limits (16 of 40 WebGL contexts survive); multi-user accounts deployed ahead of launch. Node, Playwright, ffmpeg, Cloudflare R2.',
       },
       {
         head: 'CTO · Hoddle Melbourne',
@@ -131,7 +131,7 @@ const SECTIONS = [
       {
         head: 'Kairos · AI-native scheduling app',
         meta: 'Next.js 16 · Drizzle · PostgreSQL · Vercel AI SDK',
-        body: 'Rewrote a 1,051-line Python prototype as a Next.js app in daily use. Its pure-function scheduler (seven modules, side effects isolated in one file) places tasks in under 3 s. Oct 2026 rebuild adds a 14-day planner, check-ins that learn task durations and Google Calendar sync.',
+        body: 'Rewrote a 7,000+ line Python prototype as a Next.js app in daily use. Its pure-function scheduler (seven modules, side effects isolated in one file) places tasks in under 3 s. Oct 2026 rebuild adds a 14-day planner, check-ins that learn task durations and Google Calendar sync.',
       },
       {
         head: 'Lock-In · embedded focus tracker',
@@ -202,7 +202,7 @@ export default function ResumePage() {
     <PageShell>
       <div data-stagger style={{ maxWidth: 600, margin: '0 auto', padding: '40px 28px' }}>
 
-        <div className="no-print"><PageHeader /></div>
+        <PageHeader className="no-print" />
 
         {/* Breadcrumb */}
         <div data-stagger-item className="no-print" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 22, letterSpacing: '0.02em' }}>
@@ -245,7 +245,7 @@ export default function ResumePage() {
 
         {/* Footer hint — hidden in PDF */}
         <div className="no-print" style={{ marginTop: 20, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', fontFamily: MONO }}>
-          <span style={{ color: 'var(--accent)' }}>❯</span> end of file · press <kbd>q</kbd> to quit
+          <span style={{ color: 'var(--accent)' }}>❯</span> end of file
         </div>
 
       </div>
