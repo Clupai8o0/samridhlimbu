@@ -172,7 +172,7 @@ export function ResumeDocument() {
         {/* ── Summary ─────────────────────────────────────── */}
         <Text style={s.summary}>
           Final-year CS at Deakin (WAM ~87), graduating Jun 2027. Contract engineer for a
-          health-tech startup (search latency cut to under 200 ms), CTO and sole developer of a live
+          US health-tech startup (search latency cut to under 200 ms), CTO and sole developer of a live
           mentorship platform, President of a 190+ member software club. GovHack 2025 winner. Open
           to SWE internships for summer 2026–27 and graduate roles from mid-2027.
         </Text>
