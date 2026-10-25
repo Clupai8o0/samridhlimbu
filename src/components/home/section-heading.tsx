@@ -14,9 +14,10 @@ export function SectionHeading({
 }) {
   return (
     <div className={styles.sectionHead}>
-      <h2 id={id} className={styles.sectionTitle}>
+      <h2 id={id} className={styles.sectionTitle} aria-label={typeof children === 'string' ? children : undefined}>
         <span aria-hidden="true" style={{ color: 'var(--accent)' }}>›</span>
-        {children}
+        {/* Plain-text titles decode from random glyphs on reveal (PageAnimations). */}
+        {typeof children === 'string' ? <span data-scramble aria-hidden="true">{children}</span> : children}
       </h2>
       {link && (
         <Link href={link.href} className={styles.sectionLink}>

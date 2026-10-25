@@ -121,7 +121,7 @@ export default function LockInPage() {
             { k: 'parts cost', v: 'AU$70' },
           ].map(m => (
             <div key={m.k} style={{ padding: '14px 16px', marginLeft: -1, marginTop: -1, borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
-              <div style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
+              <div data-count style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
               <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
             </div>
           ))}
@@ -138,10 +138,10 @@ export default function LockInPage() {
         {/* FSM states */}
         <div className="section-label" style={{ fontFamily: MONO }}>Finite state machine</div>
         <div style={{ position: 'relative', paddingLeft: 22, marginBottom: 28 }}>
-          <div style={{ position: 'absolute', left: 5, top: 6, bottom: 6, width: 1, background: 'var(--border)' }} />
+          <div data-timeline-line style={{ position: 'absolute', left: 5, top: 6, bottom: 6, width: 1, background: 'var(--border)' }} />
           {FSM_STATES.map((s, i) => (
             <div key={i} style={{ position: 'relative', paddingBottom: 16 }}>
-              <div style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: 'var(--bg)', border: `1.5px solid ${s.color}` }} />
+              <div data-timeline-dot style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: 'var(--bg)', border: `1.5px solid ${s.color}` }} />
               <div style={{ fontFamily: MONO, fontSize: 12, color: s.color, marginBottom: 2 }}>{s.state}</div>
               <div style={{ fontFamily: SANS, fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>{s.desc}</div>
             </div>

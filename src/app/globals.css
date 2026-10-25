@@ -24,6 +24,11 @@
   --text-lg: 20px;
   --text-2xl: 36px;
   --text-3xl: 56px;
+
+  /* Motion curves (Emil Kowalski's set). */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -121,14 +126,27 @@ html, body {
   background: transparent;
   text-decoration: none;
   border-radius: 2px;
-  transition: border-color .12s, color .12s, background .12s, transform .08s;
+  transition: border-color .12s, color .12s, background .12s, transform 160ms var(--ease-out);
   cursor: pointer;
   white-space: nowrap;
 }
 .btn:hover  { border-color: var(--fg-dim); }
 .btn:active { transform: scale(0.97); }
-.btn-primary { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+.btn-primary { color: var(--bg); background: var(--accent); border-color: var(--accent); position: relative; overflow: hidden; isolation: isolate; }
 .btn-primary:hover { background: var(--accent-dim); border-color: var(--accent-dim); }
+/* One light sweep across a primary button per hover. */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.32) 50%, transparent 70%);
+  transform: translateX(-110%);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover::after { transform: translateX(110%); transition: transform 700ms var(--ease-out); }
+}
 .btn-ghost { border-color: transparent; color: var(--muted); padding-left: 0; padding-right: 0; }
 .btn-ghost:hover { color: var(--fg); border-color: transparent; }
 
@@ -163,8 +181,8 @@ html, body {
 .t2-nav-item:hover::after { width: 100%; }
 
 /* ─── Rows ───────────────────────────────────────────────── */
-.row-hover { transition: background .12s; }
-.row-hover:hover { background: var(--bg-2); }
+.row-hover { transition: background .12s, box-shadow .12s; }
+.row-hover:hover { background: var(--bg-2); box-shadow: inset 2px 0 0 var(--accent); }
 .row-hover:hover .row-arrow { color: var(--accent); transform: translateX(2px); }
 .row-arrow { color: var(--muted-2); transition: color .12s, transform .12s; }
 
@@ -367,6 +385,110 @@ a.t2-link:hover { border-color: var(--accent); }
 /* ─── Page entry ─────────────────────────────────────────── */
 .t2-main { animation: t2-page-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 
+/* ─── Scroll progress ────────────────────────────────────── */
+.t2-progress { display: none; }
+@supports (animation-timeline: scroll()) {
+  .t2-progress {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 30;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--accent-dim), var(--accent) 70%, #93c5fd);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    animation: t2-progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes t2-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ─── Reveal hooks ───────────────────────────────────────────
+   PageAnimations adds .motion-ok to <html> and moves hidden elements from
+   [data-reveal-pending] to [data-revealed], setting --reveal-delay. Effects
+   on descendants run as keyframes with backwards fill, so they never hold
+   a style once done. Each "pending" rule comes after its "revealed" rule:
+   while any ancestor is still pending the effect waits, then starts fresh. */
+
+/* Screenshot: wipes open top to bottom behind an accent scan line. */
+.shot-frame { position: relative; }
+.motion-ok .shot[data-reveal-pending] .shot-frame { clip-path: inset(0 0 100% 0); }
+.motion-ok .shot[data-reveal-pending] .shot-caption { opacity: 0; }
+.motion-ok .shot[data-revealed] .shot-frame {
+  animation: t2-wipe-down 1000ms var(--ease-in-out) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+.motion-ok .shot[data-revealed] .shot-frame img {
+  animation: t2-settle 1400ms var(--ease-out) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+.motion-ok .shot[data-revealed] .shot-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent calc(100% - 48px), rgba(59, 130, 246, 0.16) calc(100% - 1px), var(--accent) calc(100% - 1px));
+  animation: t2-scan 1000ms var(--ease-in-out) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+.motion-ok .shot[data-revealed] .shot-caption {
+  animation: t2-rise 480ms var(--ease-out) backwards;
+  animation-delay: calc(var(--reveal-delay, 0ms) + 520ms);
+}
+
+/* Code block: lines arrive one after another. */
+.motion-ok [data-revealed] .cb-line {
+  animation: t2-line-in 420ms var(--ease-out) backwards;
+  animation-delay: calc(var(--reveal-delay, 0ms) + 160ms + min(var(--i, 0), 16) * 38ms);
+}
+.motion-ok [data-reveal-pending] .cb-line { animation: none; }
+
+/* Timeline: the rail draws down, each dot pops in after its row. */
+.motion-ok [data-timeline-line][data-reveal-pending] { clip-path: inset(0 0 100% 0); }
+.motion-ok [data-timeline-line][data-revealed] {
+  animation: t2-wipe-down 1200ms var(--ease-in-out) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+.motion-ok [data-revealed] [data-timeline-dot] {
+  animation: t2-pop 460ms var(--ease-back) backwards;
+  animation-delay: calc(var(--reveal-delay, 0ms) + 180ms);
+}
+.motion-ok [data-reveal-pending] [data-timeline-dot] { animation: none; }
+
+[data-count] { font-variant-numeric: tabular-nums; }
+
+@keyframes t2-wipe-down {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+@keyframes t2-scan {
+  from { transform: translateY(-100%); opacity: 1; }
+  85%  { opacity: 1; }
+  to   { transform: translateY(0); opacity: 0; }
+}
+@keyframes t2-settle {
+  from { transform: scale(1.06); }
+  to   { transform: scale(1); }
+}
+@keyframes t2-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes t2-line-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes t2-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
 /* ─── Floating ⌘K button ─────────────────────────────────── */
 .t2-cmd-fab { transition: border-color .12s, color .12s; }
 .t2-cmd-fab:hover { border-color: var(--accent) !important; color: var(--fg) !important; }
@@ -391,6 +513,7 @@ a.t2-link:hover { border-color: var(--accent); }
   .t2-cmd-panel,
   .t2-nav-drawer { animation: none; }
   .btn:active { transform: none; }
+  .btn-primary::after { display: none; }
 }
 
 @media (min-width: 641px) {
@@ -455,4 +578,16 @@ a.t2-link:hover { border-color: var(--accent); }
   }
 
   .t2-main { animation: none; }
+  .t2-progress { display: none !important; }
+
+  /* Never print a half-revealed page. */
+  [data-reveal-pending],
+  [data-revealed] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+  }
+  [data-reveal-pending] *,
+  [data-revealed] * { animation: none !important; clip-path: none !important; }
 }

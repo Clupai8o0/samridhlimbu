@@ -39,6 +39,8 @@ const ITEMS: Item[] = [
   // External
   { k: '_gh',  label: 'github',    hint: '', href: 'https://github.com/clupai8o0',                  group: 'external' },
   { k: '_li',  label: 'linkedin',  hint: '', href: 'https://linkedin.com/in/samridh-limbu',          group: 'external' },
+  { k: '_x',   label: 'x · @clupai8o0',      hint: '', href: 'https://x.com/clupai8o0',          group: 'external' },
+  { k: '_ig',  label: 'instagram · @clupaii', hint: '', href: 'https://instagram.com/clupaii',   group: 'external' },
   { k: '_web', label: 'clupai.com · freelance studio', hint: '', href: 'https://clupai.com',         group: 'external' },
 
   // Actions

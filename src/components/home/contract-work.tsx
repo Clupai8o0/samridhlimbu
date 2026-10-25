@@ -23,7 +23,7 @@ export function ContractWork() {
         Since July 2026 I&apos;ve worked remotely as a contract software engineer for a US health-tech startup. I can&apos;t name the client or show the product, so this stays general.
       </p>
 
-      <ol className={styles.contractList}>
+      <ol data-reveal-kids className={styles.contractList}>
         {ITEMS.map(item => (
           <li key={item.problem} className={styles.contractItem}>
             <h3 className={styles.problem}>{item.problem}</h3>

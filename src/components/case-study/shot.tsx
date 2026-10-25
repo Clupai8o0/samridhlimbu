@@ -14,11 +14,14 @@ export interface ShotProps {
 
 // A screenshot figure for case-study pages: hairline frame, 2px radius,
 // optional mono caption. The mobile variant is narrow and centred so a
-// phone shot never stretches to the full column width.
+// phone shot never stretches to the full column width. It wipes open on
+// scroll (data-reveal="wipe"; the CSS lives in globals.css).
 export function Shot({ src, alt, width, height, caption, variant = 'desktop', priority = false }: ShotProps) {
   const mobile = variant === 'mobile'
   return (
     <figure
+      data-reveal="wipe"
+      className="shot"
       style={{
         margin: 0,
         width: '100%',
@@ -28,6 +31,7 @@ export function Shot({ src, alt, width, height, caption, variant = 'desktop', pr
       }}
     >
       <div
+        className="shot-frame"
         style={{
           border: '1px solid var(--border)',
           borderRadius: 2,
@@ -47,6 +51,7 @@ export function Shot({ src, alt, width, height, caption, variant = 'desktop', pr
       </div>
       {caption ? (
         <figcaption
+          className="shot-caption"
           style={{
             fontFamily: MONO,
             fontSize: 'var(--text-xs, 12px)',

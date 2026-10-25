@@ -27,7 +27,7 @@ export function ExperienceLog() {
         experience --log
       </SectionHeading>
 
-      <ol className={styles.log}>
+      <ol data-reveal-kids className={styles.log}>
         {EXPERIENCE.map(e => (
           <li key={`${e.role}-${e.org}`}>
             {e.href?.startsWith('http') ? (

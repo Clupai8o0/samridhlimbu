@@ -41,6 +41,8 @@ const PERSON_SCHEMA = {
   sameAs: [
     'https://github.com/clupai8o0',
     'https://linkedin.com/in/samridh-limbu',
+    'https://x.com/clupai8o0',
+    'https://instagram.com/clupaii',
   ],
   worksFor: { '@type': 'Organization', name: 'Hoddle Melbourne', url: 'https://hoddle.org' },
   memberOf: { '@type': 'Organization', name: 'DSEC (Deakin Software Engineering Club)' },
@@ -76,7 +78,7 @@ export default function HomePage() {
             <Link href="/projects/kairos" className="t2-link">Kairos</Link>, and I still use it every day. Claude kept losing my workout history between sessions, so I built{' '}
             <Link href="/projects/tempo" className="t2-link">Tempo</Link>, a workout app it can read and log to through an MCP server. I care a lot about UI, and I want to own what sits behind it too: schema, API, tests, deploys.
           </p>
-          <div className={styles.meta}>last_updated: 2026-10-24</div>
+          <div className={styles.meta}>last_updated: 2026-10-25</div>
         </section>
 
         <ExperienceLog />

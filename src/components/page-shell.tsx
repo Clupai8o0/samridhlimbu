@@ -18,11 +18,13 @@ const MONO = 'var(--font-mono, "JetBrains Mono", monospace)'
 const FOOTER_LINKS = [
   { href: 'https://github.com/clupai8o0', label: 'github', rel: 'me noopener noreferrer', external: true },
   { href: 'https://linkedin.com/in/samridh-limbu', label: 'linkedin', rel: 'me noopener noreferrer', external: true },
+  { href: 'https://x.com/clupai8o0', label: 'x', rel: 'me noopener noreferrer', external: true },
+  { href: 'https://instagram.com/clupaii', label: 'instagram', rel: 'me noopener noreferrer', external: true },
   { href: 'mailto:samridh@samridhlimbu.com', label: 'email', rel: undefined, external: false },
   { href: '/api/resume', label: 'resume (pdf)', rel: undefined, external: false },
 ]
 
-const LAST_UPDATED = '2026-10-24'
+const LAST_UPDATED = '2026-10-25'
 
 export function PageShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -37,6 +39,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ background: 'var(--bg)', color: 'var(--fg)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <a href="#main" className="skip-link">Skip to content</a>
+      <div className="t2-progress" aria-hidden="true" />
       <nav className="t2-nav" style={{
         display: 'flex',
         alignItems: 'center',

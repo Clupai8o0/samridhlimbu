@@ -18,14 +18,14 @@ export function FeaturedWork() {
     <section data-reveal className={styles.section} aria-labelledby="work-heading">
       <SectionHeading id="work-heading">projects --featured</SectionHeading>
 
-      <ul className={styles.work}>
+      <ul data-reveal-kids className={styles.work}>
         {projects.map((p, i) => {
           const lead = i === 0
           return (
             <li key={p.slug} className={lead ? styles.workLead : undefined}>
               <Link href={`/projects/${p.slug}`} className={styles.card}>
                 {p.cover && (
-                  <div className={styles.cover}>
+                  <div className={styles.cover} data-spotlight data-tilt>
                     <Image
                       src={p.cover}
                       alt=""
