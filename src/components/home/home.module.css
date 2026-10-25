@@ -21,6 +21,8 @@
   inset: 0 0 auto 0;
   height: 680px;
   z-index: -1;
+  /* The spot window travels past the edges; keep it out of the scroll width. */
+  overflow: hidden;
   pointer-events: none;
   background-image:
     radial-gradient(600px circle at 12% 18%, rgba(59, 130, 246, 0.09), transparent 65%),
@@ -37,6 +39,8 @@
   mask-composite: intersect;
 }
 .spot {
+  /* Mouse only; shown in the hover block below. */
+  display: none;
   position: absolute;
   left: 0;
   top: 0;
@@ -109,8 +113,8 @@
 .word { display: inline-block; white-space: nowrap; }
 .letter { display: inline-block; }
 :global(.motion-ok) [data-revealed] .letter {
-  animation: letterIn 440ms var(--ease-out) backwards;
-  animation-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 16ms);
+  animation: letterIn 400ms var(--ease-out) backwards;
+  animation-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 10ms);
 }
 :global(.motion-ok) [data-reveal-pending] .letter { animation: none; }
 @keyframes letterIn {
@@ -465,9 +469,10 @@
    it, and then the tilt stands in for the zoom so the screenshot is
    resampled once, not twice. */
 @media (hover: hover) and (pointer: fine) {
+  .spot { display: block; }
   .cover { transition: border-color 200ms ease-out, transform 240ms var(--ease-out); }
   .cover[data-hot] { transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
-  .card:hover .cover[data-hot] img { transform: none; }
+  :global(.motion-ok) .card:hover .cover:hover img { transform: none; }
   .cover[data-hot]::after { opacity: 1; }
   .proofItem[data-hot]::before { opacity: 1; }
   .action:hover svg { transform: translateY(-1px); }

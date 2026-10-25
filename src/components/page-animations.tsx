@@ -12,13 +12,15 @@ import { usePathname } from 'next/navigation'
  *     out of a light blur in sequence on mount (items holding an image skip
  *     the blur). If a page doesn't declare a stagger root, the first direct
  *     content wrapper inside <main> is auto-staggered (first 3 children).
- *     Anything below waits for the entrance to land, and anything inside an
- *     entrance item waits for that item.
+ *     Anything below waits for the entrance to land (unless the page opens
+ *     scrolled past it), and anything inside an entrance item waits for
+ *     that item.
  *   - [data-reveal]: fades up as it enters the viewport.
  *     [data-reveal="wipe"] skips the fade; CSS wipes its frame open instead.
  *   - [data-reveal-kids]: each child fades up as it enters the viewport;
  *     children that enter together stagger. A child that is itself
- *     [data-reveal-kids] is not faded; its own children are.
+ *     [data-reveal-kids] is not faded; its own children are, carrying on
+ *     the outer count.
  *     [data-reveal-delay="ms"] on the parent adds a base delay.
  *   - `.section-label`: auto-revealed. The element immediately following each
  *     section-label is also revealed; if that element has 3+ direct children
@@ -32,16 +34,16 @@ import { usePathname } from 'next/navigation'
  *     (or from [data-count-from]) when it comes into view, after
  *     [data-count-delay] ms (default 200). Years, versions, ranges, durations
  *     and labels like "macOS 14" are left alone.
- *   - [data-spotlight] / [data-tilt]: on a mouse, the element under the
- *     pointer gets [data-hot] and --sx/--sy (and --rx/--ry for tilt), set on
- *     the element itself. Scrolling drops them, since the pointer no longer
- *     matches.
+ *   - [data-spotlight] / [data-tilt]: on a mouse or pen, the element under
+ *     the pointer gets [data-hot] and --sx/--sy (and --rx/--ry for tilt), set
+ *     on the element itself. Scrolling or leaving the window drops [data-hot]
+ *     and the tilt, since the pointer no longer matches.
  *
  * Hidden elements carry [data-reveal-pending] and switch to [data-revealed]
  * with --reveal-delay set, so CSS can time effects on their descendants.
  * Keyboard focus inside a hidden element reveals it at once. Scramble and
- * count-up never change the text itself (see below), and printing stops
- * them.
+ * count-up never change the text itself (see below); printing stops them
+ * and lands any running entrance.
  * The root gets `motion-ok`; every CSS motion hook is scoped under it, so
  * nothing is hidden without JS. Honors prefers-reduced-motion.
  */
@@ -203,11 +205,18 @@ export function PageAnimations() {
 
     // How long an effect should still wait so it never runs ahead of the
     // entrance: inside an item, until that item starts; elsewhere, until the
-    // entrance has landed. Zero once the page has settled.
+    // entrance has landed. Zero once the page has settled, and when the page
+    // opened mid-way (a #link, a reload while scrolled) with the entrance
+    // off screen.
+    const inView = (el: Element) => {
+      const r = el.getBoundingClientRect()
+      return r.bottom > 0 && r.top < window.innerHeight
+    }
     const hold = (el: Element) => {
       const host = items.find(item => item !== el && item.contains(el))
       const at = host ? (entranceAt.get(host) ?? 0) + HOST_LEAD : entranceEnd
-      return Math.max(0, Math.round(at - (performance.now() - mountedAt)))
+      const wait = Math.max(0, Math.round(at - (performance.now() - mountedAt)))
+      return wait && !host && !items.some(inView) ? 0 : wait
     }
 
     // ----- Scroll reveal ---------------------------------------------------
@@ -288,14 +297,19 @@ export function PageAnimations() {
           .filter(e => e.isIntersecting)
           .map(e => e.target as HTMLElement)
           .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
-        // Kids that arrive together stagger, counted per parent.
+        // Kids that arrive together stagger, counted per outermost kids
+        // parent, so a nested list carries on its section's count.
         const steps = new Map<Element | null, number>()
         for (const el of hits) {
           io.unobserve(el)
           let delay = 0
           if (kidBase.has(el)) {
-            const step = steps.get(el.parentElement) ?? 0
-            steps.set(el.parentElement, step + 1)
+            let group = el.parentElement
+            for (let p = group?.parentElement; p && p !== main; p = p.parentElement) {
+              if (kidParents.has(p)) group = p
+            }
+            const step = steps.get(group) ?? 0
+            steps.set(group, step + 1)
             delay = (kidBase.get(el) ?? 0) + Math.min(step, KID_MAX_STEPS) * KID_GAP
           }
           reveal(el, delay)
@@ -447,7 +461,15 @@ export function PageAnimations() {
       scrambleIo.disconnect()
       live.forEach(clear)
     }
-    window.addEventListener('beforeprint', settle)
+    // Running transitions outrank the print sheet's !important, so a page
+    // printed mid-entrance would come out faded. Land them first.
+    const onPrint = () => {
+      settle()
+      main.getAnimations({ subtree: true }).forEach(a => {
+        if (a instanceof CSSTransition) a.finish()
+      })
+    }
+    window.addEventListener('beforeprint', onPrint)
 
     // ----- Pointer spotlight and tilt --------------------------------------
     let hot: HTMLElement | null = null
@@ -455,10 +477,13 @@ export function PageAnimations() {
     let pointerFrame = 0
     const fine = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches
 
+    // The glare keeps its last spot (--sx/--sy) so it fades out where the
+    // pointer left it; the next hover overwrites it.
     const cool = () => {
       if (!hot) return
       delete hot.dataset.hot
-      for (const p of ['--sx', '--sy', '--rx', '--ry']) hot.style.removeProperty(p)
+      hot.style.removeProperty('--rx')
+      hot.style.removeProperty('--ry')
       hot = null
     }
     const track = () => {
@@ -485,7 +510,7 @@ export function PageAnimations() {
       }
     }
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType !== 'mouse') return
+      if (e.pointerType === 'touch') return
       lastMove = e
       if (!pointerFrame) {
         pointerFrame = requestAnimationFrame(track)
@@ -494,9 +519,10 @@ export function PageAnimations() {
     if (fine) {
       document.addEventListener('pointermove', onMove, { passive: true })
       document.documentElement.addEventListener('mouseleave', cool)
-      // A wheel scroll moves the page under a still pointer; settle until
-      // the next move.
+      // A wheel scroll moves the page under a still pointer, and switching
+      // away leaves it wherever it was; settle until the next move.
       window.addEventListener('scroll', cool, { passive: true })
+      window.addEventListener('blur', cool)
     }
 
     return () => {
@@ -505,10 +531,11 @@ export function PageAnimations() {
       cancelAnimationFrame(pointerFrame)
       io.disconnect()
       main.removeEventListener('focusin', onFocus)
-      window.removeEventListener('beforeprint', settle)
+      window.removeEventListener('beforeprint', onPrint)
       document.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('mouseleave', cool)
       window.removeEventListener('scroll', cool)
+      window.removeEventListener('blur', cool)
       cool()
       settle()
     }
