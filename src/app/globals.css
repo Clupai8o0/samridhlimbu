@@ -625,6 +625,8 @@ a.t2-link:hover { border-color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .t2-toc-fab { transition: none; }
 }
+/* The open mobile menu owns the screen; the contents button waits. */
+body:has(.t2-nav-drawer) .t2-toc-fab { visibility: hidden; }
 
 /* ─── Footer ─────────────────────────────────────────────── */
 .t2-footer a {
