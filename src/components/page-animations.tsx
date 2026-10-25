@@ -9,14 +9,17 @@ import { usePathname } from 'next/navigation'
  *
  * Behavior:
  *   - [data-stagger] container: children with [data-stagger-item] fade up
- *     out of a light blur in sequence on mount. If a page doesn't declare a
- *     stagger root, the first direct content wrapper inside <main> is
- *     auto-staggered (first 3 children).
+ *     out of a light blur in sequence on mount (items holding an image skip
+ *     the blur). If a page doesn't declare a stagger root, the first direct
+ *     content wrapper inside <main> is auto-staggered (first 3 children).
+ *     Anything below waits for the entrance to land, and anything inside an
+ *     entrance item waits for that item.
  *   - [data-reveal]: fades up as it enters the viewport.
  *     [data-reveal="wipe"] skips the fade; CSS wipes its frame open instead.
  *   - [data-reveal-kids]: each child fades up as it enters the viewport;
- *     children that enter together stagger. [data-reveal-delay="ms"] on the
- *     parent adds a base delay (use it for kids that sit in the entrance).
+ *     children that enter together stagger. A child that is itself
+ *     [data-reveal-kids] is not faded; its own children are.
+ *     [data-reveal-delay="ms"] on the parent adds a base delay.
  *   - `.section-label`: auto-revealed. The element immediately following each
  *     section-label is also revealed; if that element has 3+ direct children
  *     (timelines, decision rows, archive rows), its children reveal like
@@ -26,10 +29,13 @@ import { usePathname } from 'next/navigation'
  *   - `.section-label` and [data-scramble]: a single text node decodes from
  *     random glyphs, left to right, as it comes into view.
  *   - [data-count]: the first number in a single text node counts up from 0
- *     (or from [data-count-from]) when it comes into view. Years, versions,
- *     ranges, durations and labels like "macOS 14" are left alone.
- *   - [data-spotlight] / [data-tilt]: on a mouse, --sx/--sy (and --rx/--ry
- *     for tilt) follow the pointer, set on the element itself.
+ *     (or from [data-count-from]) when it comes into view, after
+ *     [data-count-delay] ms (default 200). Years, versions, ranges, durations
+ *     and labels like "macOS 14" are left alone.
+ *   - [data-spotlight] / [data-tilt]: on a mouse, the element under the
+ *     pointer gets [data-hot] and --sx/--sy (and --rx/--ry for tilt), set on
+ *     the element itself. Scrolling drops them, since the pointer no longer
+ *     matches.
  *
  * Hidden elements carry [data-reveal-pending] and switch to [data-revealed]
  * with --reveal-delay set, so CSS can time effects on their descendants.
@@ -52,7 +58,9 @@ const KID_MAX_STEPS = 8
 const SCRAMBLE_MS = 520
 const SCRAMBLE_TICK = 45
 const COUNT_MS = 1200
-const TILT_MAX = 3
+const TILT_MAX = 2
+// A child of an entrance item starts this long after its item does.
+const HOST_LEAD = 100
 
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const LOWER = 'abcdefghijklmnopqrstuvwxyz'
@@ -178,11 +186,29 @@ export function PageAnimations() {
       }
     }
     const entrance = new Set(items)
+    const entranceAt = new Map<HTMLElement, number>()
+    const mountedAt = performance.now()
 
-    items.forEach(el => hide(el, 'translateY(12px)', true))
+    // Blurring a photo or screenshot is costly and smears it; those items
+    // only fade and rise.
+    items.forEach(el => hide(el, 'translateY(12px)', !el.querySelector('img, video')))
     // Commit the hidden state before transitioning out of it.
     void main.offsetHeight
-    items.forEach((el, i) => show(el, 80 + i * 70, ENTER_MS))
+    items.forEach((el, i) => {
+      entranceAt.set(el, 80 + i * KID_GAP)
+      show(el, 80 + i * KID_GAP, ENTER_MS)
+    })
+    // Most of the way landed: the curve is ease-out, so half its time is ~90%.
+    const entranceEnd = 80 + items.length * KID_GAP + ENTER_MS / 2
+
+    // How long an effect should still wait so it never runs ahead of the
+    // entrance: inside an item, until that item starts; elsewhere, until the
+    // entrance has landed. Zero once the page has settled.
+    const hold = (el: Element) => {
+      const host = items.find(item => item !== el && item.contains(el))
+      const at = host ? (entranceAt.get(host) ?? 0) + HOST_LEAD : entranceEnd
+      return Math.max(0, Math.round(at - (performance.now() - mountedAt)))
+    }
 
     // ----- Scroll reveal ---------------------------------------------------
     const modeByEl = new Map<HTMLElement, Mode>()
@@ -200,6 +226,8 @@ export function PageAnimations() {
       const base = Number(parent.dataset.revealDelay) || 0
       for (const k of Array.from(parent.children)) {
         if (!(k instanceof HTMLElement)) continue
+        // A nested list reveals row by row; fading it as well would double up.
+        if (k.hasAttribute('data-reveal-kids')) continue
         if (k.hasAttribute('data-timeline-line')) {
           k.dataset.revealPending = ''
           rails.set(parent, k)
@@ -241,7 +269,8 @@ export function PageAnimations() {
       }
     }
 
-    const reveal = (el: HTMLElement, delay: number) => {
+    const reveal = (el: HTMLElement, after: number) => {
+      const delay = after + hold(el)
       // A rail draws with the first row of its timeline.
       const parent = el.parentElement
       const rail = parent ? rails.get(parent) : undefined
@@ -345,7 +374,7 @@ export function PageAnimations() {
           const node = onlyText(el)
           if (node) {
             const text = node.data
-            timers.push(window.setTimeout(() => scramble(el, text), 120))
+            timers.push(window.setTimeout(() => scramble(el, text), 120 + hold(el)))
           }
         }
       },
@@ -402,7 +431,7 @@ export function PageAnimations() {
           const el = entry.target as HTMLElement
           const c = counts.get(el)
           if (c) {
-            timers.push(window.setTimeout(() => runCount(el, c), c.delay))
+            timers.push(window.setTimeout(() => runCount(el, c), c.delay + hold(el)))
           }
         }
       },
@@ -428,6 +457,7 @@ export function PageAnimations() {
 
     const cool = () => {
       if (!hot) return
+      delete hot.dataset.hot
       for (const p of ['--sx', '--sy', '--rx', '--ry']) hot.style.removeProperty(p)
       hot = null
     }
@@ -443,6 +473,7 @@ export function PageAnimations() {
       }
       if (!target || !main.contains(target)) return
       hot = target
+      target.dataset.hot = ''
       const r = target.getBoundingClientRect()
       const x = e.clientX - r.left
       const y = e.clientY - r.top
@@ -463,6 +494,9 @@ export function PageAnimations() {
     if (fine) {
       document.addEventListener('pointermove', onMove, { passive: true })
       document.documentElement.addEventListener('mouseleave', cool)
+      // A wheel scroll moves the page under a still pointer; settle until
+      // the next move.
+      window.addEventListener('scroll', cool, { passive: true })
     }
 
     return () => {
@@ -474,6 +508,7 @@ export function PageAnimations() {
       window.removeEventListener('beforeprint', settle)
       document.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('mouseleave', cool)
+      window.removeEventListener('scroll', cool)
       cool()
       settle()
     }

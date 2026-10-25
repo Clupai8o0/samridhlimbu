@@ -118,12 +118,7 @@ export function Hero() {
         {PROOF.map((p, i) => (
           <li key={p.k} style={{ '--i': i } as React.CSSProperties}>
             <Link href={p.href} className={styles.proofItem} data-spotlight>
-              <span
-                className={styles.proofKey}
-                data-count={p.count ? '' : undefined}
-                data-count-from={p.countFrom}
-                data-count-delay={p.count ? 560 : undefined}
-              >
+              <span className={styles.proofKey} data-count={p.count ? '' : undefined} data-count-from={p.countFrom}>
                 {p.k}
               </span>
               <span className={styles.proofValue}>{p.v}</span>

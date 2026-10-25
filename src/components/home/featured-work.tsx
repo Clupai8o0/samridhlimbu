@@ -15,7 +15,7 @@ export function FeaturedWork() {
   }
 
   return (
-    <section data-reveal className={styles.section} aria-labelledby="work-heading">
+    <section data-reveal-kids className={styles.section} aria-labelledby="work-heading">
       <SectionHeading id="work-heading">projects --featured</SectionHeading>
 
       <ul data-reveal-kids className={styles.work}>

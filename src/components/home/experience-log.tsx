@@ -22,7 +22,7 @@ function RowBody({ e }: { e: ExperienceItem }) {
 
 export function ExperienceLog() {
   return (
-    <section data-reveal className={styles.section} aria-labelledby="experience-heading">
+    <section data-reveal-kids className={styles.section} aria-labelledby="experience-heading">
       <SectionHeading id="experience-heading" link={{ href: '/resume', label: 'full resume' }}>
         experience --log
       </SectionHeading>

@@ -66,7 +66,7 @@ export default function HomePage() {
 
         <ContractWork />
 
-        <section data-reveal className={styles.section} aria-labelledby="whoami-heading">
+        <section data-reveal-kids className={styles.section} aria-labelledby="whoami-heading">
           <SectionHeading id="whoami-heading">whoami</SectionHeading>
           <p className={styles.prose}>
             I&apos;m Sam, in my final year of computer science at Deakin, graduating in June 2027. Since July 2026 I&apos;ve been a contract software engineer for a US health-tech startup (under NDA), where I took search from seconds to under 200 ms and have shipped dozens of production deploys. I&apos;m also CTO and sole developer of{' '}
@@ -83,7 +83,7 @@ export default function HomePage() {
 
         <ExperienceLog />
 
-        <section data-reveal className={styles.section} aria-labelledby="contact-heading">
+        <section data-reveal-kids className={styles.section} aria-labelledby="contact-heading">
           <SectionHeading id="contact-heading">get_in_touch()</SectionHeading>
           <div style={{ maxWidth: 640 }}>
             <ContactForm />

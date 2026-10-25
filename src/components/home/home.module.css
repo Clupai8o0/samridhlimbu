@@ -13,7 +13,9 @@
 
 /* ─── Hero ─────────────────────────────────────────────── */
 /* Dot grid behind the hero; on a mouse an accent spotlight follows the
-   pointer (HeroBackdrop sets --mx/--my and [data-active]). */
+   pointer. HeroBackdrop moves .spot (a fixed-size window) with a transform
+   and moves .spotDots back by the same amount, so the bright dots stay on
+   the grid and nothing repaints while the pointer moves. */
 .backdrop {
   position: absolute;
   inset: 0 0 auto 0;
@@ -34,19 +36,31 @@
     linear-gradient(to bottom, #000 45%, transparent);
   mask-composite: intersect;
 }
-.backdrop::after {
-  content: '';
+.spot {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
+  width: 440px;
+  height: 440px;
+  overflow: hidden;
+  -webkit-mask-image: radial-gradient(220px circle at 50% 50%, #000, transparent 72%);
+  mask-image: radial-gradient(220px circle at 50% 50%, #000, transparent 72%);
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+  will-change: transform;
+}
+.spotDots {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 960px;
+  height: 680px;
   background-color: rgba(59, 130, 246, 0.05);
   background-image: radial-gradient(circle, rgba(96, 165, 250, 0.95) 1.2px, transparent 1.8px);
   background-size: 24px 24px;
-  -webkit-mask-image: radial-gradient(220px circle at var(--mx, 50%) var(--my, 30%), #000, transparent 72%);
-  mask-image: radial-gradient(220px circle at var(--mx, 50%) var(--my, 30%), #000, transparent 72%);
-  opacity: 0;
-  transition: opacity 300ms ease-out;
+  will-change: transform;
 }
-.backdrop[data-active]::after { opacity: 1; }
+.backdrop[data-active] .spot { opacity: 1; }
 :global(.motion-ok) .backdrop { animation: backdropIn 1400ms ease-out backwards 200ms; }
 @keyframes backdropIn {
   from { opacity: 0; }
@@ -90,27 +104,28 @@
   align-self: end;
 }
 
-/* Name letters rise out of a blur once the identity block lands. */
+/* Name letters rise out of a blur with the identity block, and land before
+   the rows below it. */
 .word { display: inline-block; white-space: nowrap; }
 .letter { display: inline-block; }
 :global(.motion-ok) [data-revealed] .letter {
-  animation: letterIn 720ms var(--ease-out) backwards;
-  animation-delay: calc(var(--reveal-delay, 0ms) + 120ms + var(--i, 0) * 28ms);
+  animation: letterIn 440ms var(--ease-out) backwards;
+  animation-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 16ms);
 }
 :global(.motion-ok) [data-reveal-pending] .letter { animation: none; }
 @keyframes letterIn {
-  from { opacity: 0; transform: translateY(0.4em); filter: blur(8px); }
+  from { opacity: 0; transform: translateY(0.4em); filter: blur(4px); }
   to   { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 /* Photo opens bottom-up while the image settles. */
 :global(.motion-ok) [data-revealed] .photo {
-  animation: photoIn 900ms var(--ease-in-out) backwards;
-  animation-delay: calc(var(--reveal-delay, 0ms) + 40ms);
+  animation: photoIn 640ms var(--ease-out) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
 }
 :global(.motion-ok) [data-revealed] .photo img {
-  animation: photoZoom 1300ms var(--ease-out) backwards;
-  animation-delay: calc(var(--reveal-delay, 0ms) + 40ms);
+  animation: photoZoom 700ms var(--ease-out) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
 }
 :global(.motion-ok) [data-reveal-pending] .photo,
 :global(.motion-ok) [data-reveal-pending] .photo img { animation: none; }
@@ -249,7 +264,7 @@
   transition: background-color 150ms ease-out;
 }
 .proofItem:hover { background: var(--bg-2); }
-/* Pointer spotlight (PageAnimations sets --sx/--sy). */
+/* Pointer spotlight (PageAnimations sets [data-hot] and --sx/--sy). */
 .proofItem::before {
   content: '';
   position: absolute;
@@ -321,11 +336,13 @@
   transform-origin: 0 50%;
   pointer-events: none;
 }
-:global(.motion-ok) [data-revealed] .sectionHead::after {
+:global(.motion-ok) [data-revealed] .sectionHead::after,
+:global(.motion-ok) .sectionHead[data-revealed]::after {
   animation: ruleDraw 1100ms var(--ease-out) backwards;
   animation-delay: calc(var(--reveal-delay, 0ms) + 120ms);
 }
-:global(.motion-ok) [data-reveal-pending] .sectionHead::after { animation: none; }
+:global(.motion-ok) [data-reveal-pending] .sectionHead::after,
+:global(.motion-ok) .sectionHead[data-reveal-pending]::after { animation: none; }
 @keyframes ruleDraw {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
@@ -410,7 +427,8 @@
 .cover img { transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1); }
 .card:hover .cover { border-color: var(--muted-2); }
 .card:hover .cover img { transform: scale(1.03); }
-/* Glare that follows the pointer (PageAnimations sets --sx/--sy). */
+/* Glare that follows the pointer (PageAnimations sets [data-hot] and
+   --sx/--sy while the pointer is on the cover). */
 .cover::after {
   content: '';
   position: absolute;
@@ -424,11 +442,11 @@
 
 /* Covers wipe open as their card reveals. */
 :global(.motion-ok) [data-revealed] .cover {
-  animation: coverWipe 1000ms var(--ease-in-out) backwards;
+  animation: coverWipe 720ms var(--ease-out) backwards;
   animation-delay: calc(var(--reveal-delay, 0ms) + 60ms);
 }
 :global(.motion-ok) [data-revealed] .cover img {
-  animation: coverZoom 1400ms var(--ease-out) backwards;
+  animation: coverZoom 960ms var(--ease-out) backwards;
   animation-delay: calc(var(--reveal-delay, 0ms) + 60ms);
 }
 :global(.motion-ok) [data-reveal-pending] .cover,
@@ -438,18 +456,20 @@
   to   { clip-path: inset(0 0 0 0); }
 }
 @keyframes coverZoom {
-  from { transform: scale(1.1); }
+  from { transform: scale(1.06); }
   to   { transform: scale(1); }
 }
 
-/* Mouse-only hover effects: tilt, glare, spotlight, button sweep. */
+/* Mouse-only hover effects: tilt, glare, spotlight, button sweep. The
+   cover is a flat 2D layer at rest; it only goes 3D while the pointer is on
+   it, and then the tilt stands in for the zoom so the screenshot is
+   resampled once, not twice. */
 @media (hover: hover) and (pointer: fine) {
-  .cover {
-    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-    transition: border-color 200ms ease-out, transform 240ms var(--ease-out);
-  }
-  .card:hover .cover::after { opacity: 1; }
-  .proofItem:hover::before { opacity: 1; }
+  .cover { transition: border-color 200ms ease-out, transform 240ms var(--ease-out); }
+  .cover[data-hot] { transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+  .card:hover .cover[data-hot] img { transform: none; }
+  .cover[data-hot]::after { opacity: 1; }
+  .proofItem[data-hot]::before { opacity: 1; }
   .action:hover svg { transform: translateY(-1px); }
   .actionPrimary:hover::after { transform: translateX(110%); transition: transform 700ms var(--ease-out); }
 }
@@ -667,5 +687,5 @@
   .cover { transform: none; }
   .liveDot::after,
   .actionPrimary::after,
-  .backdrop::after { display: none; }
+  .spot { display: none; }
 }

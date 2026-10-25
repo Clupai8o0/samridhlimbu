@@ -16,7 +16,7 @@ const ITEMS: { problem: string; did?: string; result?: string }[] = [
 
 export function ContractWork() {
   return (
-    <section data-reveal id="contract" className={styles.section} aria-labelledby="contract-heading">
+    <section data-reveal-kids id="contract" className={styles.section} aria-labelledby="contract-heading">
       <SectionHeading id="contract-heading">contract work · under NDA</SectionHeading>
 
       <p className={styles.prose}>
