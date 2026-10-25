@@ -62,7 +62,7 @@ export default function ProjectsPage() {
             <span className="t2-archive-year">year</span><span>name</span><span className="t2-archive-tech">tech</span><span style={{ textAlign: 'right' }}>link</span>
           </div>
           {ARCHIVE.map(r => (
-            <div key={r.name} className="t2-archive-grid row-hover" style={{ display: 'grid', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
+            <div key={r.name} className={`t2-archive-grid row-hover${r.slug ? ' row-link' : ''}`} style={{ display: 'grid', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
               <span className="t2-archive-year" style={{ color: 'var(--muted-2)', fontVariantNumeric: 'tabular-nums' }}>{r.year}</span>
               <span style={{ color: 'var(--fg)' }}>{r.name.toLowerCase()}</span>
               <span className="t2-archive-tech" style={{ color: 'var(--muted)' }}>{r.tech}</span>

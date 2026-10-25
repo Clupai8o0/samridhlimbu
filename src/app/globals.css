@@ -180,11 +180,40 @@ html, body {
 }
 .t2-nav-item:hover::after { width: 100%; }
 
+/* ─── Touch targets ──────────────────────────────────────────
+   On touch screens, small links and icon buttons get an invisible hit
+   area about 44px tall, so they are easy to tap and nothing moves. */
+.t2-footer-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+
+@media (pointer: coarse) {
+  .t2-crumb,
+  .t2-nav-links > *,
+  .t2-nav-ham { position: relative; }
+  .t2-crumb::before,
+  .t2-nav-links > *::before,
+  .t2-nav-ham::before,
+  .t2-copy::before {
+    content: '';
+    position: absolute;
+    inset: -13px 0;
+  }
+  .t2-nav-links > *::before { inset: -13px -12px; }
+  .t2-nav-ham::before,
+  .t2-copy::before { inset: -9px -8px; }
+
+  /* Footer links wrap, so they get real padding instead. */
+  .t2-footer-links { gap: 0; margin: -13px -8px; }
+  .t2-footer-links a { padding: 13px 8px; }
+}
+
 /* ─── Rows ───────────────────────────────────────────────── */
 .row-hover { transition: background .12s, box-shadow .12s; }
 .row-hover:hover { background: var(--bg-2); box-shadow: inset 2px 0 0 var(--accent); }
 .row-hover:hover .row-arrow { color: var(--accent); transform: translateX(2px); }
 .row-arrow { color: var(--muted-2); transition: color .12s, transform .12s; }
+/* The row's link covers the whole row, so a tap anywhere on it opens it. */
+.row-link { position: relative; }
+.row-link a::after { content: ''; position: absolute; inset: 0; }
 
 /* ─── Section label ──────────────────────────────────────── */
 .section-label {

@@ -16,6 +16,7 @@ export function CopyButton({ code, label = 'Copy to clipboard' }: { code: string
     <button
       onClick={handleCopy}
       type="button"
+      className="t2-copy"
       title={label}
       aria-label={label}
       style={{

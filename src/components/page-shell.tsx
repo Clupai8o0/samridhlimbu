@@ -54,6 +54,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
         <div style={{ display: 'flex', alignItems: 'baseline' }}>
           <Link
             href="/"
+            className="t2-crumb"
             style={{ color: 'var(--muted-2)', textDecoration: 'none', fontWeight: 400 }}
             onClick={closeMenu}
           >
@@ -62,6 +63,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
           {current && (
             <Link
               href={current.href}
+              className="t2-crumb"
               style={{ color: 'var(--muted-2)', textDecoration: 'none', fontWeight: 400 }}
               onClick={closeMenu}
             >
@@ -145,7 +147,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: 10,
-                  padding: '11px 20px',
+                  padding: '13px 20px',
                   fontFamily: MONO,
                   fontSize: 12,
                   color: isActive ? 'var(--fg)' : 'var(--muted-2)',
@@ -170,6 +172,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/"
               onClick={closeMenu}
+              className="t2-crumb"
               style={{ fontFamily: MONO, fontSize: 12, color: 'var(--muted-2)', textDecoration: 'none' }}
             >
               ~/home
@@ -184,7 +187,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
                 background: 'none',
                 border: '1px solid var(--border)',
                 borderRadius: 2,
-                padding: '8px 12px',
+                padding: '12px 14px',
                 cursor: 'pointer',
               }}
             >
@@ -219,7 +222,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
           gap: '8px 20px',
         }}>
           <span>samridh limbu · melbourne</span>
-          <nav aria-label="Elsewhere" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 16px' }}>
+          <nav aria-label="Elsewhere" className="t2-footer-links">
             {FOOTER_LINKS.map(l => (
               <a
                 key={l.label}
