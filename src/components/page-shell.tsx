@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PageAnimations } from '@/components/page-animations'
 import { openCommandPalette } from '@/components/cmd-provider'
 
@@ -32,6 +32,19 @@ export function PageShell({ children }: { children: React.ReactNode }) {
   const [menuPath, setMenuPath] = useState<string | null>(null)
   const menuOpen = menuPath !== null && menuPath === pathname
   const closeMenu = () => setMenuPath(null)
+  const hamRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setMenuPath(null)
+      // The drawer leaves the DOM, so focus would drop to the body.
+      hamRef.current?.focus()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [menuOpen])
 
   const current = SECTIONS.find(s => pathname?.startsWith(s.href))
   const others = SECTIONS.filter(s => !pathname?.startsWith(s.href))
@@ -103,6 +116,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
 
         {/* Mobile hamburger */}
         <button
+          ref={hamRef}
           className="t2-nav-ham"
           onClick={() => setMenuPath(menuOpen ? null : pathname)}
           aria-label="Toggle navigation"
@@ -127,13 +141,34 @@ export function PageShell({ children }: { children: React.ReactNode }) {
 
       {/* Mobile drawer — only in DOM when open, CSS hides on desktop */}
       {menuOpen && (
+        <button
+          type="button"
+          className="t2-nav-backdrop"
+          aria-label="Close navigation"
+          tabIndex={-1}
+          onClick={closeMenu}
+          style={{
+            display: 'none',
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            border: 0,
+            padding: 0,
+            cursor: 'pointer',
+            zIndex: 14,
+          }}
+        />
+      )}
+      {menuOpen && (
         <div
           className="t2-nav-drawer"
           style={{
             display: 'none',
             borderBottom: '1px solid var(--border)',
             background: 'var(--bg)',
-            zIndex: 15,
+            // Above the nav, so its touch hit areas never catch a tap on the first row.
+            position: 'relative',
+            zIndex: 21,
           }}
         >
           {SECTIONS.map(s => {

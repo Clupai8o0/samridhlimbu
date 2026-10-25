@@ -103,11 +103,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
         {/* Author(s) */}
         {post.authors && post.authors.length > 0 ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 22, flexWrap: 'wrap' }}>
+          <div className="prose-authors" style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 22, flexWrap: 'wrap' }}>
             {post.authors.map((author, i) => (
               <span key={i} style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                {i > 0 && <span style={{ color: 'var(--border-2)', margin: '0 10px' }}>·</span>}
-                <strong style={{ color: 'var(--fg)', fontWeight: 500 }}>{author.name}</strong>
+                {i > 0 && <span className="prose-authors-sep" style={{ color: 'var(--border-2)', margin: '0 10px' }}>·</span>}
+                <strong style={{ color: 'var(--fg)', fontWeight: 500, whiteSpace: 'nowrap' }}>{author.name}</strong>
                 {author.role && (
                   <>
                     <span style={{ color: 'var(--muted-2)' }}>·</span>
@@ -271,7 +271,7 @@ function renderBlock(block: ContentBlock, key: number) {
         )}
         <div style={{ position: 'relative' }}>
         <CopyButton code={block.code} />
-        <pre style={{
+        <pre className="prose-code" style={{
           margin: 0,
           padding: '14px 16px',
           background: '#0d0d11',
@@ -438,6 +438,7 @@ function renderBlock(block: ContentBlock, key: number) {
     return (
       <figure key={key} style={{ margin: '20px 0 22px', textAlign: 'center' }}>
         <div
+          className="prose-eq"
           style={{
             display: 'inline-block',
             padding: '12px 18px',
@@ -466,19 +467,20 @@ function renderBlock(block: ContentBlock, key: number) {
   }
 
   if (block.type === 'table') {
+    const stack = block.headers.length > 2
     return (
       <div key={key} style={{ margin: '18px 0 26px', overflowX: 'auto' }}>
-        <table style={{
+        <table role="table" className={stack ? 'prose-table-stack' : undefined} style={{
           width: '100%',
           borderCollapse: 'collapse',
           fontFamily: SANS,
           fontSize: 13,
           color: 'var(--fg-dim)',
         }}>
-          <thead>
-            <tr>
+          <thead role="rowgroup">
+            <tr role="row">
               {block.headers.map((h, i) => (
-                <th key={i} style={{
+                <th key={i} role="columnheader" style={{
                   textAlign: 'left',
                   padding: '8px 12px',
                   borderBottom: '1px solid var(--border-2)',
@@ -492,11 +494,11 @@ function renderBlock(block: ContentBlock, key: number) {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody role="rowgroup">
             {block.rows.map((row, i) => (
-              <tr key={i}>
+              <tr key={i} role="row">
                 {row.map((cell, j) => (
-                  <td key={j} style={{
+                  <td key={j} role="cell" data-label={block.headers[j]} style={{
                     padding: '10px 12px',
                     borderBottom: '1px solid var(--border)',
                     verticalAlign: 'top',

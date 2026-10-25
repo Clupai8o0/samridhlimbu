@@ -93,6 +93,7 @@ export default function FarmersIntuitionPage() {
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
           <video
             src="/projects/farmers-intuition/demo.mp4"
+            poster="/projects/farmers-intuition/demo-poster.webp"
             autoPlay
             muted
             loop
@@ -102,7 +103,7 @@ export default function FarmersIntuitionPage() {
         </div>
 
         {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
+        <div className="cs-metrics" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
           {[
             { k: 'build time', node: (<><span style={{ textDecoration: 'line-through', opacity: 0.4, marginRight: 6, fontWeight: 500 }}>48h</span>20h</>) },
             { k: 'ml layers', node: '2' },

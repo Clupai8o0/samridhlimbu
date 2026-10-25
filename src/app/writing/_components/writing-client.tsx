@@ -2,15 +2,30 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import type { FocusEvent, UIEvent } from 'react'
 import type { Post } from '@/lib/writing'
 import { ALL_TAGS } from '@/lib/writing'
+import styles from './writing-client.module.css'
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
 const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 
+// Only phones scroll the chip row sideways; elsewhere this would scroll the page.
+function revealChip(e: FocusEvent<HTMLButtonElement>) {
+  if (!window.matchMedia('(max-width: 640px)').matches) return
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  e.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduce ? 'auto' : 'smooth' })
+}
+
 export function WritingClient({ posts }: { posts: Post[] }) {
   const [active, setActive] = useState('all')
+  const [atEnd, setAtEnd] = useState(false)
+
+  const onFilterScroll = (e: UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2)
+  }
 
   const filtered = active === 'all' ? posts : posts.filter(p => p.tags.includes(active))
   const featured = filtered.filter(p => p.featured)
@@ -19,9 +34,11 @@ export function WritingClient({ posts }: { posts: Post[] }) {
   return (
     <div>
       {/* Tag filter — hidden when no tags exist */}
-      {ALL_TAGS.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 32 }}>
+      {ALL_TAGS.length > 0 && <div className={styles.filters} data-end={atEnd || undefined} onScroll={onFilterScroll}>
         <button
+          className={styles.chip}
           onClick={() => setActive('all')}
+          onFocus={revealChip}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -44,7 +61,9 @@ export function WritingClient({ posts }: { posts: Post[] }) {
         {ALL_TAGS.map(tag => (
           <button
             key={tag}
+            className={styles.chip}
             onClick={() => setActive(tag)}
+            onFocus={revealChip}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -113,7 +132,7 @@ function PostCard({ post }: { post: Post }) {
           <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 600, color: 'var(--fg)', letterSpacing: '-0.01em' }}>
             {post.title}
           </span>
-          <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', flexShrink: 0 }}>
+          <span className={styles.date} style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', flexShrink: 0 }}>
             {post.date}
           </span>
         </div>
@@ -121,6 +140,8 @@ function PostCard({ post }: { post: Post }) {
           {post.excerpt}
         </p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', flexWrap: 'wrap' }}>
+          <span className={styles.metaDate}>{post.date}</span>
+          <span className={styles.metaDate}>·</span>
           <span>{post.readMin} min</span>
           <span>·</span>
           {post.tags.map(tag => (

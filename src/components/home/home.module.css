@@ -654,10 +654,10 @@
   .proofItem { padding: 14px; }
   .section { margin-top: 72px; }
   .steps { grid-template-columns: 76px minmax(0, 1fr); gap: 6px 12px; }
-  .logRow { grid-template-columns: minmax(0, 1fr) 16px; }
+  .logRow { grid-template-columns: minmax(0, 1fr); }
   .logWhen { grid-column: 1; grid-row: 1; line-height: 1.6; }
   .logMain { grid-column: 1; grid-row: 2; }
-  .logArrow { grid-column: 2; grid-row: 1 / span 2; align-self: center; padding-top: 0; }
+  .logArrow { grid-column: 1; grid-row: 1; align-self: center; padding-top: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

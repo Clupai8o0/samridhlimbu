@@ -114,7 +114,7 @@ export default function LockInPage() {
         </div>
 
         {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
+        <div className="cs-metrics" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
           {[
             { k: 'FSM states', v: '5' },
             { k: 'tests (4 suites)', v: '51' },
@@ -192,9 +192,9 @@ export default function LockInPage() {
             ['orchestrator.py', '8 asyncio tasks: serial, tick, vision, retention, mqtt, publish, watchdog'],
             ['dashboard/app.py', 'Flask + SSE fan-out over MQTT snapshot topic'],
           ].map(([file, desc]) => (
-            <div key={file} style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 16 }}>
-              <span style={{ color: 'var(--accent)' }}>{file}</span>
-              <span style={{ color: 'var(--muted)' }}>{desc}</span>
+            <div key={file} style={{ display: 'flex', flexWrap: 'wrap', columnGap: 16 }}>
+              <span style={{ color: 'var(--accent)', flex: '0 0 180px' }}>{file}</span>
+              <span style={{ color: 'var(--muted)', flex: '1 1 240px' }}>{desc}</span>
             </div>
           ))}
         </div>

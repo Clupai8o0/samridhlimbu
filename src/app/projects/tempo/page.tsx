@@ -172,7 +172,7 @@ export default function TempoPage() {
         <div className="section-label" style={{ fontFamily: MONO }}>Stack</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 40 }}>
           {STACK.map(([label, items]) => (
-            <div key={label} style={{ display: 'flex', columnGap: 12, rowGap: 2, alignItems: 'baseline', flexWrap: 'wrap' }}>
+            <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
               <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
               <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg-dim)', lineHeight: 1.6 }}>{items.join(' · ')}</span>
             </div>

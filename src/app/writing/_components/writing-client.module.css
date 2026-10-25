@@ -1,0 +1,35 @@
+/* Phone layout for the writing index. Inline styles can't hold media queries. */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 32px;
+}
+
+.chip { flex-shrink: 0; white-space: nowrap; }
+
+.metaDate { display: none; }
+
+@media (max-width: 640px) {
+  /* One sideways-scrolling row. The 4px padding keeps focus outlines unclipped. */
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    margin: -4px -4px 28px;
+    padding: 4px;
+    scroll-padding-inline: 4px 40px;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filters[data-end] {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .date { display: none; }
+  .metaDate { display: inline; }
+}

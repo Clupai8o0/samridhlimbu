@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 
 type Item = {
@@ -21,7 +21,7 @@ const ITEMS: Item[] = [
 
   // Projects
   { k: '/projects/hoddle',            label: 'hoddle · mentorship platform',          hint: '', href: '/projects/hoddle',            group: 'projects' },
-  { k: '/projects/kairos',            label: 'kairos · ai-native scheduling',        hint: '', href: '/projects/kairos',            group: 'projects' },
+  { k: '/projects/kairos',            label: 'kairos · personal planner',             hint: '', href: '/projects/kairos',            group: 'projects' },
   { k: '/projects/aria',              label: 'aria · multi-agent home-energy brain',  hint: '', href: '/projects/aria',              group: 'projects' },
   { k: '/projects/tempo',             label: 'tempo · workout app + mcp server',      hint: '', href: '/projects/tempo',             group: 'projects' },
   { k: '/projects/dsec',              label: 'dsec · deakin software engineering club', hint: '', href: '/projects/dsec',            group: 'projects' },
@@ -55,6 +55,16 @@ const GROUP_LABELS: Record<string, string> = {
   actions:  'actions',
 }
 
+// Keyboard hints mean nothing on touch screens.
+const COARSE = '(pointer: coarse)'
+const subscribeCoarse = (callback: () => void) => {
+  const mq = window.matchMedia(COARSE)
+  mq.addEventListener('change', callback)
+  return () => mq.removeEventListener('change', callback)
+}
+const getCoarse = () => window.matchMedia(COARSE).matches
+const getCoarseServer = () => false
+
 interface Props {
   open: boolean
   onClose: () => void
@@ -66,6 +76,7 @@ export function CommandPalette({ open, onClose }: Props) {
   const [idx, setIdx] = useState(0)
   const [copied, setCopied] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
+  const coarse = useSyncExternalStore(subscribeCoarse, getCoarse, getCoarseServer)
 
   const filtered = ITEMS.filter(x =>
     x.label.toLowerCase().includes(q.toLowerCase()) ||
@@ -154,7 +165,7 @@ export function CommandPalette({ open, onClose }: Props) {
               color: 'var(--fg)', fontFamily: 'var(--font-inter, Inter, sans-serif)', fontSize: 14,
             }}
           />
-          <span className="t2-key">esc</span>
+          {!coarse && <span className="t2-key">esc</span>}
         </div>
 
         {/* Results */}
@@ -196,7 +207,7 @@ export function CommandPalette({ open, onClose }: Props) {
                         }}>
                           {copied && isMail ? '✓ copied to clipboard' : item.label}
                         </span>
-                        {item.hint && <span className="t2-key">{item.hint}</span>}
+                        {item.hint && !coarse && <span className="t2-key">{item.hint}</span>}
                       </div>
                     )
                   })}
@@ -213,9 +224,13 @@ export function CommandPalette({ open, onClose }: Props) {
           display: 'flex', gap: 12, fontFamily: 'var(--font-mono)',
           alignItems: 'center',
         }}>
-          <span><span className="t2-key">↑↓</span> nav</span>
-          <span><span className="t2-key">↵</span> open</span>
-          <span><span className="t2-key">esc</span> close</span>
+          {!coarse && (
+            <>
+              <span><span className="t2-key">↑↓</span> nav</span>
+              <span><span className="t2-key">↵</span> open</span>
+              <span><span className="t2-key">esc</span> close</span>
+            </>
+          )}
           <span style={{ marginLeft: 'auto' }}>{flatFiltered.length} command{flatFiltered.length !== 1 ? 's' : ''}</span>
         </div>
       </div>

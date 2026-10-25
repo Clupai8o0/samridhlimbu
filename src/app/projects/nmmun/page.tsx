@@ -84,6 +84,7 @@ export default function NmmunPage() {
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--bg-2)' }}>
           <video
             src="/projects/nmmun/home.mp4"
+            poster="/projects/nmmun/home-poster.webp"
             autoPlay
             muted
             loop
@@ -93,7 +94,7 @@ export default function NmmunPage() {
         </div>
 
         {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
+        <div className="cs-metrics" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
           {[
             { k: 'live participants', v: '500+' },
             { k: 'council routes', v: 'multi' },
@@ -130,7 +131,7 @@ export default function NmmunPage() {
 
         {/* Screenshot — councils */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <video src="/projects/nmmun/councils.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
+          <video src="/projects/nmmun/councils.mp4" poster="/projects/nmmun/councils-poster.webp" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Key decisions */}
@@ -153,7 +154,7 @@ export default function NmmunPage() {
 
         {/* Screenshot — gallery */}
         <div style={{ marginBottom: 28, border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <video src="/projects/nmmun/gallery.mp4" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
+          <video src="/projects/nmmun/gallery.mp4" poster="/projects/nmmun/gallery-poster.webp" autoPlay loop muted playsInline style={{ width: '100%', display: 'block' }} />
         </div>
 
         {/* Stack */}

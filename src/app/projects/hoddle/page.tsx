@@ -151,7 +151,7 @@ export default function HoddlePage() {
         </div>
 
         {/* Scale */}
-        <div data-reveal style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 40 }}>
+        <div data-reveal className="cs-metrics" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 40 }}>
           {SCALE.map((m) => (
             <div key={m.k} style={{ padding: '14px 16px 14px 0' }}>
               <div data-count style={{ fontFamily: DISPLAY, fontSize: 'var(--text-lg)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>{m.v}</div>
@@ -178,6 +178,7 @@ export default function HoddlePage() {
           <div style={{ border: '1px solid var(--border)', borderRadius: 2, overflow: 'hidden', background: 'var(--bg-2)' }}>
             <video
               src="/projects/hoddle/demo.mp4"
+              poster="/projects/hoddle/demo-poster.webp"
               controls
               muted
               playsInline
@@ -272,7 +273,7 @@ export default function HoddlePage() {
             <div className="section-label" style={{ fontFamily: MONO }}>Stack</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 40 }}>
               {Object.entries(hoddle.stack).map(([label, items]) => (
-                <div key={label} style={{ display: 'flex', columnGap: 12, rowGap: 2, alignItems: 'baseline', flexWrap: 'wrap' }}>
+                <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
                   <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
                   <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg-dim)', lineHeight: 1.6 }}>{(items as string[]).join(' · ')}</span>
                 </div>

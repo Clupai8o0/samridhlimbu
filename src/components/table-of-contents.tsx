@@ -23,6 +23,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
   const [active, setActive] = useState<string | null>(items[0]?.id ?? null)
   const isDesktop = useSyncExternalStore(subscribeMq, getMqSnapshot, getMqServerSnapshot)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [tucked, setTucked] = useState(false)
   const mounted = useSyncExternalStore(subscribeMounted, getMountedSnapshot, getMountedServerSnapshot)
 
   useEffect(() => {
@@ -50,6 +51,28 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
       window.removeEventListener('resize', update)
     }
   }, [items])
+
+  // Phones: tuck the button away while scrolling down; it returns on scroll up,
+  // after a short pause, and near the end of the page. CSS decides where it applies.
+  useEffect(() => {
+    if (isDesktop || items.length === 0) return
+    let lastY = window.scrollY
+    let timer: number | undefined
+    const onScroll = () => {
+      const y = window.scrollY
+      const nearEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 160
+      if (nearEnd || y < lastY) setTucked(false)
+      else if (y > lastY && y > 80) setTucked(true)
+      lastY = y
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => setTucked(false), 700)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.clearTimeout(timer)
+    }
+  }, [isDesktop, items.length])
 
   if (items.length === 0 || !mounted) return null
 
@@ -104,8 +127,8 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
     )
   }
 
-  // Mobile: small fixed floating icon-button, stacked above the ⌘K palette
-  // button at bottom-right so they don't overlap.
+  // Mobile: small fixed floating icon-button. Stacked above the ⌘K palette
+  // button where that shows; in the corner where it doesn't (see globals.css).
   return createPortal(
     <>
       {mobileOpen && (
@@ -126,10 +149,11 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
       )}
 
       <div
+        className="t2-toc-fab"
+        data-hidden={tucked && !mobileOpen ? '' : undefined}
         style={{
           position: 'fixed',
           right: 24,
-          bottom: 76,
           zIndex: 50,
           display: 'flex',
           flexDirection: 'column',

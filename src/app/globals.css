@@ -211,9 +211,12 @@ html, body {
 .row-hover:hover { background: var(--bg-2); box-shadow: inset 2px 0 0 var(--accent); }
 .row-hover:hover .row-arrow { color: var(--accent); transform: translateX(2px); }
 .row-arrow { color: var(--muted-2); transition: color .12s, transform .12s; }
-/* The row's link covers the whole row, so a tap anywhere on it opens it. */
+/* On touch screens the row's link covers the whole row, so a tap anywhere
+   on it opens it. A mouse keeps text selection. */
 .row-link { position: relative; }
-.row-link a::after { content: ''; position: absolute; inset: 0; }
+@media (pointer: coarse) {
+  .row-link a::after { content: ''; position: absolute; inset: 0; }
+}
 
 /* ─── Section label ──────────────────────────────────────── */
 .section-label {
@@ -391,6 +394,58 @@ a.t2-link:hover { border-color: var(--accent); }
   color: inherit;
 }
 
+@media (max-width: 640px) {
+  .prose-authors { flex-direction: column; align-items: flex-start !important; row-gap: 4px; }
+  .prose-authors-sep { display: none; }
+  .prose-eq { white-space: nowrap; padding: 12px !important; }
+  .prose-code { padding-top: 40px !important; }
+}
+
+/* Tables with 3+ columns become one card per row on phones. */
+@media (max-width: 480px) {
+  .prose-table-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .prose-table-stack,
+  .prose-table-stack tbody,
+  .prose-table-stack tr,
+  .prose-table-stack td { display: block; }
+  .prose-table-stack tr {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .prose-table-stack tr:first-child { border-top: 1px solid var(--border-2); }
+  .prose-table-stack td {
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 12px;
+    padding: 2px 0 !important;
+    border-bottom: 0 !important;
+  }
+  .prose-table-stack td::before {
+    content: attr(data-label) / '';
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-2);
+    padding-top: 2px;
+  }
+  .prose-table-stack td:first-child {
+    display: block;
+    padding-bottom: 4px !important;
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .prose-table-stack td:first-child::before { content: none; }
+  .prose-table-stack td:empty { display: none; }
+}
+
 
 /* ─── Scanlines ──────────────────────────────────────────── */
 .t2-scanlines {
@@ -409,6 +464,10 @@ a.t2-link:hover { border-color: var(--accent); }
 .t2-nav-drawer {
   display: block !important;
   animation: t2-slide-down 160ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.t2-nav-backdrop { display: block !important; }
+@media (min-width: 641px) {
+  .t2-nav-backdrop { display: none !important; }
 }
 
 /* ─── Page entry ─────────────────────────────────────────── */
@@ -540,8 +599,31 @@ a.t2-link:hover { border-color: var(--accent); }
 .t2-cmd-fab { transition: border-color .12s, color .12s; }
 .t2-cmd-fab:hover { border-color: var(--accent) !important; color: var(--fg) !important; }
 
-@media (max-width: 640px) {
+@media (max-width: 640px), (pointer: coarse) {
   .t2-cmd-fab { display: none !important; }
+}
+
+/* Contents button: above the ⌘K button where it shows, else in the corner,
+   tucked away while scrolling down (TableOfContents sets data-hidden). */
+.t2-toc-fab { bottom: 76px; }
+@media (max-width: 640px), (pointer: coarse) {
+  .t2-toc-fab {
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    transition: transform .22s var(--ease-out), opacity .22s;
+  }
+  .t2-toc-fab[data-hidden] {
+    transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom)));
+    opacity: 0;
+    pointer-events: none;
+  }
+  .t2-toc-fab[data-hidden]:focus-within {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .t2-toc-fab { transition: none; }
 }
 
 /* ─── Footer ─────────────────────────────────────────────── */
@@ -581,6 +663,7 @@ a.t2-link:hover { border-color: var(--accent); }
 
 @media (max-width: 640px) {
   .cs-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cs-metrics > :last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
 
 /* ─── Print / PDF ────────────────────────────────────────── */
