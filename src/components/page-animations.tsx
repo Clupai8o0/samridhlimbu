@@ -33,6 +33,9 @@ import { usePathname } from 'next/navigation'
  *
  * Hidden elements carry [data-reveal-pending] and switch to [data-revealed]
  * with --reveal-delay set, so CSS can time effects on their descendants.
+ * Keyboard focus inside a hidden element reveals it at once. Scramble and
+ * count-up never change the text itself (see below), and printing stops
+ * them.
  * The root gets `motion-ok`; every CSS motion hook is scoped under it, so
  * nothing is hidden without JS. Honors prefers-reduced-motion.
  */
@@ -59,8 +62,6 @@ const SYMBOLS = '#%&*+=<>/_$'
 const COUNT_RE = /(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)/
 
 interface Count {
-  node: Text
-  text: string
   prefix: string
   suffix: string
   from: number
@@ -96,15 +97,13 @@ function parseCount(el: HTMLElement): Count | null {
     if (/[→–]/.test(text)) return null
     if (/[a-z]/.test(prefix)) return null
     if (/^\.?\d/.test(suffix)) return null
-    if (/^\s*(ms|s|sec|min)\b/i.test(suffix)) return null
+    if (/^\s*(ms|s|secs?|mins?|h|hrs?|hours?|d|days?|wks?|weeks?|mo|months?|yrs?|years?)\b/i.test(suffix)) return null
     if (/^\d{4}$/.test(raw) && to >= 1900 && to <= 2099) return null
     if (to < 2) return null
   }
   const from = explicit ? Number(explicit) : 0
   if (!Number.isFinite(to) || !Number.isFinite(from)) return null
   return {
-    node,
-    text,
     prefix,
     suffix,
     from,
@@ -135,7 +134,6 @@ export function PageAnimations() {
     const main = document.querySelector<HTMLElement>('main.t2-main') ?? document.body
     const timers: number[] = []
     const frames = new Set<number>()
-    const restore = new Map<Text, string>()
 
     const hide = (el: HTMLElement, transform: string, blur = false) => {
       el.dataset.revealPending = ''
@@ -243,6 +241,18 @@ export function PageAnimations() {
       }
     }
 
+    const reveal = (el: HTMLElement, delay: number) => {
+      // A rail draws with the first row of its timeline.
+      const parent = el.parentElement
+      const rail = parent ? rails.get(parent) : undefined
+      if (parent && rail) {
+        rails.delete(parent)
+        show(rail, delay)
+      }
+      const mode = modeByEl.get(el) ?? 'single'
+      show(el, delay, mode === 'wipe' ? undefined : mode === 'kid' ? KID_MS : SINGLE_MS)
+    }
+
     const io = new IntersectionObserver(
       entries => {
         const hits = entries
@@ -253,38 +263,60 @@ export function PageAnimations() {
         const steps = new Map<Element | null, number>()
         for (const el of hits) {
           io.unobserve(el)
-          const mode = modeByEl.get(el) ?? 'single'
           let delay = 0
           if (kidBase.has(el)) {
             const step = steps.get(el.parentElement) ?? 0
             steps.set(el.parentElement, step + 1)
             delay = (kidBase.get(el) ?? 0) + Math.min(step, KID_MAX_STEPS) * KID_GAP
-            const parent = el.parentElement
-            const rail = parent ? rails.get(parent) : undefined
-            if (parent && rail) {
-              rails.delete(parent)
-              show(rail, delay)
-            }
           }
-          show(el, delay, mode === 'wipe' ? undefined : mode === 'kid' ? KID_MS : SINGLE_MS)
+          reveal(el, delay)
         }
       },
       { root: null, threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     )
     for (const el of modeByEl.keys()) io.observe(el)
 
-    // ----- Scramble --------------------------------------------------------
-    const scramble = (node: Text) => {
-      const text = node.data
-      restore.set(node, text)
+    // Tabbing can land on a link before its row is far enough in view to
+    // reveal. Show the row, and any hidden ancestor, straight away.
+    const onFocus = (e: FocusEvent) => {
+      let el = e.target instanceof HTMLElement ? e.target : null
+      for (; el && el !== main; el = el.parentElement) {
+        if (modeByEl.has(el) && el.hasAttribute('data-reveal-pending')) {
+          io.unobserve(el)
+          reveal(el, 0)
+        }
+      }
+    }
+    main.addEventListener('focusin', onFocus)
+
+    // ----- Scramble and count-up --------------------------------------------
+    // Neither touches the text node. The moving glyphs go in a data attribute
+    // ([data-scrambling] / [data-counting]) and CSS draws them over the real
+    // text as generated content with empty alt text, so screen readers,
+    // find-in-page and print only ever meet the real words. Browsers without
+    // that alt text, or forcing their own colours, skip both effects.
+    const overlay =
+      !!CSS.supports?.('content', '"x" / ""') &&
+      !window.matchMedia?.('(forced-colors: active)').matches
+    const live = new Set<HTMLElement>()
+    let settled = false
+    const clear = (el: HTMLElement) => {
+      delete el.dataset.scrambling
+      delete el.dataset.counting
+      live.delete(el)
+    }
+
+    const scramble = (el: HTMLElement, text: string) => {
+      if (settled) return
+      live.add(el)
       const start = performance.now()
       let lastTick = -1
       const tick = (now: number) => {
         frames.delete(frame)
+        if (!live.has(el)) return
         const t = now - start
         if (t >= SCRAMBLE_MS) {
-          node.data = text
-          restore.delete(node)
+          clear(el)
           return
         }
         const tickNo = Math.floor(t / SCRAMBLE_TICK)
@@ -295,7 +327,7 @@ export function PageAnimations() {
           for (let i = fixed; i < text.length; i++) {
             out += /\s/.test(text[i]) ? text[i] : randomLike(text[i])
           }
-          node.data = out
+          el.dataset.scrambling = out
         }
         frame = requestAnimationFrame(tick)
         frames.add(frame)
@@ -309,45 +341,52 @@ export function PageAnimations() {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue
           scrambleIo.unobserve(entry.target)
-          const node = onlyText(entry.target)
+          const el = entry.target as HTMLElement
+          const node = onlyText(el)
           if (node) {
-            timers.push(window.setTimeout(() => scramble(node), 120))
+            const text = node.data
+            timers.push(window.setTimeout(() => scramble(el, text), 120))
           }
         }
       },
       { threshold: 0.6, rootMargin: '0px 0px -8% 0px' }
     )
-    main.querySelectorAll<HTMLElement>('.section-label, [data-scramble]').forEach(el => {
-      // Only monospace text keeps its width while the glyphs churn.
-      if (onlyText(el) && /mono/i.test(getComputedStyle(el).fontFamily)) {
-        scrambleIo.observe(el)
-      }
-    })
+    if (overlay) {
+      main.querySelectorAll<HTMLElement>('.section-label, [data-scramble]').forEach(el => {
+        // Only monospace text keeps its width while the glyphs churn.
+        if (onlyText(el) && /mono/i.test(getComputedStyle(el).fontFamily)) {
+          scrambleIo.observe(el)
+        }
+      })
+    }
 
-    // ----- Count-up --------------------------------------------------------
     const counts = new Map<Element, Count>()
-    main.querySelectorAll<HTMLElement>('[data-count]').forEach(el => {
-      const c = parseCount(el)
-      if (!c) return
-      counts.set(el, c)
-      restore.set(c.node, c.text)
-      c.node.data = formatCount(c, c.from)
-    })
+    if (overlay) {
+      main.querySelectorAll<HTMLElement>('[data-count]').forEach(el => {
+        // A hidden element may never intersect, so it would sit at zero.
+        if (!el.getClientRects().length) return
+        const c = parseCount(el)
+        if (!c) return
+        counts.set(el, c)
+        live.add(el)
+        el.dataset.counting = formatCount(c, c.from)
+      })
+    }
 
-    const runCount = (c: Count) => {
+    const runCount = (el: HTMLElement, c: Count) => {
       const start = performance.now()
       const tick = (now: number) => {
         frames.delete(frame)
+        if (!live.has(el)) return
         const p = Math.min(1, (now - start) / COUNT_MS)
         if (p >= 1) {
-          c.node.data = c.text
-          restore.delete(c.node)
+          clear(el)
           return
         }
         const eased = 1 - Math.pow(2, -10 * p)
         const n = c.from + (c.to - c.from) * eased
         const step = Math.pow(10, -c.decimals)
-        c.node.data = formatCount(c, Math.round(n / step) * step)
+        el.dataset.counting = formatCount(c, Math.round(n / step) * step)
         frame = requestAnimationFrame(tick)
         frames.add(frame)
       }
@@ -360,15 +399,26 @@ export function PageAnimations() {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue
           countIo.unobserve(entry.target)
-          const c = counts.get(entry.target)
+          const el = entry.target as HTMLElement
+          const c = counts.get(el)
           if (c) {
-            timers.push(window.setTimeout(() => runCount(c), c.delay))
+            timers.push(window.setTimeout(() => runCount(el, c), c.delay))
           }
         }
       },
       { threshold: 0.6 }
     )
     for (const el of counts.keys()) countIo.observe(el)
+
+    // Drop every overlay: a page printed before it was scrolled must show
+    // real numbers, not zeros.
+    const settle = () => {
+      settled = true
+      countIo.disconnect()
+      scrambleIo.disconnect()
+      live.forEach(clear)
+    }
+    window.addEventListener('beforeprint', settle)
 
     // ----- Pointer spotlight and tilt --------------------------------------
     let hot: HTMLElement | null = null
@@ -420,13 +470,12 @@ export function PageAnimations() {
       frames.forEach(f => cancelAnimationFrame(f))
       cancelAnimationFrame(pointerFrame)
       io.disconnect()
-      scrambleIo.disconnect()
-      countIo.disconnect()
+      main.removeEventListener('focusin', onFocus)
+      window.removeEventListener('beforeprint', settle)
       document.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('mouseleave', cool)
       cool()
-      // Put back any text a scramble or count left half-way.
-      for (const [node, text] of restore) node.data = text
+      settle()
     }
   }, [pathname])
 

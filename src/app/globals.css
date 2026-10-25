@@ -463,6 +463,24 @@ a.t2-link:hover { border-color: var(--accent); }
 
 [data-count] { font-variant-numeric: tabular-nums; }
 
+/* Scramble and count-up: the real text keeps its place (and is what screen
+   readers, find-in-page and print see); the moving glyphs are drawn over it
+   as generated content with empty alt text. */
+.motion-ok [data-scrambling],
+.motion-ok [data-counting] {
+  position: relative;
+  -webkit-text-fill-color: transparent;
+}
+.motion-ok [data-scrambling]::after,
+.motion-ok [data-counting]::after {
+  position: absolute;
+  inset: 0;
+  -webkit-text-fill-color: currentcolor;
+  pointer-events: none;
+}
+.motion-ok [data-scrambling]::after { content: attr(data-scrambling) / ''; }
+.motion-ok [data-counting]::after { content: attr(data-counting) / ''; }
+
 @keyframes t2-wipe-down {
   from { clip-path: inset(0 0 100% 0); }
   to   { clip-path: inset(0 0 0 0); }
@@ -514,6 +532,7 @@ a.t2-link:hover { border-color: var(--accent); }
   .t2-nav-drawer { animation: none; }
   .btn:active { transform: none; }
   .btn-primary::after { display: none; }
+  .t2-progress { display: none; }
 }
 
 @media (min-width: 641px) {
@@ -590,4 +609,9 @@ a.t2-link:hover { border-color: var(--accent); }
   }
   [data-reveal-pending] *,
   [data-revealed] * { animation: none !important; clip-path: none !important; }
+  [data-reveal-pending] .shot-caption { opacity: 1 !important; }
+  [data-scrambling],
+  [data-counting] { -webkit-text-fill-color: currentcolor !important; }
+  [data-scrambling]::after,
+  [data-counting]::after { display: none !important; }
 }
