@@ -51,7 +51,7 @@ const SECTIONS = [
       {
         head: 'President · Deakin Software Engineering Club (DSEC)',
         meta: 'Jun 2025–present',
-        body: 'Run a 190+ member club across five committees. Led development of its site, committee hub and member portal on a FastAPI backend with ~24 routers and an MCP server. Triaged a 212-finding security audit into 121 tickets. Hosted T2 2026 workshops and a hackathon.',
+        body: 'Run a 190+ member club across five committees. Lead developer of the platform the club runs on: public site (dsec.club), member portal and a role-based committee hub where every team manages events, sponsors, finance, tasks and meetings, all on one FastAPI API (~24 routers) with an MCP server. Code at github.com/dsec-hub. Hosted T2 2026 workshops and a hackathon.',
       },
       {
         head: 'Software Engineer · MyMor',

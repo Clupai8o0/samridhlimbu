@@ -228,9 +228,12 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Jun 2025–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Run a 190+ member club across five committees. Led development of the club platform
-              (FastAPI, MCP server). Triaged a 212-finding security audit into 121 tickets. Hosted T2
-              2026 workshops and a hackathon.
+              Run a 190+ member club across five committees. Lead developer of the platform the club
+              runs on: public site (<Link src="https://dsec.club" style={s.inlineLink}>dsec.club</Link>),
+              member portal and a role-based committee hub where every team manages events, sponsors,
+              finance, tasks and meetings, all on one FastAPI API with an MCP server
+              (<Link src="https://github.com/dsec-hub" style={s.inlineLink}>github.com/dsec-hub</Link>).
+              Hosted T2 2026 workshops and a hackathon.
             </Text>
           </View>
 
