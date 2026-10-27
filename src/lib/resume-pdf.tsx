@@ -257,9 +257,9 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Mar–Aug 2026</Text>
             </View>
             <Text style={s.entryBody}>
-              Led the rebrand and a Next.js 16 rebuild after ruling out WordPress. Desktop Lighthouse:
-              Performance 99, SEO 100. Built an Instant Estimate Tool that shows a price before asking
-              for contact details.
+              Led the rebrand and moved the site from WordPress to Next.js 16. Built a quote tool
+              that prices each window from its measurements before asking for contact details.
+              Lighthouse on the live site: 99 desktop, 95 phone, SEO 100.
             </Text>
           </View>
 

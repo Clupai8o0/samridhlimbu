@@ -61,7 +61,7 @@ const SECTIONS = [
       {
         head: 'Technical Lead & SEO · King Double Glazing (freelance)',
         meta: 'Mar–Aug 2026',
-        body: 'Rebranded The Glass Discounters as King Double Glazing and rebuilt the site on Next.js 16 after ruling out WordPress. Desktop Lighthouse: Performance 99, SEO 100. Built an Instant Estimate Tool that shows a price before asking for contact details. Planned SEO across five keyword verticals.',
+        body: 'Rebranded The Glass Discounters as King Double Glazing and moved the site from WordPress to Next.js 16. Built a quote tool that prices each window from its measurements before asking for contact details, with prices the business edits in TinaCMS. Lighthouse on the live site: 99 desktop, 95 phone, SEO 100. Planned SEO across five keyword verticals.',
       },
       {
         head: 'Co-founder · TapCraft Studio',
