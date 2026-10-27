@@ -40,7 +40,6 @@ const LOG = {
   lineHeight: 1.7,
   color: 'var(--fg-dim)',
   background: 'var(--bg-2)',
-  border: '1px solid var(--border)',
   borderRadius: 2,
   padding: '14px 16px',
   margin: 0,
@@ -127,7 +126,7 @@ const TIMELINE = [
   { date: '3 Aug 2026', title: 'First commit', body: 'The ingest flow, state service, dispatch worker, autoscaler and load harness, all running on my laptop.' },
   { date: '22 Aug 2026', title: 'The run set', body: 'Ingest, matching under load with one worker and autoscaled, and monitoring, from one script. The batching comparison ran straight after.' },
   { date: '24 Aug 2026', title: 'Write path', body: 'One more ramp to watch the trip writer, then the final commit with the experiments and batched matching.' },
-  { date: '25–26 Aug 2026', title: 'AWS slice', body: 'SQS, two Fargate services, Cloud Map, Secrets Manager and three IoT Core vehicles. Built, measured and torn down in one session.' },
+  { date: '25–26 Aug 2026', title: 'AWS slice', body: 'SQS, two Fargate services, Cloud Map, Secrets Manager and three IoT Core vehicles. Built, measured, then torn down on 26 Aug.' },
   { date: '27 Aug 2026', title: 'Batching write-up', body: 'The comparison of nearest-car-first against a batched rule, written up as a post.' },
   { date: '27 Oct 2026', title: 'Re-run for this page', body: 'The local experiments again, from a copy of the repo. Same ceiling.', current: true },
 ]
@@ -196,7 +195,7 @@ export default function FleetPlatformPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ ...PROSE, margin: '0 0 14px' }}>
-            The final project for SIT314, Software Architecture and Scalability for the Internet of Things, at Deakin in Trimester 2 2026. It is a solo project. The brief was a cloud backend for a driverless-taxi fleet that keeps working as the load grows.
+            The final project for SIT314, Software Architecture and Scalability for the Internet of Things, at Deakin in Trimester 2 2026. The brief was a cloud backend for a driverless-taxi fleet that keeps working as the load grows.
           </p>
           <p style={{ ...PROSE, margin: 0 }}>
             Nothing here is live. I built the AWS part on my own account, measured it and tore it down on 26 Aug 2026, and the repo is private. Every number on this page comes from a run log.
@@ -228,7 +227,7 @@ export default function FleetPlatformPage() {
         {/* Matching under load */}
         <div className="section-label" style={{ fontFamily: MONO }}>Matching under load</div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          A load harness sends ride requests in five stages, from 200 a second up to 3,000 and back down to 800. Each request goes on a queue. A dispatch worker takes eight at a time, asks the state service for idle cars nearby and claims one. A claim can lose to another worker, and then it tries the next car on its list. Over the whole run set that happened on about one claim in fourteen: 47,031 conflicts in 602,554 claims.
+          A load harness sends ride requests in five stages, from 200 a second up to 3,000 and back down to 800. Each request goes on a queue. A dispatch worker takes eight at a time, asks the state service for idle cars nearby and claims one. A claim can lose to another worker, and then it tries the next car on its list. Across the two runs below that happened on about one claim in twelve: 27,429 lost claims out of 321,340.
         </p>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           I ran the ramp twice, once with a single worker and once with an autoscaler free to run up to six.
@@ -247,7 +246,7 @@ export default function FleetPlatformPage() {
           <div style={LOG_CAPTION}>The load harness, one-worker run, 22 Aug 2026. Latency columns in ms, distances in metres. Trimmed to the stage table.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          Both runs flatten near 950 matches a second, and both leave about 61,000 requests without a car at the 3,000 stage. Latency held at 45 ms there and no request went unanswered, so the worker kept up with everything it was given. What ran out was free cars. Each match holds a car for 300 ms, and the simulator keeps it busy for about half a second more. So the limit was the fleet, which is the opposite of what I planned for: I spent the project scaling the matching service. The autoscaler never went past three workers.
+          Both runs flatten near 950 matches a second, and both leave about 61,000 requests without a car at the 3,000 stage. p95 latency held at 45 ms there and no request went unanswered, so the worker kept up with everything it was given. Each match holds a car for 300 ms, and the simulator then keeps it on a trip for half a second to a second. I read the limit as free cars running out, though my counters could not tell an empty candidate list apart from a car another worker claimed first. Either way it was not the matching service, which is the part I spent the project scaling. The autoscaler never went past three workers.
         </p>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
           I ran the same script again on 27 Oct 2026, from a copy of the repo, without Postgres, on a laptop busy with other work. Ingest came out identical, because the simulator is seeded. Matching peaked at 968.6 a second with one worker and 971.2 autoscaled. Same ceiling.
@@ -263,7 +262,7 @@ export default function FleetPlatformPage() {
           <div style={LOG_CAPTION}>Trip service counters and a row count, 24 Aug 2026. Trimmed to the start, the peak and the drain.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
-          The buffer peaked at 30,783 rows and took about a minute to clear after the load stopped. The worker matched 79,983 rides, the trip service wrote 79,983 rows, and the table held 79,983. The rows arrived late, but they all arrived. Postgres was nowhere near its limit. The 500 is a constant in my own flush loop.
+          The buffer peaked at 30,783 rows and took about a minute to clear after the load stopped. The worker matched 79,983 rides, the trip service wrote 79,983 rows, and the table held 79,983. The rows arrived late, but they all arrived. The cap is not Postgres: the 500 is a constant in my own flush loop.
         </p>
 
         {/* AWS */}
@@ -316,7 +315,7 @@ export default function FleetPlatformPage() {
             src="/projects/fleet-platform/aws-ecs-events.webp"
             alt="The ECS console event list for sit314-dispatch on 26 August 2026: at 02:42 desired count set to 1 by the sit314-backlog-low alarm and policy sit314-in, one task stopped; at 02:39 two tasks stopped."
             width={1095}
-            height={555}
+            height={534}
             caption="The ECS console's event list for the dispatch service after the run, cropped to the events. Times are AEST."
           />
         </div>
@@ -325,7 +324,7 @@ export default function FleetPlatformPage() {
           <div style={LOG_CAPTION}>The load harness on the SQS path, 26 Aug 2026. Distances in metres. It reports no latency, because the answers come back through a queue it polls.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
-          The task count went 1, 4, 6, then back to 4, 2 and 1, and AWS records the alarm and policy behind every step. 36,898 of 57,900 requests were matched. Almost all of the 21,002 misses are in the 200-a-second stage, and fleet size explains them on its own: a match holds a car for 20 s here, so 198 a second needs about 3,960 cars, and there were 2,000. That is the same finding as on the laptop. My poller saw a peak of 19,187 waiting, while CloudWatch&apos;s highest one-minute average was 15,071. The alarm reads the average, which is part of why scaling out lags.
+          The task count went 1, 4, 6, then back to 4, 2 and 1, and AWS records the alarm and policy behind every step. 36,898 of 57,900 requests were matched. Almost all of the 21,002 misses are in the 200-a-second stage, and fleet size explains them on its own: a match holds a car for 20 s here, so 198 a second needs about 3,960 cars, and there were 2,000. That points the same way as the laptop runs. My poller saw a peak of 19,187 waiting, while CloudWatch&apos;s highest one-minute average was 15,071. The alarm reads the average, which is part of why scaling out lags.
         </p>
 
         {/* Security */}
@@ -390,10 +389,10 @@ export default function FleetPlatformPage() {
         {/* What I'd do differently */}
         <div className="section-label" style={{ fontFamily: MONO }}>What I&apos;d do differently</div>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 14px' }}>
-          Move to AWS early. I left it until the end, so the experiments ran on two shapes of infrastructure instead of one. I also scaled the wrong thing: the matcher never became the bottleneck, and the fleet did.
+          Move to AWS early. I left it until the end, so the experiments ran on two shapes of infrastructure instead of one. I also scaled the wrong thing: the matcher never became the bottleneck, and the fleet most likely did.
         </p>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
-          Two limits are my own doing. The trip writer&apos;s fixed 500 rows a second is the kind of hard-coded constant the unit warned about. And the scaling policy reads raw queue depth, so at six tasks the backlog can drop under 50 while the load is still high, and it scales in anyway. It should divide the depth by the number of tasks.
+          Two limits are my own doing. The trip writer&apos;s 500 rows a second is a constant I hard-coded. And the scaling policy reads raw queue depth. Once enough tasks keep up, the depth sits near zero however busy the system is, so the low alarm could remove tasks that are still needed. On this run the scale-in came after the load had dropped, so I never saw it, but I would scale on the arrival rate instead.
         </p>
 
         {/* Stack */}
