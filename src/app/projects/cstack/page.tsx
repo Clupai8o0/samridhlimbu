@@ -107,7 +107,7 @@ const EFFORT_CHART: ChartBlock = {
   kind: 'bar',
   title: 'Opus 5 cost per task, by effort',
   subtitle: 'Routing benchmark, 17 Sep 2026: 5 tasks from real work with planted bugs, 2 runs each, API list price.',
-  caption: 'Low effort scored 96-100% on every task, against 100% at extra-high, and its writing scored higher (8.0 vs 6.8 out of 10).',
+  caption: 'On the four tasks marked right or wrong, low effort scored 96-100% against 100% at extra-high. On the writing task it scored higher (8.0 vs 6.8 out of 10).',
   xLabel: 'effort',
   unit: 'USD',
   categories: ['low', 'medium', 'high', 'extra-high'],

@@ -13,7 +13,7 @@ export const CSTACK_POST: Post = {
   readMin: 14,
   tags: ['ai-agents', 'tooling', 'benchmarks', 'python'],
   excerpt:
-    'cstack is the shared set of rules, hooks and skills that six coding-agent CLIs use on my Mac, so parallel sessions stop editing the same files and starting the same stacks. Most of its token rules come from benchmarks on my own work. The biggest single saving was effort: Opus 5 subagents at low effort cost $0.33 a task against $0.90 at extra-high, and still scored 96-100% on every task.',
+    'cstack is the shared set of rules, hooks and skills that six coding-agent CLIs use on my Mac, so parallel sessions stop editing the same files and starting the same stacks. Most of its token rules come from benchmarks on my own work. The biggest single saving was effort: Opus 5 subagents at low effort cost $0.33 a task against $0.90 at extra-high, and still scored 96-100% on the four tasks marked right or wrong, with better writing.',
   featured: true,
   content: [
     {
