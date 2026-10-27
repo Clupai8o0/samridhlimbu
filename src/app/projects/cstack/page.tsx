@@ -40,7 +40,7 @@ const METRICS = [
 ]
 
 const SHAPE: [string, string][] = [
-  ['rules/', 'one global rules file every agent reads'],
+  ['rules/', 'one source rules file; each agent gets its copy from it'],
   ['hooks/', 'claims, queues, guardrails, memory recall, alerts'],
   ['skills/_core/', 'token economy, tool scoping, loaded on demand'],
   ['sync-agents.py', 'writes each agent its AGENTS.md, skills and hook config'],
