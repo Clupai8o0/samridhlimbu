@@ -51,7 +51,7 @@
 
   <!-- pi zone -->
   <rect class="zone" x="10" y="294" width="380" height="372" rx="8"/>
-  <text class="m" x="20" y="316">RASPBERRY PI 5</text>
+  <text class="m" x="20" y="316">RASPBERRY PI</text>
 
   <rect class="hot" x="20" y="328" width="360" height="92" rx="6"/>
   <text class="t" x="36" y="354">orchestrator.py</text>
