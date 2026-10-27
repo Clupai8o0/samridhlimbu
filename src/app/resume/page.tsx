@@ -86,7 +86,7 @@ const SECTIONS = [
       {
         head: 'Deakin University · B. Computer Science (IoT Major)',
         meta: 'Jun 2024–Jun 2027 (expected) · WAM ~87',
-        body: "Vice-Chancellor's International Scholarship (100% tuition) · VCPEP scholar. Capstone: leading the Notifications sub-team on Thoth Tech / OnTrack, with merged PRs on security, accessibility, notifications and pagination. Relevant: Data Structures & Algorithms · Advanced Algorithms · Concurrent & Distributed Programming · Software Architecture · Secure Backend · Embedded Systems.",
+        body: "Vice-Chancellor's International Scholarship (100% tuition) · VCPEP scholar. Capstone on Thoth Tech / OnTrack: built the light and dark theme system and page redesign, led the notifications stream, and fixed security and accessibility bugs from a product audit (103 merged PRs). Relevant: Data Structures & Algorithms · Advanced Algorithms · Concurrent & Distributed Programming · Software Architecture · Secure Backend · Embedded Systems.",
       },
     ],
   },

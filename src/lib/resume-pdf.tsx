@@ -297,7 +297,7 @@ export function ResumeDocument() {
             </View>
             <Text style={s.entryBody}>
               WAM ~87 · Vice-Chancellor’s International Scholarship (100% tuition) · VCPEP scholar{'\n'}
-              Capstone: Notifications sub-team lead, Thoth Tech / OnTrack{'\n'}
+              Capstone, Thoth Tech / OnTrack: theme system and redesign, notifications lead, 103 merged PRs{'\n'}
               Relevant: Data Structures & Algorithms · Advanced Algorithms · Concurrent & Distributed
               Programming · Software Architecture · Secure Backend · Embedded Systems
             </Text>
