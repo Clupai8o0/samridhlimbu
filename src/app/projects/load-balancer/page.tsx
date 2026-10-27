@@ -111,7 +111,6 @@ export default function LoadBalancerPage() {
         {/* Timeline */}
         <div className="section-label" style={{ fontFamily: MONO }}>Timeline</div>
         <div style={{ position: 'relative', paddingLeft: 22, marginBottom: 28 }}>
-          <div data-timeline-line style={{ position: 'absolute', left: 5, top: 6, bottom: 6, width: 1, background: 'var(--border)' }} />
           {TIMELINE.map((e, i) => (
             <div key={i} style={{ position: 'relative', paddingBottom: 18 }}>
               <div data-timeline-dot style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />

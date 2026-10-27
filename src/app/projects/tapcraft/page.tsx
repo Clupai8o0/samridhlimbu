@@ -133,7 +133,7 @@ export default function TapcraftPage() {
         <div className="section-label" style={{ fontFamily: MONO }}>Timeline</div>
         <div style={{ marginBottom: 40 }}>
           {TIMELINE.map((e, i) => (
-            <div key={i} style={{ position: 'relative', marginLeft: 5, paddingLeft: 22, paddingBottom: i === TIMELINE.length - 1 ? 0 : 20, borderLeft: '1px solid var(--border)' }}>
+            <div key={i} style={{ position: 'relative', marginLeft: 5, paddingLeft: 22, paddingBottom: i === TIMELINE.length - 1 ? 0 : 20 }}>
               <div data-timeline-dot style={{ position: 'absolute', left: -6, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--muted)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--muted)' : 'var(--muted-2)'}` }} />
               <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{e.date}</div>
               <div style={{ fontFamily: SANS, fontSize: 15, fontWeight: 600, color: 'var(--fg)', marginBottom: 4 }}>{e.title}</div>
