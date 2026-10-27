@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 661" role="img" aria-labelledby="t d">
+  <title id="t">Where each kind of job goes</title>
+  <desc id="d">A task goes to one of six routes. Coding a test decides: Sonnet 5.5 low, or Haiku 5.5 low for a short job. Default subagent work: Opus 5.5 low, the main worker. Text people read, reviews and judging: Opus 5.5 high. Hardest coding: Fable 5.1. Bulk work on an open or personal folder: DeepSeek V4 Flash, then a review pass. Then every code change: Codex reviews the diff.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#8b8b93"/>
+    </marker>
+    <marker id="aha" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#3b82f6"/>
+    </marker>
+    <style>
+      .m { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-variant-ligatures: none; }
+      .s { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .box { fill: #141417; stroke: #2e2e35; stroke-width: 1.2; }
+      .t { fill: #ededef; }
+      .mu { fill: #8b8b93; }
+      .ln { fill: none; stroke: #8b8b93; stroke-width: 1.5; }
+      .la { fill: none; stroke: #3b82f6; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="360" height="661" fill="#0a0a0b"/>
+  <rect class="box" x="12" y="12" width="336" height="46" rx="10" style="stroke:#3b82f6"/>
+  <text class="m t" x="26" y="38" font-size="15">a task</text>
+  <path class="ln" d="M26 58 V572"/>
+  <rect class="box" x="48" y="74" width="300" height="87" rx="10"/>
+  <text class="s t" x="62" y="100" font-size="16" font-weight="600">Coding a test decides</text>
+  <text class="m t" x="62" y="124" font-size="14">Sonnet 5.5 low</text>
+  <text class="s mu" x="62" y="146" font-size="13.5">short job: Haiku 5.5 low</text>
+  <path class="ln" d="M26 96 H46" marker-end="url(#ah)"/>
+  <rect class="box" x="48" y="173" width="300" height="87" rx="10"/>
+  <text class="s t" x="62" y="199" font-size="16" font-weight="600">Default subagent work</text>
+  <text class="m t" x="62" y="223" font-size="14">Opus 5.5 low</text>
+  <text class="s mu" x="62" y="245" font-size="13.5">the main worker</text>
+  <path class="ln" d="M26 195 H46" marker-end="url(#ah)"/>
+  <rect class="box" x="48" y="272" width="300" height="68" rx="10"/>
+  <text class="s t" x="62" y="298" font-size="16" font-weight="600">Text people read, reviews</text>
+  <text class="m t" x="62" y="322" font-size="14">Opus 5.5 high</text>
+  <path class="ln" d="M26 294 H46" marker-end="url(#ah)"/>
+  <rect class="box" x="48" y="352" width="300" height="68" rx="10"/>
+  <text class="s t" x="62" y="378" font-size="16" font-weight="600">Hardest coding</text>
+  <text class="m t" x="62" y="402" font-size="14">Fable 5.1</text>
+  <path class="ln" d="M26 374 H46" marker-end="url(#ah)"/>
+  <rect class="box" x="48" y="432" width="300" height="106" rx="10"/>
+  <text class="s t" x="62" y="458" font-size="16" font-weight="600">Bulk work</text>
+  <text class="s mu" x="62" y="482" font-size="13.5">open or personal folder</text>
+  <text class="m t" x="62" y="501" font-size="14">DeepSeek V4 Flash</text>
+  <text class="s mu" x="62" y="523" font-size="13.5">then a review pass</text>
+  <path class="ln" d="M26 454 H46" marker-end="url(#ah)"/>
+  <rect class="box" x="48" y="550" width="300" height="87" rx="10" style="stroke:#3b82f6"/>
+  <text class="s t" x="62" y="576" font-size="16" font-weight="600">Then, every code change</text>
+  <text class="m t" x="62" y="600" font-size="14">Codex</text>
+  <text class="s mu" x="62" y="622" font-size="13.5">reviews the diff</text>
+  <path class="la" d="M26 572 H46" marker-end="url(#aha)"/>
+</svg>
