@@ -58,11 +58,11 @@ export default function ProjectsPage() {
         {/* Archive */}
         <div className="section-label" style={{ fontFamily: MONO }}>Archive</div>
         <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>
-          <div className="t2-archive-grid" style={{ display: 'grid', gap: 12, padding: '6px 0', color: 'var(--muted-2)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div className="t2-archive-grid" style={{ display: 'grid', gap: 12, padding: '6px 0 10px', color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             <span className="t2-archive-year">year</span><span>name</span><span className="t2-archive-tech">tech</span><span style={{ textAlign: 'right' }}>link</span>
           </div>
           {ARCHIVE.map(r => (
-            <div key={r.name} className={`t2-archive-grid row-hover${r.slug ? ' row-link' : ''}`} style={{ display: 'grid', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
+            <div key={r.name} className={`t2-archive-grid row-hover${r.slug ? ' row-link' : ''}`} style={{ display: 'grid', gap: 12, padding: '12px 0', alignItems: 'center' }}>
               <span className="t2-archive-year" style={{ color: 'var(--muted-2)', fontVariantNumeric: 'tabular-nums' }}>{r.year}</span>
               <span style={{ color: 'var(--fg)' }}>{r.name.toLowerCase()}</span>
               <span className="t2-archive-tech" style={{ color: 'var(--muted)' }}>{r.tech}</span>

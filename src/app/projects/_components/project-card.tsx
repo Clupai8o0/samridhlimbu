@@ -47,7 +47,6 @@ export function ProjectCard({ project: p, hasDetailPage, preload = false }: Prop
           position: 'relative',
           aspectRatio: '16 / 10',
           overflow: 'hidden',
-          borderBottom: '1px solid var(--border)',
           background: 'var(--bg-2)',
         }}
       >

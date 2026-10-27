@@ -57,7 +57,6 @@ export function PageShell({ children }: { children: React.ReactNode }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottom: '1px solid var(--border)',
         fontFamily: MONO,
         fontSize: 12,
         position: 'relative',
@@ -164,7 +163,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
           className="t2-nav-drawer"
           style={{
             display: 'none',
-            borderBottom: '1px solid var(--border)',
+            paddingBottom: 8,
             background: 'var(--bg)',
             // Above the nav, so its touch hit areas never catch a tap on the first row.
             position: 'relative',
@@ -188,7 +187,6 @@ export function PageShell({ children }: { children: React.ReactNode }) {
                   color: isActive ? 'var(--fg)' : 'var(--muted-2)',
                   textDecoration: 'none',
                   borderLeft: `2px solid ${isActive ? 'var(--accent)' : 'transparent'}`,
-                  borderBottom: '1px solid var(--border)',
                   transition: 'color .12s',
                 }}
               >
@@ -240,7 +238,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
       <footer
         className="t2-footer"
         style={{
-          borderTop: '1px solid var(--border)',
+          marginTop: 24,
           fontFamily: MONO,
           fontSize: 12,
           color: 'var(--muted-2)',

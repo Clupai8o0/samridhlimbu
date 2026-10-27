@@ -75,7 +75,7 @@ export default function FarmersIntuitionPage() {
         </div>
 
         {/* Banner */}
-        <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div data-stagger-item style={{ padding: '22px 0', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Farmers Intuition</h1>
             <span className="pill" style={{ color: '#f59e0b', borderColor: 'rgba(245,158,11,0.3)', fontFamily: MONO }}>● hack48 · <span style={{ textDecoration: 'line-through', opacity: 0.55 }}>48h</span> 20h</span>
@@ -103,13 +103,13 @@ export default function FarmersIntuitionPage() {
         </div>
 
         {/* Metrics */}
-        <div className="cs-metrics" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
+        <div className="cs-metrics" style={{ marginBottom: 28 }}>
           {[
             { k: 'build time', node: (<><span style={{ textDecoration: 'line-through', opacity: 0.4, marginRight: 6, fontWeight: 500 }}>48h</span>20h</>) },
             { k: 'ml layers', node: '2' },
             { k: 'voice assistant', node: 'Sage' },
           ].map(m => (
-            <div key={m.k} style={{ padding: '14px 16px', marginLeft: -1, marginTop: -1, borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
+            <div key={m.k} style={{ padding: '14px 16px 14px 0' }}>
               <div data-count style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.node}</div>
               <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
             </div>
@@ -181,7 +181,7 @@ export default function FarmersIntuitionPage() {
         </div>
 
         {/* Footer actions */}
-        <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, paddingTop: 18, flexWrap: 'wrap' }}>
           <a href="https://github.com/clupai8o0/farmers-intuition" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> frontend</a>
           <a href="https://github.com/Clupai8o0/Farmers_Intuition_API" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> api</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>← back to projects</Link>

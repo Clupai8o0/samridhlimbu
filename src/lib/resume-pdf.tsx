@@ -5,7 +5,6 @@ const FG     = '#0a0a0a'
 const FG_DIM = '#1c1c1c'
 const MUTED  = '#3a3a3a'
 const MUTED2 = '#5a5a5a'
-const BORDER = '#d0d0d0'
 
 const s = StyleSheet.create({
   page: {
@@ -25,8 +24,6 @@ const s = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 9,
     paddingBottom: 9,
-    borderBottomWidth: 1.5,
-    borderBottomColor: ACCENT,
   },
   name: {
     fontFamily: 'Helvetica-Bold',
@@ -74,8 +71,6 @@ const s = StyleSheet.create({
     textTransform: 'uppercase',
     marginBottom: 6,
     paddingBottom: 3,
-    borderBottomWidth: 0.5,
-    borderBottomColor: BORDER,
   },
 
   /* ── Entry ────────────────────────────────────────────── */

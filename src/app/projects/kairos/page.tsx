@@ -83,7 +83,7 @@ export default function KairosPage() {
         </div>
 
         {/* Banner */}
-        <div data-stagger-item style={{ padding: '24px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 24 }}>
+        <div data-stagger-item style={{ padding: '24px 0', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', columnGap: 12, rowGap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 'var(--text-2xl)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Kairos</h1>
             <span className="pill" style={{ fontFamily: MONO }}>prototype · oct 2026 rebuild</span>
@@ -106,7 +106,7 @@ export default function KairosPage() {
         </div>
 
         {/* Metrics */}
-        <div data-reveal className="cs-metrics" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 40 }}>
+        <div data-reveal className="cs-metrics" style={{ marginBottom: 40 }}>
           {METRICS.map((m) => (
             <div key={m.k} style={{ padding: '14px 16px 14px 0' }}>
               <div data-count style={{ fontFamily: DISPLAY, fontSize: 'var(--text-lg)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>{m.v}</div>
@@ -217,7 +217,7 @@ export default function KairosPage() {
         </div>
 
         {/* Footer actions */}
-        <div style={{ display: 'flex', gap: 8, paddingTop: 20, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, paddingTop: 20, flexWrap: 'wrap' }}>
           <a href="https://kairos.clupai.com" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> kairos.clupai.com · earlier build</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO }}>← back to projects</Link>
         </div>

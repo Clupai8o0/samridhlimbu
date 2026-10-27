@@ -62,7 +62,7 @@
 /* The skip link moves focus to <main>: show it for keyboard users only. */
 main:focus:not(:focus-visible) { outline: none; }
 main:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.cmdk-input-row:focus-within { box-shadow: inset 0 -2px 0 var(--accent); }
+.cmdk-input-row:focus-within { box-shadow: inset 0 0 0 1px var(--accent); }
 
 html, body {
   margin: 0;
@@ -328,15 +328,10 @@ a.t2-link:hover { border-color: var(--accent); }
 }
 
 /* ─── Contact grid ───────────────────────────────────────── */
-.t2-contact-grid { grid-template-columns: 1fr 1fr; }
-.t2-contact-grid a                      { border-bottom: 1px solid var(--border); }
-.t2-contact-grid a:nth-last-child(-n+2) { border-bottom: none; }
-.t2-contact-grid a:nth-child(odd)       { border-right: 1px solid var(--border); }
+.t2-contact-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
 
 @media (max-width: 640px) {
-  .t2-contact-grid                  { grid-template-columns: 1fr; }
-  .t2-contact-grid a                { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
-  .t2-contact-grid a:last-child     { border-bottom: none !important; }
+  .t2-contact-grid { grid-template-columns: 1fr; }
 }
 
 /* ─── Contact grid item ──────────────────────────────────── */
@@ -416,10 +411,9 @@ a.t2-link:hover { border-color: var(--accent); }
   .prose-table-stack tr,
   .prose-table-stack td { display: block; }
   .prose-table-stack tr {
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
+    padding: 12px;
   }
-  .prose-table-stack tr:first-child { border-top: 1px solid var(--border-2); }
+  .prose-table-stack tr:nth-child(even) { background: var(--bg-2); }
   .prose-table-stack td {
     display: grid;
     grid-template-columns: 104px 1fr;

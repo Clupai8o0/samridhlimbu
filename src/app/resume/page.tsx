@@ -241,7 +241,7 @@ export default function ResumePage() {
         </div>
 
         {/* Header */}
-        <div data-stagger-item style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 16, borderBottom: '1px solid var(--accent)', marginBottom: 24 }}>
+        <div data-stagger-item style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 16, marginBottom: 24 }}>
           <div>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: '0 0 4px', letterSpacing: '-0.02em', color: 'var(--fg)' }}>Samridh Limbu</h1>
             <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--muted)' }}>Software Engineer · Melbourne</div>

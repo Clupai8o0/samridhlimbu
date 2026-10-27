@@ -12,6 +12,8 @@ const ROW: React.CSSProperties = {
   display: 'grid',
   gridTemplateColumns: '76px minmax(0, 1fr)',
   alignItems: 'start',
+  background: 'var(--bg-2)',
+  borderRadius: 2,
 }
 
 const LABEL: React.CSSProperties = {
@@ -24,7 +26,7 @@ const LABEL: React.CSSProperties = {
 }
 
 // The global :focus-visible ring draws on the field itself; the negative
-// offset keeps it inside the row's hairline border.
+// offset keeps it inside the row's soft background.
 const FIELD: React.CSSProperties = {
   width: '100%',
   minWidth: 0,
@@ -79,9 +81,9 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit} style={{ marginTop: 0 }}>
 
-      <div style={{ border: '1px solid var(--border-2)', borderRadius: 2 }}>
+      <div style={{ border: '1px solid var(--border-2)', borderRadius: 2, padding: 6, display: 'grid', gap: 6 }}>
 
-        <div style={{ ...ROW, borderBottom: '1px solid var(--border)' }}>
+        <div style={ROW}>
           <label htmlFor={`${id}-name`} style={LABEL}>--name</label>
           <input
             id={`${id}-name`}
@@ -98,7 +100,7 @@ export function ContactForm() {
           />
         </div>
 
-        <div style={{ ...ROW, borderBottom: '1px solid var(--border)' }}>
+        <div style={ROW}>
           <label htmlFor={`${id}-email`} style={LABEL}>--email</label>
           <input
             id={`${id}-email`}

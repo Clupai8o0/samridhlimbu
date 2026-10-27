@@ -89,13 +89,12 @@ export default function AboutPage() {
 
         {/* Availability + visa */}
         <div data-reveal style={{ border: '1px solid var(--border-2)', borderRadius: 2, marginBottom: 40 }}>
-          {[{ k: 'status', v: AVAILABILITY, dot: true }, { k: 'visa', v: VISA, dot: false }].map((row, i) => (
+          {[{ k: 'status', v: AVAILABILITY, dot: true }, { k: 'visa', v: VISA, dot: false }].map(row => (
             <div
               key={row.k}
               style={{
                 display: 'grid', gridTemplateColumns: '64px minmax(0, 1fr)', gap: 12,
                 padding: '14px 16px',
-                borderTop: i === 0 ? 'none' : '1px solid var(--border)',
               }}
             >
               <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', lineHeight: '22px', color: 'var(--muted-2)' }}>

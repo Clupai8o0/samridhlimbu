@@ -7,7 +7,7 @@ interface CodeBlockProps {
 export function CodeBlock({ lines, filename, lang }: CodeBlockProps) {
   return (
     <div data-reveal style={{ border: '1px solid var(--border)', background: 'var(--bg-2)', fontFamily: 'var(--font-mono, "JetBrains Mono", monospace)', fontSize: 13, lineHeight: 1.6 }}>
-      <div style={{ padding: '6px 12px', borderBottom: '1px solid var(--border)', fontSize: 'var(--text-xs)', color: 'var(--muted-2)', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ padding: '6px 12px', background: 'var(--bg-3)', fontSize: 'var(--text-xs)', color: 'var(--muted-2)', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
         <span>{filename}</span>
         <span>{lang}</span>
       </div>

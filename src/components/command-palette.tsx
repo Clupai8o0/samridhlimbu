@@ -145,7 +145,7 @@ export function CommandPalette({ open, onClose }: Props) {
       >
         {/* Search input. The row shows focus, since the input itself has no outline. */}
         <div className="cmdk-input-row" style={{
-          padding: '11px 14px', borderBottom: '1px solid var(--border)',
+          padding: '11px 14px', background: 'var(--bg-2)',
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
           <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: 13 }}>❯</span>
@@ -221,7 +221,7 @@ export function CommandPalette({ open, onClose }: Props) {
 
         {/* Footer */}
         <div style={{
-          padding: '7px 14px', borderTop: '1px solid var(--border)',
+          padding: '10px 14px',
           fontSize: 12, color: 'var(--muted-2)',
           display: 'flex', gap: 12, fontFamily: 'var(--font-mono)',
           alignItems: 'center',

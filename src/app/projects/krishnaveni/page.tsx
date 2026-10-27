@@ -66,7 +66,7 @@ export default function KrishnaveniPage() {
         </div>
 
         {/* Banner */}
-        <div data-stagger-item style={{ padding: '22px 0', borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
+        <div data-stagger-item style={{ padding: '22px 0', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Krishnaveni</h1>
             <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · freelance</span>
@@ -81,13 +81,13 @@ export default function KrishnaveniPage() {
         </div>
 
         {/* Metrics */}
-        <div className="cs-metrics" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden', marginBottom: 28 }}>
+        <div className="cs-metrics" style={{ marginBottom: 28 }}>
           {[
             { k: 'SEO score', v: '92' },
             { k: 'Best Practices', v: '100' },
             { k: 'CLS', v: '0' },
           ].map(m => (
-            <div key={m.k} style={{ padding: '14px 16px', marginLeft: -1, marginTop: -1, borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
+            <div key={m.k} style={{ padding: '14px 16px 14px 0' }}>
               <div data-count style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
               <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
             </div>
@@ -156,7 +156,7 @@ export default function KrishnaveniPage() {
         {/* Testimonial */}
         <div style={{ marginBottom: 28 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>In their words</div>
-          <div style={{ borderLeft: '2px solid var(--accent)', paddingLeft: 16 }}>
+          <div style={{ paddingLeft: 16 }}>
             <p style={{ fontFamily: SANS, fontSize: 15.5, color: 'var(--fg)', lineHeight: 1.7, margin: '0 0 10px', fontStyle: 'italic' }}>
               &ldquo;We&rsquo;re not a technical team — we gave Samridh the brief and he handled everything else. What we asked for, he delivered. Then he delivered more.&rdquo;
             </p>
@@ -167,7 +167,7 @@ export default function KrishnaveniPage() {
         </div>
 
         {/* Footer actions */}
-        <div style={{ display: 'flex', gap: 8, paddingTop: 18, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, paddingTop: 18, flexWrap: 'wrap' }}>
           <a href="https://krishnavenischool.co.in" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="external" size={11} /> krishnavenischool.co.in</a>
           <a href="https://github.com/clupai8o0/krishnaveni-sanity" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> source</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>← back to projects</Link>

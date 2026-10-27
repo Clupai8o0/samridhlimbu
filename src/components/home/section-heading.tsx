@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Icon } from '@/components/icons'
 import styles from './home.module.css'
 
-/** Terminal-style section heading: `› title` on a hairline, optional link on the right. */
+/** Terminal-style section heading: `› title`, optional link on the right. */
 export function SectionHeading({
   id,
   children,

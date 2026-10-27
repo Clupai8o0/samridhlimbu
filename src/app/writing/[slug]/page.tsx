@@ -143,8 +143,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </div>
         )}
 
-        {/* Separator */}
-        <div style={{ height: 1, background: 'var(--border)', marginBottom: 32 }} />
+        {/* Space before the article body */}
+        <div aria-hidden="true" style={{ height: 36 }} />
 
         {/* Article body */}
         {post.content ? (
@@ -158,7 +158,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         )}
 
         {/* Footer */}
-        <div style={{ paddingTop: 28, marginTop: 28, borderTop: '1px solid var(--border)' }}>
+        <div style={{ paddingTop: 28, marginTop: 36 }}>
           <Link href="/writing" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>
             ← back to writing
           </Link>
@@ -203,9 +203,9 @@ function renderBlock(block: ContentBlock, key: number) {
         key={key}
         style={{
           margin: '24px 0',
-          padding: '14px 20px',
-          borderLeft: '3px solid var(--accent)',
-          background: 'rgba(99,102,241,0.04)',
+          padding: '16px 22px',
+          background: 'var(--bg-2)',
+          borderRadius: 4,
           fontStyle: 'italic',
           color: 'var(--fg)',
           fontSize: 14.5,
@@ -482,8 +482,7 @@ function renderBlock(block: ContentBlock, key: number) {
               {block.headers.map((h, i) => (
                 <th key={i} role="columnheader" style={{
                   textAlign: 'left',
-                  padding: '8px 12px',
-                  borderBottom: '1px solid var(--border-2)',
+                  padding: '8px 12px 10px',
                   fontFamily: MONO,
                   fontSize: 'var(--text-xs)',
                   textTransform: 'uppercase',
@@ -496,11 +495,10 @@ function renderBlock(block: ContentBlock, key: number) {
           </thead>
           <tbody role="rowgroup">
             {block.rows.map((row, i) => (
-              <tr key={i} role="row">
+              <tr key={i} role="row" style={{ background: i % 2 === 1 ? 'var(--bg-2)' : undefined }}>
                 {row.map((cell, j) => (
                   <td key={j} role="cell" data-label={block.headers[j]} style={{
                     padding: '10px 12px',
-                    borderBottom: '1px solid var(--border)',
                     verticalAlign: 'top',
                   }}>{cell}</td>
                 ))}

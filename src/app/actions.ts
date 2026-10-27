@@ -85,9 +85,9 @@ try {
           </p>
         </td></tr>
         <tr><td style="padding:30px 36px 0;">
-          <p style="margin:0 0 6px;font-family:'SFMono-Regular',Menlo,monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#6b6b6b;">Your message</p>
-          <table role="presentation" width="100%" style="border-top:1px solid #1f1f1f;">
-            <tr><td style="padding:14px 0;font-size:14px;line-height:1.7;color:#e5e5e5;white-space:pre-wrap;">${escHtml(message)}</td></tr>
+          <p style="margin:0 0 10px;font-family:'SFMono-Regular',Menlo,monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#6b6b6b;">Your message</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#151515;border-radius:4px;">
+            <tr><td style="padding:14px 16px;font-size:14px;line-height:1.7;color:#e5e5e5;white-space:pre-wrap;">${escHtml(message)}</td></tr>
           </table>
         </td></tr>
         <tr><td style="padding:18px 36px 0;">
@@ -96,7 +96,7 @@ try {
           </p>
         </td></tr>
         <tr><td style="padding:28px 36px 32px;">
-          <div style="border-top:1px solid #1f1f1f;padding-top:18px;">
+          <div style="padding-top:18px;">
             <p style="margin:0;font-size:13px;color:#e5e5e5;font-weight:600;">${escHtml(STUDIO)}</p>
             <p style="margin:5px 0 0;font-size:12px;line-height:1.65;color:#6b6b6b;">We reply within one business day.</p>
           </div>
