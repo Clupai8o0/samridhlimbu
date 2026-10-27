@@ -9,7 +9,7 @@ const LAST_MODIFIED = new Date('2026-10-27')
 
 // One entry per src/app/projects/<slug>/page.tsx.
 const PROJECT_SLUGS = [
-  'hoddle', 'kairos', 'aria', 'r1gpt', 'dsec', 'ontrack', 'tempo',
+  'hoddle', 'kairos', 'aria', 'r1gpt', 'dsec', 'ontrack', 'tempo', 'morgue', 'cstack',
   'king-glazing', 'allarkive', 'acknowledgement-force', 'krishnaveni', 'nmmun', 'tapcraft',
   'lock-in', 'govchat', 'farmers-intuition', 'notes-app', 'load-balancer',
 ]

@@ -24,6 +24,8 @@ const ITEMS: Item[] = [
   { k: '/projects/kairos',            label: 'kairos · personal planner',             hint: '', href: '/projects/kairos',            group: 'projects' },
   { k: '/projects/aria',              label: 'aria · multi-agent home-energy brain',  hint: '', href: '/projects/aria',              group: 'projects' },
   { k: '/projects/tempo',             label: 'tempo · workout app + mcp server',      hint: '', href: '/projects/tempo',             group: 'projects' },
+  { k: '/projects/morgue',            label: 'morgue · ui animation vault for agents', hint: '', href: '/projects/morgue',            group: 'projects' },
+  { k: '/projects/cstack',            label: 'cstack · shared layer for coding agents', hint: '', href: '/projects/cstack',            group: 'projects' },
   { k: '/projects/dsec',              label: 'dsec · deakin software engineering club', hint: '', href: '/projects/dsec',            group: 'projects' },
   { k: '/projects/tapcraft',          label: 'tapcraft · headless shopify + 3d',     hint: '', href: '/projects/tapcraft',          group: 'projects' },
   { k: '/projects/king-glazing',      label: 'king glazing · next.js + seo',         hint: '', href: '/projects/king-glazing',      group: 'projects' },
