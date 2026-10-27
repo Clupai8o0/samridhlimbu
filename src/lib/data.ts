@@ -216,8 +216,8 @@ export const PROJECTS: Project[] = [
     tag: 'Shared rules, hooks and skills for coding agents',
     year: '2026',
     status: 'Open source · MIT',
-    pitch: 'One set of rules, hooks and skills shared by six coding agents: Claude Code, Codex, OpenCode, DeepSeek, Kimi and Grok Build. Hooks claim each file a session edits so two parallel sessions do not edit one file, queue shared deploys and keep guardrails learned from failures. Model routing is set by benchmark: running subagents at low effort cut the cost per task 2.7x ($0.33 vs $0.90) at the same score.',
-    pitchShort: 'One rules, hooks and skills layer for six coding agents. Benchmarked model routing cut cost per task 2.7x at the same score.',
+    pitch: 'One set of rules, hooks and skills shared by six coding agents: Claude Code, Codex, OpenCode, DeepSeek, Kimi and Grok Build. Hooks claim each file a session edits so two parallel sessions do not edit one file, queue shared deploys and keep guardrails learned from failures. Model routing is set by benchmark: running subagents at low effort cut the cost per task 2.7x ($0.33 vs $0.90) with no meaningful loss in quality.',
+    pitchShort: 'One rules, hooks and skills layer for six coding agents. Benchmarked model routing cut cost per task 2.7x with no meaningful loss in quality.',
     stack: {
       Frontend: ['Claude Code', 'Codex', 'OpenCode', 'DeepSeek', 'Kimi', 'Grok Build'],
       Backend: ['Python', 'Shell'],
@@ -225,7 +225,7 @@ export const PROJECTS: Project[] = [
     },
     metrics: [
       { k: 'coding agents, one layer', v: '6' },
-      { k: 'cheaper per task, same score', v: '2.7×' },
+      { k: 'cheaper per task than xhigh effort', v: '2.7×' },
       { k: 'licence', v: 'MIT' },
     ],
     cover: '/projects/cstack/cover.webp',

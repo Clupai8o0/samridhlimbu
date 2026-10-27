@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 
 const DESCRIPTION =
-  'cstack is one shared layer of rules, hooks and skills for six coding agents, from Claude Code and Codex to DeepSeek and Grok Build. A model-routing benchmark cut the cost per task 2.7x ($0.33 vs $0.90) at the same score. Open source, MIT.'
+  'cstack is one shared layer of rules, hooks and skills for six coding agents, from Claude Code and Codex to DeepSeek and Grok Build. A model-routing benchmark cut the cost per task 2.7x ($0.33 vs $0.90) with no meaningful loss in quality. Open source, MIT.'
 
 export const metadata: Metadata = {
   title: 'cstack · shared layer for coding agents',
@@ -35,7 +35,7 @@ const PROSE = { fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeig
 
 const METRICS = [
   { k: 'coding agents, one layer', v: '6' },
-  { k: 'cheaper per task, same score', v: '2.7×' },
+  { k: 'cheaper per task than xhigh effort', v: '2.7×' },
   { k: 'licence', v: 'MIT' },
 ]
 
@@ -49,7 +49,7 @@ const SHAPE: [string, string][] = [
 ]
 
 const DECISIONS = [
-  ['measured routing', 'one model for everything', 'Subagents run Opus at low effort, always pinned. In the routing benchmark it scored the same as extra-high effort for $0.33 a task instead of $0.90. Coding that a test can judge goes to cheaper models, and every rule in the table came from a run, not a guess.'],
+  ['measured routing', 'one model for everything', 'Subagents run Opus at low effort, always pinned. In the routing benchmark it cost $0.33 a task against $0.90 at extra-high effort, with no meaningful gain from the extra spend. Coding that a test can judge goes to cheaper models. The routing rules come from benchmark and bake-off runs; the README marks the few numbers that are estimates.'],
   ['reviews on the diff', 'a reviewer that explores the repo', 'Every code change gets an outside review before it counts as done. The script sends only the git diff with a findings-only brief, so the reviewer stops wandering the repo and almost no Claude usage is spent on it.'],
   ['file claims between sessions', 'hoping two sessions never collide', 'Several agent sessions often work on one repo at once. A hook claims each file a session edits and blocks a second session from editing it in the same worktree. Status notes and their history show what was already done or tried.'],
   ['hooks that fail open', 'hooks that can block work', 'A broken script never stops a session. The cost is that a fresh install has to be checked by hand, which the README says plainly.'],
