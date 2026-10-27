@@ -353,7 +353,7 @@ export const EXPERIENCE: ExperienceItem[] = [
     when: 'Mar 2026–present',
     role: 'CTO',
     org: 'Hoddle Melbourne',
-    detail: 'Sole developer of hoddle.org, a mentorship platform for international students: 26K+ lines, 51 routes, 23 Postgres tables. Placed 2nd at Study Melbourne Leadership 4Impact.',
+    detail: 'Sole developer of hoddle.org, a mentorship platform for international students: 25K+ lines, 51 routes, 24 Postgres tables. Placed 2nd at Study Melbourne Leadership 4Impact.',
     href: '/projects/hoddle',
   },
   {

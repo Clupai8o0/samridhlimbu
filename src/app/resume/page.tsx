@@ -46,7 +46,7 @@ const SECTIONS = [
       {
         head: 'CTO · Hoddle Melbourne',
         meta: 'Mar 2026–present',
-        body: 'Built hoddle.org, a mentorship platform for international students, as its sole developer: 26K+ lines, 51 routes, 23 Postgres tables behind row-level security. Designed weighted mentor matching with nightly recompute. Shipped forums, live Q&As, DMs and real-time notifications. Placed 2nd at Study Melbourne Leadership 4Impact.',
+        body: 'Built hoddle.org, a mentorship platform for international students, as its sole developer: 25K+ lines, 51 routes, 24 Postgres tables behind row-level security. Designed weighted mentor matching with nightly recompute. Shipped forums, live Q&As, DMs and real-time notifications. Placed 2nd at Study Melbourne Leadership 4Impact.',
       },
       {
         head: 'President · Deakin Software Engineering Club (DSEC)',

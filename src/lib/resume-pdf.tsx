@@ -216,8 +216,8 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Mar 2026–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Built hoddle.org, an international-student mentorship platform, as sole developer. 26K+
-              lines, 51 routes, 23 Postgres tables with RLS. Weighted mentor matching, forums, DMs,
+              Built hoddle.org, an international-student mentorship platform, as sole developer. 25K+
+              lines, 51 routes, 24 Postgres tables with RLS. Weighted mentor matching, forums, DMs,
               real-time notifications. 2nd place, Study Melbourne Leadership 4Impact.
             </Text>
           </View>

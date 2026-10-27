@@ -13,7 +13,7 @@ export const AVAILABILITY =
 // countFrom: the number the count-up starts at (search went from seconds to <200 ms).
 const PROOF: { k: string; v: string; href: string; count?: boolean; countFrom?: number }[] = [
   { k: '<200 ms search', v: 'US health-tech contract', href: '#contract', count: true, countFrom: 2000 },
-  { k: '26K+\u00a0lines · 51\u00a0routes', v: 'hoddle.org', href: '/projects/hoddle', count: true },
+  { k: '25K+\u00a0lines · 51\u00a0routes', v: 'hoddle.org', href: '/projects/hoddle', count: true },
   { k: 'Winner · GovHack 2025', v: 'GovChat', href: '/projects/govchat' },
   { k: '190+ members', v: 'DSEC president', href: '/projects/dsec', count: true },
 ]
