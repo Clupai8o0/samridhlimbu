@@ -196,9 +196,9 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
         style={{ position: 'relative', marginTop: 10, outlineOffset: 4, borderRadius: 4 }}
       >
         {measured === null ? <div style={{ height: HEIGHT }} /> : <svg viewBox={`0 0 ${width} ${HEIGHT}`} width="100%" height={HEIGHT} aria-hidden="true" style={{ display: 'block', overflow: 'visible' }}>
+          {/* Tick labels only: no gridlines or baseline (the site uses no divider lines). */}
           {ticks.map(t => (
             <g key={t}>
-              <line x1={PAD.left} x2={width - right} y1={yAt(t)} y2={yAt(t)} stroke={t === 0 ? '#2a2a2e' : '#17171a'} strokeWidth={1} shapeRendering="crispEdges" />
               <text x={PAD.left - 8} y={yAt(t)} dy="0.32em" textAnchor="end" style={{ fontFamily: MONO, fontSize: 10.5, fill: 'var(--muted-2)', fontVariantNumeric: 'tabular-nums' }}>
                 {fmtTick(t)}
               </text>
