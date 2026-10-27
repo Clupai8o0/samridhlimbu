@@ -373,8 +373,8 @@ export const PROJECTS: Project[] = [
 export const ARCHIVE: ArchiveItem[] = [
   { year: '2026', name: 'Farmers Intuition · Hack48', tech: 'FastAPI · Gemini · ElevenLabs', link: 'github', slug: 'farmers-intuition' },
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
-  { year: '2026', name: 'Fleet platform · SIT314', tech: 'Node.js · MQTT · Node-RED · Postgres · AWS Fargate · SQS', link: 'uni' },
-  { year: '2026', name: 'Bed monitor · SIT329', tech: 'C · FreeRTOS · SAMD21 registers · Python · SQLite', link: 'uni' },
+  { year: '2026', name: 'Fleet platform · SIT314', tech: 'Node.js · MQTT · Node-RED · Postgres · AWS Fargate · SQS', link: 'uni', slug: 'fleet-platform' },
+  { year: '2026', name: 'Bed monitor · SIT329', tech: 'C · FreeRTOS · SAMD21 registers · Python · SQLite', link: 'uni', slug: 'bed-monitor' },
   { year: '2025', name: 'GovChat · GovHack 2025 winner', tech: 'FastAPI · ChromaDB · Next.js', link: 'github', slug: 'govchat' },
   { year: '2025', name: 'notes-app · CI/CD showcase', tech: 'Next.js · MongoDB · Docker · Jenkins · AWS · Prometheus · Grafana', link: 'github', slug: 'notes-app' },
   { year: '2025', name: 'load-balancer', tech: 'Go · Prometheus', link: 'github', slug: 'load-balancer' },
