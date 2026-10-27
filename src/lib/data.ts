@@ -352,7 +352,7 @@ export const PROJECTS: Project[] = [
     tag: 'Embedded focus tracker · Arduino + Raspberry Pi',
     year: '2026',
     status: 'SIT210 project, May 2026 · open source, no hosted demo',
-    pitch: 'A desk-side focus tracker for SIT210 Embedded Systems, because every focus app runs on the laptop you\'re trying not to get distracted by. An Arduino Uno reads presence, distance, temperature and light once a second. A Raspberry Pi runs a five-state machine (AWAY, IDLE, FOCUS, DEGRADING, BREAK) across 8 asyncio tasks, with a Gemini check of a webcam still every 75 s as one input among the sensors. MQTT and Server-Sent Events push state to a Flask dashboard: the median time from a click to the screen updating fell from 2.75 s with file polling to 0.31 s. 51 tests across 4 suites; systemd units with a watchdog start it on boot.',
+    pitch: 'A desk-side focus tracker for SIT210 Embedded Systems, because focus apps run on the laptop you\'re trying not to get distracted by. An Arduino Uno reads presence, distance, temperature and light once a second. On a Raspberry Pi, 8 asyncio tasks share one five-state machine (AWAY, IDLE, FOCUS, DEGRADING, BREAK), with a Gemini check of a webcam still every 75 s as one input among the sensors. MQTT and Server-Sent Events push state to a Flask dashboard: the median time from a click to the screen updating fell from 2.75 s with file polling to 0.31 s (40 clicks each, on localhost). 51 tests across 4 suites; systemd units with a watchdog start it on boot.',
     pitchShort: 'Arduino + Raspberry Pi focus tracker. Five-state FSM, Gemini vision, MQTT. 51 tests.',
     stack: {
       Frontend: ['Flask + Jinja dashboard', 'Server-Sent Events'],

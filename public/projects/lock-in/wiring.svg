@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 832" width="400" height="832" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 840" width="400" height="840" role="img" aria-labelledby="t d">
   <title id="t">Lock-In Arduino Uno pin map</title>
   <desc id="d">Inputs: PIR on D2 (interrupt 0), push button on D3 (interrupt 1, pull-up), HC-SR04 trigger D4 and echo D5, DHT22 on D7 with a 10 kilo-ohm pull-up, LDR on A0 in a divider with 10 kilo-ohms. Outputs: red LED D6, yellow LED D8, green LED D10, each through 220 ohms, and a passive piezo on D9. The Uno talks to the Raspberry Pi over USB serial at 115200 baud.</desc>
   <defs>
@@ -15,7 +15,7 @@
     .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.5; }
     .ln { stroke: #a1a1aa; stroke-width: 1.5; fill: none; }
   </style>
-  <rect width="400" height="832" fill="#050505"/>
+  <rect width="400" height="840" fill="#050505"/>
 
   <text class="m" x="20" y="28">INPUTS</text>
   <rect class="box" x="20" y="40" width="360" height="272" rx="6"/>
@@ -55,7 +55,7 @@
   <text class="m" x="36" y="652">tone() patterns</text>
 
   <text class="m" x="20" y="720">USB SERIAL</text>
-  <rect class="box" x="20" y="732" width="360" height="80" rx="6"/>
+  <rect class="box" x="20" y="732" width="360" height="88" rx="6"/>
   <text class="n" x="36" y="764">Raspberry Pi</text>
   <text class="p" x="364" y="764" text-anchor="end">115200 baud</text>
   <text class="m" x="36" y="788">newline-delimited JSON,</text>

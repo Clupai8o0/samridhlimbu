@@ -52,7 +52,7 @@ const LOG_CAPTION = { fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(
 const METRICS = [
   { k: 'tests passing', v: '51' },
   { k: 'median click to screen', v: '0.31 s' },
-  { k: 'asyncio tasks', v: '8' },
+  { k: 'orchestrator tasks', v: '8' },
   { k: 'vision check every', v: '75 s' },
 ]
 
@@ -70,6 +70,7 @@ const SESSION_LOG = `2026-10-27 22:41:47 WARNING lockin.orchestrator: GEMINI_API
 2026-10-27 22:45:02 INFO lockin.fsm: FSM: BREAK -> FOCUS (button_resume)
 2026-10-27 22:45:52 INFO lockin.fsm: FSM: FOCUS -> DEGRADING (desk_away)
 2026-10-27 22:47:53 INFO lockin.fsm: FSM: DEGRADING -> BREAK (degrading_timeout)
+2026-10-27 22:48:02 INFO lockin.fsm: FSM: BREAK -> FOCUS (button_resume)
 2026-10-27 22:48:22 INFO lockin.fsm: FSM: FOCUS -> IDLE (button_long)
 2026-10-27 22:48:22 INFO lockin.orchestrator: session 1 ended`
 
@@ -95,18 +96,18 @@ Ran 51 tests in 2.814s
 OK`
 
 const SUITES: [string, string, string][] = [
-  ['test_fsm.py', '13', 'every transition, driven by a fake clock'],
+  ['test_fsm.py', '13', 'the main transitions and their holds, driven by a fake clock'],
   ['test_vision_judge.py', '25', 'parsing whatever Gemini sends back: fenced JSON, prose around it, truncated, wrong types'],
-  ['test_serial_reader.py', '9', 'bad bytes, a busy port, end of file, a full queue'],
+  ['test_serial_reader.py', '9', 'bad bytes, a port that fails to open, end of file, a full queue'],
   ['test_mqtt_integration.py', '4', 'round trips through a real broker; skipped when none is running'],
 ]
 
 const DECISIONS = [
   ['the state machine decides', 'trusting the model', 'My first version asked Gemini every 30 seconds and believed the answer. It flipped between FOCUS and DEGRADING all the time, because one bad frame, a hand over the face or a glance down at paper, was enough. Now a judgment below 0.6 confidence is ignored, leaving the desk only counts after 30 seconds, and getting back to FOCUS takes 60 seconds of steady focus. Gemini is one input among the sensors.'],
-  ['a state machine with no I/O', 'one that reads the clock and the ports', 'fsm.py takes events in and hands back a list of actions. The clock is passed in, so the 13 FSM tests move time with a fake clock instead of waiting, and no test needs a serial port or a network.'],
+  ['a state machine with no I/O', 'one that reads the clock and the ports', 'fsm.py takes events in and hands back a list of actions. The clock is passed in, so the 13 FSM tests move time with a fake clock instead of waiting, and none of them needs a serial port or a network.'],
   ['None on failure', 'exceptions', 'camera_client.capture() returns None on a timeout or an HTTP error, and the vision judge returns None on anything it cannot parse. The orchestrator treats None as an ordinary case: it logs "vision skipped" and carries on with the sensors.'],
   ['a webcam server on a laptop', 'an ESP32-CAM', 'The ESP32-CAM dropped frames over Wi-Fi and gave blurry JPEGs under a desk lamp. A small Flask server on a laptop serves a JPEG at GET /capture in the same shape, so the Pi side only needed a new URL.'],
-  ['MQTT with a file fallback', 'polling a file', 'The first dashboard polled a snapshot file, and a click took about 2.7 seconds to show. MQTT and Server-Sent Events brought the median down to 0.31 seconds. If the broker is down, commands still reach the Pi through a file.'],
+  ['MQTT with a file fallback', 'polling a file', 'The first dashboard polled a snapshot file, and a click took a median 2.75 seconds to show. MQTT and Server-Sent Events brought the median down to 0.31 seconds. If the broker is down, commands still reach the Pi through a file.'],
 ]
 
 const STACK: [string, string[]][] = [
@@ -173,7 +174,7 @@ export default function LockInPage() {
         {/* How it fits together */}
         <div className="section-label" style={{ fontFamily: MONO }}>How it fits together</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
-          The Pi is the only part that talks to everything else, and the only place session state lives. The Uno sends a JSON frame every second over USB serial and gets LED and buzzer commands back. On the Pi, one asyncio process runs eight tasks around a single state machine and writes sessions to SQLite. It publishes a snapshot to a local MQTT broker twice a second, and the Flask dashboard passes each one to the browser.
+          The Pi is the only part that talks to everything else, and the only place session state lives. The Uno sends a JSON frame every second over USB serial and gets LED and buzzer commands back. On the Pi, the orchestrator runs eight asyncio tasks around a single state machine and writes sessions to SQLite. It publishes a snapshot to a local MQTT broker twice a second, and the Flask dashboard passes each one to the browser.
         </p>
         <div style={{ maxWidth: 480, margin: '0 auto 40px' }}>
           <Shot
@@ -188,7 +189,7 @@ export default function LockInPage() {
         {/* The state machine */}
         <div className="section-label" style={{ fontFamily: MONO }}>Five states</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
-          Every timed transition waits for a hold, so no single reading moves the state. The ultrasonic sensor decides whether I&apos;m at the desk; the PIR only keeps me counted as present.
+          Every sensor transition waits for a hold, so no single distance reading moves the state. A Gemini judgment acts at once, but only at 0.6 confidence or more. The ultrasonic sensor decides whether I&apos;m at the desk; the PIR only keeps me counted as present.
         </p>
         <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
           <Shot
@@ -213,7 +214,7 @@ export default function LockInPage() {
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
           <pre style={LOG}>{SESSION_LOG}</pre>
-          <div style={LOG_CAPTION}>Orchestrator log, 27 Oct 2026, simulated Arduino. Lines copied as logged, trimmed to the state changes.</div>
+          <div style={LOG_CAPTION}>Orchestrator log, 27 Oct 2026, simulated Arduino. Lines copied as logged, trimmed to the state changes and a few warnings.</div>
         </div>
 
         {/* Screens */}
@@ -236,7 +237,7 @@ export default function LockInPage() {
             alt="The dashboard on a phone in DEGRADING, with the tabs along the top, the face in the ring and the focused and session cards below"
             width={1170}
             height={2330}
-            caption="The Today tab on a phone, during the first walk away."
+            caption="The Today tab on a phone, back at the desk after the first walk away, before the 60-second hold ends."
             variant="mobile"
           />
         </div>
@@ -253,7 +254,7 @@ export default function LockInPage() {
         {/* The MQTT switch */}
         <div className="section-label" style={{ fontFamily: MONO }}>From polling to push</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
-          The first dashboard wrote a button press to a file that the Pi read once a second, and the browser fetched the state every 2 seconds. A click took seconds to show. In the last commits before the report, I moved both directions onto MQTT and pushed state to the browser over Server-Sent Events. To check the gain, I ran both builds against the same simulated Arduino and had a browser click Start and Break 40 times each, timing until the state badge changed.
+          The first dashboard wrote a button press to a file that the Pi read once a second, and the browser fetched the state every 2 seconds. A click took seconds to show. In the last commits before the report, I moved both directions onto MQTT and pushed state to the browser over Server-Sent Events. To check the gain, I ran both builds against the same simulated Arduino and had a browser click Start and Break in turn, 40 clicks per build, timing until the state badge changed.
         </p>
         <div style={{ marginBottom: 40 }}>
           <Shot
@@ -272,10 +273,10 @@ export default function LockInPage() {
         </p>
         <div data-reveal style={{ marginBottom: 14 }}>
           <pre style={LOG}>{FAILURE_LOG}</pre>
-          <div style={LOG_CAPTION}>Orchestrator log with no MQTT broker running, 27 Oct 2026. Lines copied as logged.</div>
+          <div style={LOG_CAPTION}>Orchestrator log with no MQTT broker running, 27 Oct 2026. Lines copied as logged, trimmed.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          That run also found a gap. The open page never changed: in 8 of 8 clicks the badge stayed put for the full 10 seconds. The Server-Sent Events stream stays open and sends keep-alives even with no broker behind it, so the browser never falls back to polling. A reload shows the right state, read from the snapshot file.
+          That run also found a gap. The open page never changed: in 8 of 8 clicks the badge stayed put for the full 10 seconds. The Server-Sent Events stream stays open and sends keep-alives even with no broker behind it, so the browser never falls back to polling. Going by the code, a reload helps only when the dashboard never reached the broker, as here: the page is then rendered from the snapshot file. If the broker drops mid-session, the dashboard keeps serving its last MQTT snapshot.
         </p>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
           When the Uno goes away, the serial reader retries every 5 seconds until it comes back.
@@ -295,8 +296,8 @@ export default function LockInPage() {
             src="/projects/lock-in/wiring.svg"
             alt="Pin map: PIR HC-SR501 on D2 (INT0), push button on D3 (INT1, active-low with the internal pull-up), HC-SR04 trigger D4 and echo D5, DHT22 on D7 with a 10 kilo-ohm pull-up, LDR on A0 in a divider with 10 kilo-ohms. Outputs: red LED D6, yellow LED D8, green LED D10, each through 220 ohms, and a passive piezo on D9. USB serial to the Raspberry Pi at 115200 baud."
             width={400}
-            height={832}
-            caption="Pin map from lock_in_arduino.ino."
+            height={840}
+            caption="Pin map from lock_in_arduino.ino and the setup guide in the repo."
           />
         </div>
         <div style={{ marginBottom: 40 }}>
@@ -342,7 +343,7 @@ export default function LockInPage() {
         {/* What I'd do differently */}
         <div className="section-label" style={{ fontFamily: MONO }}>What I&apos;d do differently</div>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
-          Start with the state machine and its tests, not the wiring; I lost time on FSM bugs that came from timing assumptions. Run a small local vision model first and keep Gemini as the fallback, because a Gemini call takes two to three seconds and that is why the check runs only every 75 seconds. And make the browser start polling when the stream goes quiet, not only when it errors.
+          Start with the state machine and its tests, not the wiring; I lost time on FSM bugs that came from timing assumptions. Run a small local vision model first and keep Gemini as the fallback, because a Gemini call took two to three seconds when I built it, which is why the check runs only every 75 seconds. And make the browser start polling when the stream goes quiet, not only when it errors.
         </p>
 
         {/* Stack */}
