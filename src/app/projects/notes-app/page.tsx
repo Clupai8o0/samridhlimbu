@@ -72,12 +72,10 @@ http_request_duration_seconds_bucket{le="0.05",route="/server/ping",method="GET"
 ✅ Prometheus target 'notes-app' is ACTIVE
 [exit 0]`
 
-const LOG_DELETE = `# before: client at commit 954b945
-$ curl -s -X DELETE localhost:3444/api/notes/6ae0d9caeb80b1c285442015 -H 'Cookie: token=<local token>' -w ' HTTP %{http_code}'
-{"message":"Not authorized to access this route - No token found"} HTTP 401
+const LOG_DELETE_BEFORE = `$ curl -s -X DELETE localhost:3444/api/notes/6ae0d9caeb80b1c285442015 -H 'Cookie: token=<local token>' -w ' HTTP %{http_code}'
+{"message":"Not authorized to access this route - No token found"} HTTP 401`
 
-# after: one-line fix in the clone (delete-fix.diff), client rebuilt
-$ curl -s -X DELETE localhost:3444/api/notes/6ae0d9caeb80b1c285442015 -H 'Cookie: token=<local token>' -w ' HTTP %{http_code}'
+const LOG_DELETE_AFTER = `$ curl -s -X DELETE localhost:3444/api/notes/6ae0d9caeb80b1c285442015 -H 'Cookie: token=<local token>' -w ' HTTP %{http_code}'
 {"message":"Note deleted successfully"} HTTP 200`
 
 const DIFF_DELETE = `--- a/client/app/api/notes/[id]/route.ts
@@ -93,7 +91,7 @@ const DIFF_DELETE = `--- a/client/app/api/notes/[id]/route.ts
 const DECISIONS = [
   ['versioned images', 'one latest tag', 'Each build pushes both images as v1.0.<build number>. That is what makes the rollback work: the failure step looks up the last successful build and redeploys its tag.'],
   ['a person approves the deploy', 'deploy on every push', 'The deploy stage opens with an input step, "Deploy to Production?". Everything before it runs on its own; nothing reaches the server until someone clicks.'],
-  ['scan before release', 'scan after deploy', 'SonarCloud and Snyk run on both apps before the release tag and the deploy, so a failed scan stops the build before anything is tagged or deployed. The images are already on Docker Hub by then.'],
+  ['scan before release', 'scan after deploy', 'SonarCloud and Snyk run on both apps before the release tag and the deploy. If Snyk finds a known vulnerability, the build stops before anything is tagged or the new images are deployed. SonarCloud only reports: the pipeline does not wait for its quality gate. The images are already on Docker Hub by then.'],
   ['check after deploy', 'trust a green deploy', 'Two stages run against the server after the deploy: /server/ping must return 200, then /server/metrics must answer and Prometheus must list the notes-app target as active.'],
 ]
 
@@ -186,7 +184,7 @@ export default function NotesAppPage() {
         <div data-reveal style={{ maxWidth: 480, margin: '0 auto 40px' }}>
           <Shot
             src="/projects/notes-app/pipeline.svg"
-            alt="Pipeline diagram: 01 Checkout Code, 02 Lint and Test Backend, 03 Lint and Test Frontend, 04 Build and Push Docker Images, 05 Code Quality Analysis, 06 Snyk Security Scan, 07 Release Tagging, then an input step 'Deploy to Production?', 08 Deploy to Production, 09 Smoke Test on EC2, 10 Monitoring and Alerts. A dotted line from every stage leads to 'post failure: roll back', which redeploys the last good build."
+            alt="Pipeline diagram: 01 Checkout Code, 02 Lint and Test Backend, 03 Lint and Test Frontend, 04 Build and Push Docker Images, 05 Code Quality Analysis, 06 Snyk Security Scan, 07 Release Tagging, then an input step 'Deploy to Production?', 08 Deploy to Production, 09 Smoke Test on EC2, 10 Monitoring and Alerts. Dotted lines labelled 'any stage fails' lead to 'post failure: roll back', which redeploys the last good build."
             width={480}
             height={1002}
             caption="The ten stages and the rollback, drawn from the Jenkinsfile."
@@ -223,11 +221,11 @@ export default function NotesAppPage() {
           />
         </div>
         <p style={{ ...PROSE, margin: '0 0 16px' }}>
-          The backend stage fails at the latest commit, as intended. That commit changed the ping test to request <code>/server/pin</code>, so it gets a 404. Its parent commit passes all 132 tests.
+          The backend stage fails at the latest commit, as intended. The last pipeline commit changed the ping test to request <code>/server/pin</code>, so it gets a 404. The commit before it passes all 132 tests.
         </p>
         <div data-reveal style={{ marginBottom: 28 }}>
           <LogBlock label="Lint and Test Backend · at 954b945" text={LOG_BACKEND} />
-          <LogBlock label="Lint and Test Backend · one commit earlier" text={LOG_BACKEND_PREV} />
+          <LogBlock label="Lint and Test Backend · before the planned failure" text={LOG_BACKEND_PREV} />
           <LogBlock label="Lint and Test Frontend" text={LOG_FRONTEND} />
         </div>
         <p style={{ ...PROSE, margin: '0 0 16px' }}>
@@ -264,14 +262,15 @@ export default function NotesAppPage() {
         {/* Bug */}
         <div className="section-label" style={{ fontFamily: MONO }}>A bug the tests missed</div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          The traffic script made some 4XX errors on purpose: requests with no token and logins with a wrong password. The DELETE errors were not planned. Of 541 deletes sent through the client, all 541 got a 401. Deleting a note from the app has never worked: the route is unchanged since the first commit.
+          The traffic script made some 4XX errors on purpose: 368 requests with no token and 205 logins with a wrong password. That accounts for 573 of the 1114. The other 541 were not planned: every delete sent through the client got a 401. Deleting a note from the app has never worked: the route is unchanged since the first commit.
         </p>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
-          The client&apos;s API routes read the token cookie and pass it on to the server. The GET and PUT routes send it as a Bearer header. The DELETE route only forwards the cookie, and the Express server never parses cookies, so it finds no token. The server tests always send the Bearer header and the client tests do not cover the API routes, so none of the 219 tests catch it.
+          The client&apos;s API routes read the token cookie and pass it on to the server. The GET and PUT routes send it as a Bearer header. The DELETE route only forwards the cookie, and the Express server never parses cookies, so it finds no token. The server tests send the token as a Bearer header, and the client tests mock fetch and never reach the API routes, so none of the 219 tests catch it. The server suite&apos;s own notes say a cookie-auth test section was dropped because it needed complex middleware setup.
         </p>
         <div data-reveal style={{ marginBottom: 16 }}>
           <LogBlock label="The fix · one line" text={DIFF_DELETE} />
-          <LogBlock label="Before and after · local" text={LOG_DELETE} />
+          <LogBlock label="Before · client at 954b945" text={LOG_DELETE_BEFORE} />
+          <LogBlock label="After · fix applied, client rebuilt" text={LOG_DELETE_AFTER} />
         </div>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
           The fix exists only in my local copy, used to check it. The repo on GitHub still has the bug. The note screenshots were taken before the fix.
