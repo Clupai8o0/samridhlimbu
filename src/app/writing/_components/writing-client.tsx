@@ -27,7 +27,9 @@ export function WritingClient({ posts }: { posts: Post[] }) {
     setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2)
   }
 
-  const filtered = active === 'all' ? posts : posts.filter(p => p.tags.includes(active))
+  // Newest first, within Featured and within All.
+  const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date))
+  const filtered = active === 'all' ? sorted : sorted.filter(p => p.tags.includes(active))
   const featured = filtered.filter(p => p.featured)
   const rest = filtered.filter(p => !p.featured)
 

@@ -8,6 +8,22 @@ export type ContentBlock =
   | { type: 'list'; items: string[]; ordered?: boolean }
   | { type: 'table'; headers: string[]; rows: string[][] }
   | { type: 'equation'; html: string; caption?: string }
+  | ChartBlock
+
+// A themed bar or line chart, drawn by <ArticleChart>. One value per category in
+// every series, all on one y axis. Bars always start at zero; a line can set yMin.
+export type ChartBlock = {
+  type: 'chart'
+  kind: 'bar' | 'line'
+  title: string
+  subtitle?: string
+  caption?: string
+  xLabel?: string
+  unit?: string
+  yMin?: number
+  categories: string[]
+  series: { name: string; values: number[] }[]
+}
 
 export type Post = {
   slug: string
@@ -2609,6 +2625,7 @@ except aiohttp.ClientError as e:
     tags: ['iot', 'scalability', 'algorithms', 'node'],
     excerpt:
       'I swapped my taxi dispatcher\'s first-come, nearest-car rule for a batched hill climb adapted from a 2017 DiDi paper. Under load, mean pickup distance fell by about a quarter and p95 match latency roughly doubled. The first sweep also broke the worker, most likely through my code rather than the algorithm.',
+    featured: true,
     content: [
       {
         type: 'paragraph',
@@ -2803,6 +2820,19 @@ while (moved && passes < 4) {               // capped at four passes
           'The offline result says the mechanism works. The project needed to know whether it survives queueing, claim races and a fleet whose cars come and go. I used the same five-stage ramp as the project report: 2,000 vehicles, one dispatch worker, a matched car held for 300 ms, everything else held still. The greedy arm ran twice and its figures are the mean of the two. The batched arm holds requests for up to 250 ms or until it has 64, whichever comes first.',
       },
       {
+        type: 'chart',
+        kind: 'line',
+        title: 'Batching cut mean pickup distance once the fleet was under load',
+        subtitle: 'Metres per matched rider across the five-stage ramp, lower is better',
+        xLabel: 'offered',
+        unit: 'm',
+        categories: ['200/s', '800/s', '1,600/s', '3,000/s', '800/s'],
+        series: [
+          { name: 'Greedy', values: [238, 1189, 968, 1044, 1074] },
+          { name: 'Batched', values: [237, 861, 777, 796, 820] },
+        ],
+      },
+      {
         type: 'table',
         headers: ['Offered/s', 'Greedy mean m', 'Greedy p95 m', 'Greedy p95 ms', 'Batched mean m', 'Change', 'Batched p95 m', 'Batched p95 ms'],
         rows: [
@@ -2838,6 +2868,16 @@ while (moved && passes < 4) {               // capped at four passes
         type: 'paragraph',
         html:
           'Batch size is the real knob. For this sweep I held the window at 2,000 ms so it never binds, and labelled each row by the batch size the worker actually reached. The receive call takes up to eight messages before the size limit is checked, so eight is the floor and asking for four gets eight. That is a bug in my loop. It gave me a free replicate, since the runs at 4 and 8 are the same condition. They came out at 1,062 and 1,051 m, eleven metres apart. Their p95 latencies were 42 and 152 ms, so the 97 ms in the table is an average of two quite different runs.',
+      },
+      {
+        type: 'chart',
+        kind: 'bar',
+        title: 'Mean pickup distance falls as the batch grows',
+        subtitle: 'Metres per matched rider, lower is better',
+        xLabel: 'batch',
+        unit: 'm',
+        categories: ['greedy', '8', '16', '32', '65', '129'],
+        series: [{ name: 'Mean pickup distance', values: [1068, 1056, 1018, 998, 828, 667] }],
       },
       {
         type: 'table',
@@ -2937,6 +2977,7 @@ await Promise.all(msgs.map((m, j) => settle(m, picked[j], cands[j])));`,
     tags: ['algorithms', 'reinforcement-learning', 'bayesian-networks', 'python', 'sit320'],
     excerpt:
       'I built an agent that learns the shape of a Bayesian network by editing it one edge at a time, with a reward that mixes BIC with how well the network generates data. With the generative half switched off, my linear agent beat hill climbing on five of six networks. The generative reward mostly did not help.',
+    featured: true,
     content: [
       {
         type: 'paragraph',
@@ -3016,6 +3057,18 @@ await Promise.all(msgs.map((m, j) => settle(m, picked[j], cands[j])));`,
         alt: 'Bar chart of milliseconds per environment step on six networks, on a log scale. Cheap steps sit well below generative steps at 200, 1000 and 5000 simulated rows.',
         caption: 'Milliseconds per environment step, log scale. Grey is a cheap BIC-only step, the coloured bars are generative steps at three simulation sizes.',
         lightBg: true,
+      },
+      {
+        type: 'chart',
+        kind: 'bar',
+        title: 'A generative step costs 4.5 to 12.9 times a cheap one',
+        subtitle: 'Milliseconds per step, simulating 1,000 rows',
+        unit: 'ms',
+        categories: ['synthetic', 'asia', 'sachs', 'child', 'insurance', 'alarm'],
+        series: [
+          { name: 'Cheap step', values: [0.06, 0.05, 0.08, 0.16, 0.29, 0.77] },
+          { name: 'Generative step', values: [0.71, 0.52, 0.81, 2.02, 2.44, 3.51] },
+        ],
       },
       {
         type: 'table',
@@ -3367,6 +3420,7 @@ return the graph with the best measured H`,
     readMin: 21,
     tags: ['algorithms', 'reinforcement-learning', 'dynamic-programming', 'teaching', 'sit320'],
     excerpt: 'I built two tic-tac-toe players, one solved by dynamic programming and one that learned by playing 200,000 games. Both end as tables nobody typed. I argue that "the algorithm" depends on the level you describe a system at, give a three-part test for which run-time state belongs to it, and propose a two-hour lab I have not yet run with a class.',
+    featured: true,
     content: [
       {
         type: 'paragraph',

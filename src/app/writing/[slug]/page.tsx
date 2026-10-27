@@ -9,6 +9,7 @@ import type { ContentBlock } from '@/lib/writing'
 import { highlight, HL_COLORS, extractYouTubeId } from '@/lib/highlight'
 import { TableOfContents, type TocItem } from '@/components/table-of-contents'
 import { CopyButton } from '@/components/copy-button'
+import { ArticleChart } from '@/components/article-chart'
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
@@ -464,6 +465,10 @@ function renderBlock(block: ContentBlock, key: number) {
         )}
       </figure>
     )
+  }
+
+  if (block.type === 'chart') {
+    return <ArticleChart key={key} block={block} />
   }
 
   if (block.type === 'table') {
