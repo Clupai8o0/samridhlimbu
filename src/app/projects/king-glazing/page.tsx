@@ -123,7 +123,7 @@ export default function KingGlazingPage() {
             alt="King Double Glazing home page on desktop: a yellow promo bar, the headline Why choose the King double glazing system, a Generate my quote button and a 10-year warranty badge"
             width={2880}
             height={1800}
-            caption="The home page. All screenshots are the business's own code from its repository, run on my machine with analytics blocked. The window sizes in the quote are made up."
+            caption="The home page. All screenshots are the business's own code from its repository, run on my machine with analytics blocked. The window sizes in the quote are made up, and prices are blurred."
             priority
           />
         </div>
@@ -170,7 +170,7 @@ export default function KingGlazingPage() {
         <div data-reveal style={{ marginBottom: 16 }}>
           <Shot
             src="/projects/kdg/estimate-options.webp"
-            alt="Four glass options, A to D, each with how much quieter and how much less heat it lets through and its price per square metre; option C is selected"
+            alt="Four glass options, A to D, each with how much quieter and how much less heat it lets through and its price per square metre, blurred; option C is selected"
             width={1920}
             height={1480}
             caption="Step one: the glass. All four prices stay on screen."
@@ -180,7 +180,7 @@ export default function KingGlazingPage() {
           <div style={{ flex: '0 1 220px', minWidth: 0 }}>
             <Shot
               src="/projects/kdg/estimate-windows-mobile.webp"
-              alt="Three window rows on a phone, each with height, width and quantity, a second-storey checkbox and the area worked out underneath"
+              alt="Three window rows on a phone, each with height, width and quantity, a second-storey checkbox with its charge blurred, and the area worked out underneath"
               width={1170}
               height={2532}
               caption="Step two on a phone: one row per window."
@@ -190,9 +190,9 @@ export default function KingGlazingPage() {
           <div style={{ flex: '1 1 360px', minWidth: 0 }}>
             <Shot
               src="/projects/kdg/estimate-quote.webp"
-              alt="The quote: the total in large type, a line per window with its price, total area 4.32 square metres, the glass make-up, a note that the price is accurate to within 10%, and a Send us your quote button"
+              alt="The quote: the total in large type and a line per window, with every price blurred, total area 4.32 square metres, the glass make-up, a note that the price is accurate to within 10%, and a Send us your quote button"
               width={1920}
-              height={1560}
+              height={1540}
               caption="The result: one price, the working behind it, and the glass it buys."
             />
           </div>
