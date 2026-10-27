@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 
 const DESCRIPTION =
-  'cstack is one shared layer of rules, hooks and skills for six coding agents, from Claude Code and Codex to DeepSeek and Grok Build. A model-routing benchmark cut the cost per task 2.7x ($0.33 vs $0.90) with no meaningful loss in quality. Open source, MIT.'
+  'cstack is one shared layer of rules, hooks and skills for six coding agents, from Claude Code and Codex to DeepSeek and Grok Build. Running subagents at low effort instead of extra-high cut the cost per task 2.7x ($0.33 vs $0.90) with no meaningful loss in score. Open source, MIT.'
 
 export const metadata: Metadata = {
   title: 'cstack · shared layer for coding agents',
@@ -35,22 +35,22 @@ const PROSE = { fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeig
 
 const METRICS = [
   { k: 'coding agents, one layer', v: '6' },
-  { k: 'cheaper per task than xhigh effort', v: '2.7×' },
+  { k: 'cheaper per task, low vs extra-high effort', v: '2.7×' },
   { k: 'licence', v: 'MIT' },
 ]
 
 const SHAPE: [string, string][] = [
   ['rules/', 'one source rules file; each agent gets its copy from it'],
   ['hooks/', 'claims, queues, guardrails, memory recall, alerts'],
-  ['skills/_core/', 'token economy, tool scoping, loaded on demand'],
-  ['sync-agents.py', 'writes each agent its AGENTS.md, skills and hook config'],
-  ['second_opinion.py', 'calls outside models, sandboxed and policy-checked'],
+  ['skills/_core/', 'token economy, tool scoping, and a loader for the rest'],
+  ['scripts/sync-agents.py', 'writes the other agents their AGENTS.md, skills and hooks'],
+  ['scripts/second_opinion.py', 'calls outside models, sandboxed and policy-checked'],
   ['bakeoff/', 'run the same model bake-off on your own repo'],
 ]
 
 const DECISIONS = [
-  ['measured routing', 'one model for everything', 'Subagents run Opus at low effort, always pinned. In the routing benchmark it cost $0.33 a task against $0.90 at extra-high effort, with no meaningful gain from the extra spend. Coding that a test can judge goes to cheaper models. The routing rules come from benchmark and bake-off runs; the README marks the few numbers that are estimates.'],
-  ['reviews on the diff', 'a reviewer that explores the repo', 'Every code change gets an outside review before it counts as done. The script sends only the git diff with a findings-only brief, so the reviewer stops wandering the repo and almost no Claude usage is spent on it.'],
+  ['measured routing', 'one model for everything', 'Subagents run Opus at low effort, always pinned. In the routing benchmark, Opus 5 at low effort scored 96-100% on every task, against 100% at extra-high, for $0.33 a task instead of $0.90. Coding that a test can judge goes to cheaper models. Most rules in the table come from these runs; the README marks the few that are estimates.'],
+  ['reviews on the diff', 'a reviewer that explores the repo', 'Every code change gets an outside review before it counts as done. Codex does the review, so it costs almost no Claude usage. The script sends only the git diff with a findings-only brief, which keeps the reviewer from wandering the repo.'],
   ['file claims between sessions', 'hoping two sessions never collide', 'Several agent sessions often work on one repo at once. A hook claims each file a session edits and blocks a second session from editing it in the same worktree. Status notes and their history show what was already done or tried.'],
   ['hooks that fail open', 'hooks that can block work', 'A broken script never stops a session. The cost is that a fresh install has to be checked by hand, which the README says plainly.'],
 ]
@@ -110,7 +110,7 @@ export default function CstackPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>The fix</div>
           <p style={{ ...PROSE, margin: 0 }}>
-            cstack keeps one copy of everything. A sync script writes each agent its own rules file, links the same skills and points every agent at the same hooks, so a guardrail learned in one session applies in all of them. Then I measured: a routing benchmark built from real work with planted bugs, and a bake-off on real commits from one app. The routing rules in the README come from those runs.
+            cstack keeps one copy of everything. Claude Code links the rules and skills directly; a sync script writes each of the other agents its own rules file, links the same skills and points it at the same hooks, so a guardrail learned in one session applies in all of them. Then I measured: a routing benchmark built from real work with planted bugs, and a bake-off on real commits from one app. Most of the routing rules in the README come from those runs.
           </p>
         </div>
 
@@ -119,7 +119,7 @@ export default function CstackPage() {
         <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 2, padding: '14px 16px', marginBottom: 14, lineHeight: 1.8 }}>
           {SHAPE.map(([part, desc]) => (
             <div key={part} style={{ display: 'flex', flexWrap: 'wrap', columnGap: 16 }}>
-              <span style={{ color: 'var(--accent)', width: 150, flexShrink: 0 }}>{part}</span>
+              <span style={{ color: 'var(--accent)', width: 200, flexShrink: 0 }}>{part}</span>
               <span style={{ color: 'var(--muted)', flex: '1 1 200px' }}>{desc}</span>
             </div>
           ))}
