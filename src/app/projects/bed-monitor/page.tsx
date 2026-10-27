@@ -52,7 +52,7 @@ const METRICS = [
   { k: 'FreeRTOS tasks', v: '4' },
   { k: 'host checks passing', v: '814' },
   { k: 'board frames in SQLite', v: '1,216' },
-  { k: 'sequence gaps', v: '0' },
+  { k: 'sequence gaps inside a connection', v: '0' },
 ]
 
 const BANNER_LOG = `link
@@ -73,11 +73,11 @@ $AC,SEQ=485,UP=513000,BED=1,T=1934,TB=HYPO,MAT=4095,F=405,OCC=0,ALM=06,TAPS=8,ST
 const STATS_LOG = `13|2026-09-07T04:47:01.890Z|1|stats|up 3083.0 s, TC3 ran 6166 times (2.00 a second), EIC took 3 edges and dropped 2 as bounce, busy waits adc 0 state 0 link 0, heap free 6704`
 
 const DECISIONS = [
-  ['the LED on a hardware timer', 'a blink task', 'The 1 second blink is the only thing in the task sheet with a fixed period, so it is not a task at all. TC3 counts to 31249 at 62.5 kHz and its interrupt toggles the pin every 500 ms. No load on the scheduler can stretch it. Over one 51-minute run the board reported TC3 firing 6166 times, 2.00 a second.'],
+  ['the LED on a hardware timer', 'a blink task', 'The blink has to keep a steady 1 second beat whatever else is running, so it is not a task at all. TC3 counts to 31249 at 62.5 kHz and its interrupt toggles the pin every 500 ms. No load on the scheduler can stretch it. After 51 minutes up, the board reported TC3 firing 6166 times, 2.00 a second.'],
   ['rate-monotonic priorities', 'priority by importance', 'The task with the shortest period gets the highest priority: the mat at 10 ms, commands at 50 ms, the link at 1 s, temperature at 5 minutes. Priority 2 is left empty because the kernel creates its own timer service task there.'],
   ['a tap is a pulse', 'any threshold crossing', 'The first tap detector counted someone getting into bed as a tap. Now a crossing only becomes a tap when the signal comes back down. One still up after 400 ms is a person, so it is thrown away.'],
   ['a mutex on the link', 'two tasks sharing the USART', 'The command task can pre-empt the link task halfway through a frame. Each byte is sent and then read back off the D6 to D7 jumper before the next, so a pre-emption there would mix two frames together. A third mutex fixed it. No host check could catch this one, because it needs two tasks running.'],
-  ['one clock generator each', 'sharing generator 5', 'The timer and USART classes from earlier tasks both claimed clock generator 5 at different speeds. Nothing stops you rewriting a live generator, so it would have failed quietly: a 3 Hz blink or every baud rate a third out. The USART moved to generator 6. The board reported 115219 baud against the 115200 asked for.'],
+  ['one clock generator each', 'sharing generator 5', 'The timer and USART classes from earlier tasks both claimed clock generator 5 at different speeds. Nothing stops you rewriting a live generator, so it would have failed quietly: a 3 Hz blink, or every baud rate a third of what was asked. The USART moved to generator 6. The board reported 115219 baud against the 115200 asked for.'],
   ['microvolts', 'whole millivolts', 'Rounding the thermistor voltage to whole millivolts threw away about half the temperature resolution between 35 and 39 C. Working in microvolts, every one of the 233 ADC counts in that range changes the reading. The host checks confirm all 233.'],
 ]
 
@@ -138,10 +138,10 @@ export default function BedMonitorPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ ...PROSE, margin: '0 0 14px' }}>
-            Task 6.1D in SIT329, Advanced Embedded Systems, at Deakin. The unit is about programming an ARM Cortex-M0+ through its registers, so a version that blinks the LED with digitalWrite has not done the task. The timer, ADC and USART classes come from my own earlier tasks in the unit.
+            Task 6.1D in SIT329, Advanced Embedded Systems, at Deakin. The unit is about programming an ARM Cortex-M0+ through its registers, so nothing in the running program calls digitalWrite, analogRead or attachInterrupt. The timer, ADC and USART classes come from my own earlier tasks in the unit.
           </p>
           <p style={{ ...PROSE, margin: 0 }}>
-            The task sheet asked for temperature every 5 minutes, a red LED blinking once a second in a fever, an alarm above 39 C or below 35 C, bed occupancy from a force sensor, a HELP alarm on five taps in two seconds that a nurse can reset, and a dashboard that logs to a file or database.
+            The task sheet asked for temperature every 5 minutes, a red LED blinking once a second in a fever, an alarm above 39 C or below 35 C, bed occupancy from a force sensor, a HELP alarm on five taps in two seconds that a nurse can reset, and a dashboard that logs to a database.
           </p>
         </div>
 
@@ -175,11 +175,11 @@ export default function BedMonitorPage() {
           />
         </div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          The board prints its own setup at boot. This is the end of that banner from 24 Aug 2026, read back off the real registers.
+          The board prints its own setup at boot. Here is part of that banner from 24 Aug 2026. The register values and the baud rate are read back off the hardware, not copied from the source.
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
           <pre style={LOG}>{BANNER_LOG}</pre>
-          <div style={LOG_CAPTION}>Serial output from the board, 24 Aug 2026. Lines copied as captured, trimmed to the link and scheduler.</div>
+          <div style={LOG_CAPTION}>Serial output from the board, 24 Aug 2026. Lines copied as captured, trimmed to the link, pins and scheduler.</div>
         </div>
 
         {/* The mat */}
@@ -197,7 +197,7 @@ export default function BedMonitorPage() {
           />
         </div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
-          Here is the rule on the real board. The dashboard stored every frame from this session in SQLite. The mat was pressed and held twice, then tapped.
+          Here is the rule on the real board. The dashboard stored every frame from this session in SQLite. The mat was held down twice, then tapped quickly.
         </p>
         <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
           <Shot
@@ -221,14 +221,14 @@ export default function BedMonitorPage() {
             alt="The dashboard after a reset: body temperature 20.03 C, bed EMPTY at 0 g, the alarm bar showing only HYPOTHERMIA, and the link log showing the load falling from 1041 g to 0 g, then sent RESET, board acknowledged RESET, and alarm word 0x06 to 0x02"
             width={2092}
             height={1272}
-            caption="After the nurse's reset, 7 Sep 2026. The log shows the load going, the reset and the board's acknowledgement, and HELP clearing from the alarm word."
+            caption="After pressing the reset button, 7 Sep 2026. The log shows the load going, the reset and the board's acknowledgement, and HELP clearing from the alarm word."
           />
         </div>
 
         {/* Proof */}
         <div className="section-label" style={{ fontFamily: MONO }}>What the logs show</div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          The SQLite file holds 1,216 frames from three sessions on the real board: 24 Aug, 7 Sep and 8 Sep 2026. None has the stub bit set, so none was injected. The sequence number restarts six times, each time at a reconnect or a reboot, and never skips within a connection. The temperature only changes at uptime 301 s and 3001 s, which is the 5-minute task running on time. The board also reported its own counters near the end of a 51-minute run.
+          The SQLite file holds 1,216 frames from the real board, logged on three days: 24 Aug, 7 Sep and 8 Sep 2026. None has the stub bit set, so none was injected. The sequence number jumps six times, each time at a reconnect or a reboot, and never skips within a connection. Within a connection the temperature only changes at uptime 301 s and 3001 s, which is the 5-minute task running on time. The board also reported its own counters after 51 minutes up.
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
           <pre style={LOG}>{STATS_LOG}</pre>
@@ -259,7 +259,7 @@ export default function BedMonitorPage() {
         {/* What I'd do differently */}
         <div className="section-label" style={{ fontFamily: MONO }}>What I&apos;d do differently</div>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
-          Calibrate the sensors before building on them. The force numbers still come from two placeholder points, so the grams are not real weights. The thermistor constants were never measured off the part either. And with no mat plugged in, D4 floats: it read as about 450 g, an occupied bed and seven taps a second, and nothing downstream can tell that from a real reading. A pull-down resistor and a fault check for that case would come first next time.
+          Calibrate the sensors before building on them. The force numbers still come from two placeholder points, so the grams are not real weights. The thermistor constants were never measured off the part either. And with no mat plugged in, D4 floats: it read as about 450 g, an occupied bed and about seven taps a second, and nothing downstream can tell that from a real reading. A pull-down resistor and a fault check for that case would come first next time.
         </p>
 
         {/* Stack */}
