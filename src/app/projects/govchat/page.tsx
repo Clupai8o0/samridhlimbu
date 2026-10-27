@@ -45,7 +45,7 @@ const METRICS = [
 
 const TIMELINE = [
   { date: 'Aug 2025', title: 'Problem framing', body: 'Australian government data is spread across the ABS and dozens of department sites. Finding a dataset means knowing which agency holds it and what it is called. GovChat lets you ask in plain English instead.' },
-  { date: 'Aug 2025', title: 'Catalogue and embeddings', body: 'Two crawlers, both respecting robots.txt. One walks *.gov.au for CSV, XLS, PDF and ZIP links; the other pulls page text from seed sites, with optional Playwright for pages that need JavaScript. ABS dataflow metadata is flattened into one catalogue, embedded with OpenAI and loaded into ChromaDB.' },
+  { date: 'Aug 2025', title: 'Catalogue and embeddings', body: 'Two crawlers, both respecting robots.txt. One walks *.gov.au for CSV, XLS and PDF links (ZIP optional); the other pulls page text from seed sites, with optional Playwright for pages that need JavaScript. ABS dataflow metadata is flattened into one catalogue, embedded with OpenAI and loaded into ChromaDB.' },
   { date: 'Aug 2025', title: 'Trust layer', body: 'Each answer returns the top four datasets, a trust score from five factors and an audit id. The frontend shows the factors, the sources with similarity badges and an audit view; the API stores the full record under that id. A React Flow graph lets you browse related datasets.' },
   { date: 'Dec 2025', title: 'Won GovHack 2025', body: 'GovChat was named a GovHack 2025 winner.' },
   { date: 'Oct 2026', title: 'Measured and improved, locally', body: 'I ran both repos on my laptop, wrote 40 test questions and measured how often search finds the right dataset. Then I built an improved copy and measured it the same way. The copy is a local prototype: it is not deployed and not published.', current: true },
@@ -87,10 +87,10 @@ const STACK: [string, string][] = [
   ['Oct 2026 tests', 'all-MiniLM-L6-v2 run locally · rank_bm25 · Playwright screenshots · matplotlib'],
 ]
 
-function LogBlock({ label, text }: { label: string; text: string })
+function LogBlock({ label, text, reveal = true }: { label: string; text: string; reveal?: boolean })
 {
   return (
-    <figure data-reveal style={{ margin: '0 0 12px' }}>
+    <figure data-reveal={reveal ? '' : undefined} style={{ margin: '0 0 12px' }}>
       <figcaption style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</figcaption>
       <pre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }}>
         {text}
@@ -156,7 +156,7 @@ export default function GovchatPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ ...PROSE, margin: 0 }}>
-            A team project for GovHack 2025; the frontend and most of the API commits are mine. Public data is only useful if people can find it, and a wrong answer about government data does real harm. So GovChat answers from dataset metadata only, cites every source, and shows a trust score you can check against the audit record.
+            A team project for GovHack 2025. All the frontend commits are mine, and about half of the API commits. Public data is only useful if people can find it, and a wrong answer about government data does real harm. So GovChat answers from dataset metadata only, cites every source, and shows a trust score you can check against the audit record.
           </p>
         </div>
 
@@ -209,7 +209,7 @@ export default function GovchatPage() {
         {/* Trust score */}
         <div className="section-label" style={{ fontFamily: MONO }}>Trust score</div>
         <div style={{ marginBottom: 12 }}>
-          <LogBlock label="retrieval.py (simplified)" text={TRUST_CODE} />
+          <LogBlock label="retrieval.py (simplified)" text={TRUST_CODE} reveal={false} />
         </div>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 24px' }}>
           Grounding carries the most weight because invented figures are the worst failure. Retrieval reaches 1.0 only when the best match clears 0.90 similarity. The figure check is a pattern match, so it catches forms like &ldquo;4.2 million&rdquo; or &ldquo;5 percent&rdquo;, not every number. Two factors are placeholders for now: recency and verification sit at 1.0 until freshness tracking and checks on figures are built.
@@ -266,10 +266,10 @@ export default function GovchatPage() {
           />
           <Shot
             src="/projects/govchat/rental-after.webp"
-            alt="Improved datasets panel: Taxation Statistics 2021-22, 2019-20, 2018-19 and 2022-23 cards at 39%, 38%, 38% and 38%, each with a File line reading 'ts NN individual 26 rental property schedules'."
+            alt="Improved datasets panel: Taxation Statistics 2021-22, 2019-20, 2018-19 and 2022-23 cards at 39%, 38%, 38% and 38%. The first three show a File line reading 'ts 22 / 20 / 19 individual 26 rental property schedules'; the fourth card is cut off below its title."
             width={766}
             height={1300}
-            caption="After: the rental property schedules for four tax years, each with its file line."
+            caption="After: rental property schedules for several tax years, each told apart by its file line, at 38 to 39 %."
           />
         </div>
 
@@ -292,7 +292,7 @@ export default function GovchatPage() {
         <p style={{ ...PROSE, margin: '0 0 16px' }}>
           The similarity fix shows up in the logs. Chroma&apos;s distance equals 2 − 2·cos, so the old formula turned a cosine of 0.33 into 0.09. Asked all 40 questions over HTTP, the original gave two answers a trust score of zero; the copy gave none.
         </p>
-        <LogBlock label="similarity check, first match of one question" text={SIM_LOG} />
+        <LogBlock label="similarity check, first match for ‘How do people get to work in each area?’" text={SIM_LOG} />
         <div style={{ marginBottom: 40 }}>
           <LogBlock label="trust over HTTP, 40 questions, both APIs" text={TRUST_LOG} />
         </div>
