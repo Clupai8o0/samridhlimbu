@@ -59,7 +59,7 @@ const METRICS = [
 const ALERT_LOG = `{
   "baseline_weekly_l": 636195.64,
   "recommended_daily_l": 20903.57,
-  "confidence": "high",
+  "confidence_level": "high",
   "should_alert": true,
   "alerts": [
     "Soil moisture critically low at 18.0%",
@@ -69,7 +69,7 @@ const ALERT_LOG = `{
 }`
 
 const DECISIONS = [
-  ['rules for the last step', 'a second model', 'The model has only seen three simulated farms. It knows nothing about grape varieties or growth stages. So the step from its farm-sized number to advice for one block is five multipliers in a config file, and every litre in the answer can be traced to a rule.'],
+  ['rules for the last step', 'a second model', 'The model has only seen three simulated farms, and none of them is a vineyard. It knows nothing about grape varieties or growth stages. So the step from its farm-sized number to advice for one block is five multipliers in a config file, and every change to the model\'s number can be traced to a rule.'],
   ['ranking two tests', 'the best score on one year', 'Judged on 2025 alone, linear regression would have won. Tested one year at a time, it came last. Ranking both tests picked gradient boosting, which was close to the best in each.'],
   ['voice first', 'a dashboard only', 'A grower out in the rows cannot keep reading a screen. Sage answers in two or three sentences and quotes the numbers. The dashboard is for setting up the block and showing the working.'],
   ['lazy imports', 'loading everything at start-up', 'The first Vercel deploy returned 500 errors. The fix moved the heavy libraries into the functions that use them, so the Python function can start without them. The model file is now loaded on every request, and a local request still takes about 20 ms.'],
@@ -78,14 +78,14 @@ const DECISIONS = [
 
 const TIMELINE = [
   { date: '14 Mar 2026 · 23:49', title: 'Voice page first', body: 'The front end starts as a voice assistant screen. By 00:26 it has routes for ElevenLabs speech to text and text to speech.' },
-  { date: '15 Mar · 01:09 to 01:35', title: 'Dashboard prototype and the model', body: 'A separate dashboard prototype with five knobs. Then Akash\'s first API commit: the simulated data, the training script, a trained model, the rules and nine tests.' },
+  { date: '15 Mar · 01:09 to 01:35', title: 'Dashboard prototype and the model', body: 'A separate dashboard prototype with five knobs. Then a teammate\'s first API commit: the simulated data, the training script, a trained model, the first rules and nine tests.' },
   { date: '15 Mar · 02:52 to 04:31', title: 'Wired up and deployed', body: 'Gemini chat, the Vercel config, a CORS fix and the lazy-import fix. The dashboard starts posting to the API, and the mic switches from the browser\'s speech API to ElevenLabs.' },
   { date: '15 Mar · 06:19 to 08:53', title: 'Last fixes before demo time', body: 'Eighteen short commits across both repos. The savings card arrives around 08:00 and the Model Info card in the last commit. The live site serves that build.', current: true },
 ]
 
 const STACK: [string, string[]][] = [
   ['Frontend', ['React 19', 'Vite 8', 'MediaRecorder', 'Web Audio']],
-  ['Backend', ['FastAPI', 'Python 3.12', 'scikit-learn', 'pandas', 'joblib', 'Vercel']],
+  ['Backend', ['FastAPI', 'Python', 'scikit-learn', 'pandas', 'joblib', 'Vercel']],
   ['AI', ['Gemini 2.5 Flash', 'ElevenLabs Scribe', 'ElevenLabs TTS']],
   ['Tooling', ['pytest', 'Claude Code']],
 ]
@@ -143,7 +143,7 @@ export default function FarmersIntuitionPage() {
             Hack48, March 2026. Growers often water on a fixed schedule or by feel, and a weather app knows nothing about their soil or their vines. We tried to give them one number for the day, worked out from the conditions on the block.
           </p>
           <p style={{ ...PROSE, margin: 0 }}>
-            Akash set up the API repo. I built the rest, partly with Claude Code, across three repos in one night. The training data is simulated: 780 weekly records from three made-up Victorian farms, 2021 to 2025. Nothing reads a real soil probe. The gauges stand in for sensors.
+            A teammate wrote the first version of the API: the data, the model training and the first rules. I built the voice page and the dashboard, and added the Gemini chat, the alerts, the vineyard factors and the Vercel deploy to the API, partly with Claude Code. The training data is simulated: 780 weekly records from three made-up Victorian farms, 2021 to 2025. Nothing reads a real soil probe. The gauges stand in for sensors.
           </p>
         </div>
 
@@ -178,7 +178,7 @@ export default function FarmersIntuitionPage() {
         <div data-reveal style={{ maxWidth: 480, margin: '0 auto 40px' }}>
           <Shot
             src="/projects/farmers-intuition/request-flow.svg"
-            alt="Request flow. Asking Sage a question takes seven steps: tap the orb, /api/stt, GET /environment, POST /chat, Gemini answers, /api/tts, play the reply. When a rule fires on the dashboard: POST /environment returns should_alert, POST /chat with no message asks Gemini for a short warning, and the voice page opens and plays it."
+            alt="Request flow. Asking Sage a question takes seven steps: tap the orb, /api/stt, GET /environment, POST /chat, Gemini answers, /api/tts, play the reply. When a rule fires on the dashboard: POST /environment returns should_alert, POST /chat with no message asks Gemini for a short warning, and the voice page plays it when you switch to it."
             width={400}
             height={940}
             caption="What happens when you ask Sage a question, and when an alert rule fires."
@@ -188,7 +188,7 @@ export default function FarmersIntuitionPage() {
         {/* The two layers */}
         <div className="section-label" style={{ fontFamily: MONO }}>Two layers, and one is rules</div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          Layer 1 is a gradient boosting model. It predicts a whole farm&apos;s weekly water from the region, the time of year and the last few weeks. That number is far too big for one small block.
+          Layer 1 is a gradient boosting model. It was trained to predict a whole farm&apos;s weekly water from the region, the time of year, the weather and that farm&apos;s last few weeks. From the dashboard it gets only temperature, humidity and the region, and four of the five regions on offer are not in its training data. The rest are fixed defaults, and the block has no past weeks of its own. Its number is far too big for one small block.
         </p>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Layer 2 scales it down with plain rules from a config file. Block size is compared with a 25 ha reference, and each variety and growth stage has a factor. Rain takes off up to 35% and wet soil up to 25%.
@@ -209,7 +209,7 @@ export default function FarmersIntuitionPage() {
         {/* Model choice */}
         <div className="section-label" style={{ fontFamily: MONO }}>Picking the model</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
-          The training script tries four models and tests each one twice. First on 2025, which it holds back from training. Then one year at a time from 2022, training only on the years before. It ranks the models on three error measures in both tests and keeps the lowest total.
+          The training script tries four models and tests each one twice. First on 2025, which it holds back from training. Then one year at a time from 2022, training only on the years before. It ranks the models on three scores (RMSE, MAE and R²) in both tests and keeps the lowest total.
         </p>
         <div data-reveal style={{ maxWidth: 560, margin: '0 auto 40px' }}>
           <Shot
@@ -224,7 +224,7 @@ export default function FarmersIntuitionPage() {
         {/* Alerts */}
         <div className="section-label" style={{ fontFamily: MONO }}>When something is wrong</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
-          Five rules can raise an alert: soil under 30%, heat over 35 °C, mildew weather, soil over 85%, and a jump of more than 20% in the advice while the block settings stay the same. When one fires, the dashboard asks <code>/chat</code> for a short spoken warning and opens the voice page to play it.
+          Five rules can raise an alert: soil under 30%, heat over 35 °C, mildew weather, soil over 85%, and a jump of more than 20% in the advice while the block settings stay the same. When one fires, the dashboard asks <code>/chat</code> for a short warning, shows the text and queues it. The voice page reads it out when you switch to it.
         </p>
         <div data-reveal style={{ marginBottom: 32 }}>
           <pre style={LOG}>{ALERT_LOG}</pre>
@@ -243,7 +243,7 @@ export default function FarmersIntuitionPage() {
 
         {/* Recording with keys */}
         <div className="section-label" style={{ fontFamily: MONO }}>Sage, with keys set</div>
-        <div data-reveal style={{ marginBottom: 40 }}>
+        <div style={{ marginBottom: 40 }}>
           <video
             src="/projects/farmers-intuition/demo.mp4"
             poster="/projects/farmers-intuition/demo-poster.webp"
