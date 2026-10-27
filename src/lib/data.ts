@@ -373,7 +373,7 @@ export const PROJECTS: Project[] = [
 export const ARCHIVE: ArchiveItem[] = [
   { year: '2026', name: 'Farmers Intuition · Hack48', tech: 'FastAPI · Gemini · ElevenLabs', link: 'github', slug: 'farmers-intuition' },
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
-  { year: '2026', name: 'Recall · ambient task capture', tech: 'Swift · OCR · Gemini · Next.js', link: 'github' },
+  { year: '2026', name: 'Recall · local-first screen memory', tech: 'Swift · OCR · Ollama · Whisper.cpp', link: 'github' },
   { year: '2026', name: 'Robot controller API · SIT331', tech: 'C# · ASP.NET Core · PostgreSQL · EF Core', link: 'uni' },
   { year: '2026', name: 'Voice light controller · SIT210', tech: 'Python · Raspberry Pi · BLE · Arduino · Gemini · ElevenLabs', link: 'uni' },
   { year: '2026', name: 'Fleet platform · SIT314', tech: 'Node.js · MQTT · Node-RED · Postgres · AWS Fargate · SQS', link: 'uni', slug: 'fleet-platform' },
