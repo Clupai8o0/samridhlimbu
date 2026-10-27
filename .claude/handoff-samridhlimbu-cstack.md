@@ -1,53 +1,41 @@
-# Handoff: cstack writing post + project page with diagrams and charts (27 Oct 2026)
+# Handoff: cstack writing post + project page (updated 28 Oct 2026, vivobook)
 
-Sam asked: "add cstack as a writing and a project in samridhlimbu and explain it with illustrations, diagrams and statistics".
-The owner moved the work to the vivobook mid-run, so the skeptic pass was stopped before it finished.
+**Status: done and pushed on `cstack-post-20261028`. Waiting on Sam: merge or not.**
 
-## Done (uncommitted, branch `case-studies-cstack-morgue`)
-| File | What |
+## Done
+| Step | Result |
 |---|---|
-| `src/lib/posts/cstack.ts` | New post `CSTACK_POST`, slug `cstack-one-layer-six-agents`, 2026-10-27, featured, with chart blocks, tables and diagram images |
-| `src/lib/writing.ts` | 2 lines only: `import { CSTACK_POST } ...` at the top, and `CSTACK_POST,` as the last POSTS entry. samridhlimbu-64 handed this file over after committing a011a1e |
-| `src/app/projects/cstack/page.tsx` | Upgraded: more stats, 5 diagrams, ArticleChart charts, links to the write-up |
-| `public/writing/cstack/{layer,claims,guardrail-loop,routing,review}.svg` | Hand-written SVG diagrams, used by both the post and the page |
-| `.claude/tmp/cstack-post/facts.md` | Fact sheet with a source for every number, plus a "do not claim" list. Earlier fact check: `.claude/tmp/cstack-check.md` |
+| Skeptic pass | Checked every number against `~/Documents/projects/cstack` (HEAD `e065d5c`) and facts.md. Fixed the claims that were wrong (list below). |
+| Design check | Desktop SVGs fine, no dividers. On a phone their text shrank to ~6-7px, so I added portrait versions (`public/writing/cstack/*-m.svg`, generator `.claude/tmp/cstack-post/gen_mobile.py`), served under 640px through `<picture>`. |
+| Voice | unslop audit: no hard hits. Fixed one "X, not Y" tail on the page. Soft flags left as judgement calls: even sentence lengths, and a closing paragraph that echoes the opening. Spelling is Australian. |
+| Build + QA | `next build` passes in a copy without `projects/load-balancer` (still broken on the other branch: `__STRATEGY_ROWS__`). sweep.py on 3 routes, 4 views: no overflow, broken images or page errors. Charts render. cstack is the first card on /writing and is featured. |
+| Codex review | Diff of the cstack files only, from `7d0d303`. 2 findings, both fixed: 96-100% now covers only the four right-or-wrong tasks, and the claims.svg description now has A sending the handoff. |
 
-- Checks: eslint is clean on all 3 TS files. `tsc` is clean for these files; its one error is `load-balancer/page.tsx` (`__STRATEGY_ROWS__`, samridhlimbu-89's work in progress).
-- Not touched: `data.ts` (held by samridhlimbu-89), `article-chart.tsx`, the `[slug]` renderer.
+Fixes from the skeptic pass:
+- Project page: the review diagram's alt text described a bug chart. It now has the right alt, sits under "reviews on the diff", and a real bugs-of-17 chart was added.
+- Alt text and captions for routing.svg and review.svg now match what the diagrams show.
+- The 2.7x figure is now labelled as Opus 5 in the page description.
+- The reviewer chart title no longer says every model shown is routed.
+- Wording fixed: "rules/" no longer says "copies", and subagents "inherited the session's effort".
+
+Commits: `2a6401c`, `45692d1`. The Mac's WIP is in `8523655`.
 
 ## Left, in order
-1. **Skeptic pass (was cut off).**
-   - Claims: check every number, chart value, caption and diagram label in the 3 TS files and 5 SVGs against `~/Documents/projects/cstack` (README, docs/) and facts.md.
-   - Watch for: effort vs model routing (2.7x is Opus 5 low vs xhigh), "same score", Opus 5 vs 5.5, causal claims the docs don't make.
-   - The post writer noted that `routing.svg` and `review.svg` were drawn after their captions were written. Check that the alt text and captions match the drawings.
-2. **Design check.**
-   - Render each SVG at 1200 and 390 px on a dark page and look at it.
-   - No dividers (owner rule).
-   - Phone text must stay readable.
-   - Check render scripts: `.claude/tmp/cstack-post/render.py`.
-3. **Voice.** Run an unslop audit on the post and the page prose. Australian spelling.
-4. **Build and QA.**
-   - `npm run build`, then `next start -p 3311`.
-   - Run `sweep.py` from the portfolio-showcase skill on `/projects/cstack`, `/writing` and `/writing/cstack-one-layer-six-agents`.
-   - Check the charts render, the card order and the featured flag.
-5. **Codex review** of the diff (always required):
-   - Command: `second_opinion.py - --cwd <site> --review --ladder codex`.
-   - Also run `dsh:deepseek-flash` (with `--timeout 3000`, g59) and `grok:grok-4.7` (with `--timeout`, g26), because this is a personal folder.
-6. **Commit.**
-   - Stage by name only: the 3 TS files and the 5 SVGs. Never AGENTS.md, CLAUDE.md or `.claude/`.
-   - Other sessions' files are in the tree (load-balancer, notes-app, fleet-platform, bed-monitor, lock-in svgs).
-   - Push the branch.
-   - **Merge to main only when Sam says "merge".**
-
-## Risks / guardrails
-- The site repo is public: a push publishes. The privacy check must pass first (no client names, no paths, counts only for guardrails and claims history).
-- Guardrails:
-  - g82: never `git stash`.
-  - g83: careful with `git apply --cached`.
-  - g67: no bare `ls`.
-  - g85: no `pkill`.
-  - g31: quote push refspecs.
-- `cstack` repo is read-only.
+1. **Sam: merge?** If yes, merge `cstack-post-20261028` into `main`. It needs the load-balancer fix from `case-studies-cstack-morgue` first, or the build fails on that page.
+2. Optional: grow the small tap targets the sweep flagged. Both are in shared components, not this work: the chart "view data" toggle (78x18) and the footer "x" link.
 
 ## Decisions for Sam
-- None yet. Ask after QA whether to merge.
+- **Merge** (recommended, once load-balancer is fixed), or hold for a read on the phone first.
+- **Extra reviewers skipped.** DeepSeek and Grok passes were not run. `second_opinion.py` treats `samridhlimbu-cstack` as confidential because the folder isn't listed in model-policy.json. Adding `samridhlimbu-*` as personal would allow them next time.
+
+## Changed outside this post
+- `src/lib/writing.ts`: the image block has a new optional `mobileSrc` (1 line).
+- `src/app/writing/[slug]/page.tsx`: image blocks are wrapped in `<picture>` and use `mobileSrc` under 640px. Posts without it are unchanged.
+
+## Commands
+- Build without the broken page: `git archive HEAD | tar -x -C .claude/tmp/qa-build`, then `cp -al node_modules` into it, remove `src/app/projects/load-balancer`, and run `npx next build && npx next start -p 3311`. A symlinked node_modules breaks Turbopack.
+- On Linux, sweep.py needs a venv with `playwright` and `EXE` pointed at `~/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome`.
+- Regenerate the phone SVGs: `python3 .claude/tmp/cstack-post/gen_mobile.py`.
+
+## Guardrails
+g82 no stash, g85 no pkill, g31 quote refspecs. The repo is public: the privacy check passed (counts only, no paths or client names).
