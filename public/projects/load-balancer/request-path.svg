@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1010" width="400" height="1010" role="img" aria-labelledby="t d">
+  <title id="t">Request path through the load balancer</title>
+  <desc id="d">A request passes the AIMD soft limit, the global semaphore of 64 and a per-client token bucket, then the picker chooses a backend that can serve and the reverse proxy forwards it, retrying a different backend on a connection error. Three background loops run beside it: active health checks, outlier ejection and the AIMD controller. Metrics are exported at /metrics and every request is logged.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .h { font: 700 15px Manrope, "Helvetica Neue", Arial, sans-serif; fill: #e5e5e5; }
+    .k { font: 600 14px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .r { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #f59e0b; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .zone { fill: #0d0d10; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.2; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+  </style>
+  <rect width="400" height="1010" fill="#050505"/>
+
+  <text class="h" x="20" y="30">One request, in order</text>
+
+  <!-- client -->
+  <rect class="box" x="120" y="48" width="160" height="34" rx="17"/>
+  <text class="k" x="200" y="70" text-anchor="middle">GET /  (client)</text>
+  <path class="ar" d="M200 82 V102" marker-end="url(#a)"/>
+
+  <!-- 1 AIMD soft limit -->
+  <rect class="box" x="20" y="106" width="360" height="62" rx="4"/>
+  <text class="k" x="36" y="130">1  adaptive limit (AIMD)</text>
+  <text class="r" x="36" y="153">in flight ≥ limit → 503 busy</text>
+  <path class="ar" d="M200 168 V188" marker-end="url(#a)"/>
+
+  <!-- 2 semaphore -->
+  <rect class="box" x="20" y="192" width="360" height="62" rx="4"/>
+  <text class="k" x="36" y="216">2  global semaphore, 64 slots</text>
+  <text class="r" x="36" y="239">no free slot → 503 busy</text>
+  <path class="ar" d="M200 254 V274" marker-end="url(#a)"/>
+
+  <!-- 3 token bucket -->
+  <rect class="box" x="20" y="278" width="360" height="62" rx="4"/>
+  <text class="k" x="36" y="302">3  token bucket per client</text>
+  <text class="r" x="36" y="325">20 burst, 10/s refill → else 429</text>
+  <path class="ar" d="M200 340 V360" marker-end="url(#a)"/>
+
+  <!-- 4 picker -->
+  <rect class="hot" x="20" y="364" width="360" height="104" rx="4"/>
+  <text class="k" x="36" y="388">4  picker (first rule that is on)</text>
+  <text class="x" x="36" y="411">canary › sticky › P2C-EWMA</text>
+  <text class="x" x="36" y="430">› weighted RR › least-conn › RR</text>
+  <text class="s" x="36" y="453">skips down, open, quarantined, capped</text>
+  <path class="ar" d="M200 468 V488" marker-end="url(#a)"/>
+
+  <!-- 5 proxy -->
+  <rect class="box" x="20" y="492" width="360" height="84" rx="4"/>
+  <text class="k" x="36" y="516">5  reverse proxy, 3 s budget</text>
+  <text class="s" x="36" y="539">connection error on GET → retry</text>
+  <text class="s" x="36" y="558">another backend, up to 2 times</text>
+
+  <!-- backends -->
+  <path class="ar" d="M90 576 V606" marker-end="url(#a)"/>
+  <path class="ar" d="M200 576 V606" marker-end="url(#a)"/>
+  <path class="ar" d="M310 576 V606" marker-end="url(#a)"/>
+  <rect class="box" x="20" y="610" width="110" height="40" rx="4"/>
+  <rect class="box" x="145" y="610" width="110" height="40" rx="4"/>
+  <rect class="box" x="270" y="610" width="110" height="40" rx="4"/>
+  <text class="k" x="75" y="635" text-anchor="middle">:8430</text>
+  <text class="k" x="200" y="635" text-anchor="middle">:8431</text>
+  <text class="k" x="325" y="635" text-anchor="middle">:8432</text>
+
+  <!-- background loops -->
+  <rect class="zone" x="10" y="676" width="380" height="260" rx="6"/>
+  <text class="h" x="24" y="704">Running beside it</text>
+
+  <text class="k" x="24" y="734">health check, every 5 s ± 2 s</text>
+  <text class="s" x="24" y="755">2 failed GET /healthz → down</text>
+  <text class="s" x="24" y="774">2 OK → up, then a 30 s warm-up</text>
+
+  <text class="k" x="24" y="808">outlier check, every 10 s</text>
+  <text class="s" x="24" y="829">≥ 20 % 5xx or EWMA ≥ 400 ms</text>
+  <text class="s" x="24" y="848">→ out of rotation for 20 s</text>
+
+  <text class="k" x="24" y="882">AIMD controller, every 2 s</text>
+  <text class="s" x="24" y="903">latency &gt; 200 ms or rejects &gt; 5 %</text>
+  <text class="s" x="24" y="922">→ limit × 0.9, else limit + 1</text>
+
+  <!-- outputs -->
+  <text class="k" x="24" y="966">out</text>
+  <text class="s" x="64" y="966">/metrics for Prometheus</text>
+  <text class="s" x="64" y="986">one access log line per request</text>
+</svg>

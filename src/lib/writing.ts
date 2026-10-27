@@ -1,3 +1,5 @@
+import { CSTACK_POST } from '@/lib/posts/cstack'
+
 export type ContentBlock =
   | { type: 'paragraph'; html: string; dropCap?: boolean }
   | { type: 'blockquote'; html: string }
@@ -3749,6 +3751,7 @@ return the graph with the best measured H`,
       },
     ],
   },
+  CSTACK_POST,
 ]
 
 export const ALL_TAGS: string[] = Array.from(

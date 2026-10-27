@@ -3,13 +3,13 @@ import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
-import { CodeBlock } from '@/components/code-block'
+import { Shot } from '@/components/case-study/shot'
 
 const DESCRIPTION =
-  'An adaptive HTTP load balancer in Go, built over 21 iterations from round-robin to P2C-EWMA routing, AIMD concurrency control, circuit breakers and Prometheus metrics.'
+  'A concurrent HTTP load balancer in Go, written for SIT315 at Deakin in 2025. Five ways to pick a backend, health checks, circuit breakers, retries, an AIMD concurrency limit and Prometheus metrics, measured on a MacBook in October 2026 with real logs.'
 
 export const metadata: Metadata = {
-  title: 'load-balancer',
+  title: 'load-balancer · Go',
   description: DESCRIPTION,
   alternates: { canonical: '/projects/load-balancer' },
   openGraph: {
@@ -30,145 +30,250 @@ export const metadata: Metadata = {
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const SANS = 'Inter, var(--font-inter), sans-serif'
 const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
-const GREEN = '#4ade80'
+const GREEN = 'var(--term-green)'
 
-const TIMELINE = [
-  { date: '2025 · v1–4', title: 'Round-robin baseline', body: 'SIT315 (Concurrent & Distributed Systems). Start simple: even distribution, no health awareness. Establish the request routing primitives in Go.' },
-  { date: '2025 · v5–10', title: 'Health-aware routing', body: 'Added weighted round-robin and least-connections. Backends with higher measured latency receive proportionally fewer requests.' },
-  { date: '2025 · v11–15', title: 'P2C-EWMA', body: 'Power-of-Two-Choices with Exponentially Weighted Moving Average. Pick two backends at random, route to the one with lower EWMA latency. Avoids hot-spots without explicit health scores.' },
-  { date: '2025 · v16–20', title: 'AIMD + circuit breakers', body: 'AIMD concurrency control — additive increase on success, multiplicative decrease on timeout. Circuit breakers (closed/half-open/open) with outlier quarantine.' },
-  { date: '2025 · v21', title: 'Observability + admin API', body: 'Prometheus /metrics, slog structured JSON logging, /admin/metrics/json. Dynamic backend add/remove without restart, live strategy switching, canary rollout controls. /admin/selftest and /debug/config for diagnostics.', current: true },
+const PROSE = { fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.65, maxWidth: 640 }
+
+const METRICS = [
+  { k: 'mean latency, RR → P2C', v: '__RR_MEAN__ → __P2C_MEAN__ ms' },
+  { k: 'failed of __FO_N__ with a backend killed', v: '__FO_ERR__' },
+  { k: 'lines of Go', v: '1,801' },
 ]
+
+// Real excerpts from $S/runs/*/lb.log and /metrics, lines trimmed by selection only.
+const FAILOVER_LOG = `__FAILOVER_LOG__`
+
+const FAILOVER_METRICS = `__FAILOVER_METRICS__`
+
+const OVERLOAD_LOG = `__OVERLOAD_LOG__`
+
+const STRATEGY_ROWS: [string, string, string, string, string][] = __STRATEGY_ROWS__
 
 const DECISIONS = [
-  ['p2c-ewma', 'pure round-robin', 'Round-robin ignores backend health. P2C-EWMA naturally avoids slow backends — latency is the signal, no explicit health scores needed. Two random picks, route to the better one.'],
-  ['aimd concurrency', 'fixed connection limit', "The same algorithm TCP uses for congestion control. Grows aggressively when backends are healthy, halves on the first timeout. Adapts in real time without coordination between backends."],
-  ['circuit breakers', 'timeout-only failure handling', 'A consistently failing backend should be quarantined, not just timed out. Warm-up ramp on recovery + half-open probing lets it return to rotation gradually without manual intervention.'],
-  ['ip-hash sticky sessions', 'stateless round-robin', 'Stateful workloads need affinity. IP-Hash maps client IP → consistent backend so session state stays local — no external store needed.'],
-  ['prometheus /metrics', 'log-only observability', 'Metrics are queryable over time; logs are forensic. Structured slog JSON logging pairs with Prometheus so you get both queryable time-series and machine-readable event context.'],
+  ['a breaker per backend', 'health checks alone', 'Three failures in a row open a backend\'s circuit breaker, and the picker skips it. In the kill test that happened inside the first second; the health check, which needs two failed probes 5 s ± 2 s apart, marked it down __FO_DOWN__ s later.'],
+  ['retry GET, HEAD and OPTIONS only', 'retry everything', 'When the connection to a backend fails, the proxy waits 10 to 40 ms and sends the request to another backend, up to twice. A POST is never resent, because it might already have done its work.'],
+  ['P2C on EWMA latency', 'checking every backend', 'Each request looks at two random backends and compares one number for each, so the work per request stays the same as the pool grows. The EWMA moves 20 % of the way to each new response time.'],
+  ['a soft limit inside a hard one', 'one fixed connection cap', 'A semaphore of 64 is the hard ceiling. Below it, AIMD moves a soft limit between 4 and 64 every 2 s: down to 90 % when average latency is over 200 ms or more than 5 % of requests are turned away, otherwise up by one.'],
+  ['switches at runtime', 'restarts', 'POST /admin/flip changes the strategy on a running balancer, and backends can be added, removed or drained without a restart. Every strategy test below used /admin/flip on a fresh process.'],
 ]
 
-const AIMD_LINES = [
-  `<span style="color:#71717a">// additive increase on success</span>`,
-  `<span style="color:#c084fc">if</span> success {`,
-  `    concurrency += <span style="color:#fcd34d">1</span>`,
-  `}`,
-  `<span style="color:#71717a">// multiplicative decrease on timeout</span>`,
-  `<span style="color:#c084fc">if</span> timeout {`,
-  `    concurrency = <span style="color:#fcd34d">int</span>(float64(concurrency) * <span style="color:#fcd34d">0.5</span>)`,
-  `}`,
+const FIXES = [
+  ['Half-open ignores the health check.', 'After 10 s an open breaker lets requests through again, even when the backend is marked down. In the kill test that cost one 502 every 10 s until the backend came back.'],
+  ['AIMD can lock itself at the floor.', 'The reject rate counts the requests the limit itself turns away. Once the limit is low, rejects stay above 5 %, so it never climbs back, and served traffic stayed at __AIMD_FLOOR_RPS__ a second when the backends could take about 120.'],
+  ['Outlier ejection has no cap.', 'With AIMD off, all three backends crossed the 400 ms line in the same 10 s window and were ejected together, so the balancer served nothing for 20 s.'],
+  ['The rate limit trusts X-Forwarded-For.', 'Any client can set that header and get a fresh token bucket. The load generator here used it on purpose, to act as 200 clients.'],
+  ['The access log names the first pick.', 'A request that failed on a dead backend and was retried elsewhere is logged against the dead one, with status 200. The README calls the log JSON; it is key=value text.'],
 ]
+
+const STACK: [string, string][] = [
+  ['Language', 'Go (go.mod says 1.23; built here with 1.27)'],
+  ['Strategies', 'round-robin · weighted round-robin · least-connections · P2C-EWMA · IP-hash sticky · canary percentage'],
+  ['Resilience', 'semaphore · AIMD soft limit · token bucket per client · circuit breaker · active health checks · outlier ejection · 30 s warm-up · retries'],
+  ['Observability', 'Prometheus client_golang at /metrics · log/slog access log · /admin/metrics/json'],
+  ['Test rig', 'three Go dummy backends with set delays · an open-loop Go load generator · Python for runs and charts'],
+]
+
+function LogBlock({ label, text }: { label: string; text: string })
+{
+  return (
+    <figure data-reveal style={{ margin: '0 0 12px' }}>
+      <figcaption style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</figcaption>
+      <pre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }}>
+        {text}
+      </pre>
+    </figure>
+  )
+}
 
 export default function LoadBalancerPage() {
   return (
     <PageShell>
-      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>
+      <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 20px' }}>
 
         <PageHeader />
 
         {/* breadcrumb */}
-        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 14 }}>
+        <div data-stagger-item style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 16 }}>
           <span style={{ color: 'var(--accent)' }}>❯</span>{' '}
           cd <Link href="/projects" style={{ color: 'var(--fg)', textDecoration: 'none' }}>projects</Link>/load-balancer
         </div>
 
         {/* Banner */}
-        <div data-stagger-item style={{ padding: '22px 0', marginBottom: 28 }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
-            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 36, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>load-balancer</h1>
-            <span className="pill" style={{ color: '#a78bfa', borderColor: 'rgba(167,139,250,0.3)', fontFamily: MONO }}>● systems · Go</span>
+        <div data-stagger-item style={{ padding: '24px 0', marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', columnGap: 12, rowGap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+            <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 'var(--text-2xl)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>load-balancer</h1>
+            <span className="pill" style={{ fontFamily: MONO }}>SIT315 · Go · 2025</span>
           </div>
-          <p style={{ fontFamily: SANS, fontSize: 'var(--text-base)', color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 580, margin: '0 0 16px' }}>
-            Adaptive concurrent HTTP load balancer in Go — 21 iterations from basic round-robin to P2C-EWMA, AIMD concurrency control, circuit breakers, and Prometheus observability. SIT315 HD submission.
+          <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: 0 }}>
+            __INTRO__
           </p>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <a href="https://github.com/clupai8o0/load-balancer" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> github</a>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 16 }}>
+            <a href="https://github.com/clupai8o0/load-balancer" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> github</a>
           </div>
         </div>
 
         {/* Metrics */}
-        <div className="cs-metrics" style={{ marginBottom: 28 }}>
-          {[
-            { k: 'iterations', v: '21' },
-            { k: 'strategies', v: '5' },
-            { k: 'grade', v: 'HD' },
-          ].map(m => (
+        <div data-reveal className="cs-metrics" style={{ marginBottom: 40 }}>
+          {METRICS.map((m) => (
             <div key={m.k} style={{ padding: '14px 16px 14px 0' }}>
-              <div data-count style={{ fontFamily: DISPLAY, fontSize: 20, color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
-              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.k}</div>
+              <div style={{ fontFamily: DISPLAY, fontSize: 'var(--text-lg)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '-0.02em' }}>{m.v}</div>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.06em', lineHeight: 1.4 }}>{m.k}</div>
             </div>
           ))}
         </div>
 
         {/* Context */}
-        <div style={{ marginBottom: 28 }}>
+        <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
-          <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.7, margin: 0 }}>
-            SIT315 Concurrent and Distributed Systems assessment at Deakin — written in Go 1.23. The exercise: start with the simplest working load balancer and iterate toward production-grade. 21 versions. Each adds one capability — health awareness, adaptive concurrency, failure isolation. The progression is the point.
+          <p style={{ ...PROSE, margin: 0 }}>
+            __CONTEXT__
           </p>
         </div>
 
-        {/* Timeline */}
-        <div className="section-label" style={{ fontFamily: MONO }}>Timeline</div>
-        <div style={{ position: 'relative', paddingLeft: 22, marginBottom: 28 }}>
-          {TIMELINE.map((e, i) => (
-            <div key={i} style={{ position: 'relative', paddingBottom: 18 }}>
-              <div data-timeline-dot style={{ position: 'absolute', left: -22, top: 4, width: 11, height: 11, borderRadius: 6, background: e.current ? 'var(--accent)' : 'var(--bg)', border: `1.5px solid ${e.current ? 'var(--accent)' : 'var(--muted-2)'}` }} />
-              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{e.date}</div>
-              <div style={{ fontFamily: MONO, fontSize: 12.5, color: 'var(--fg)', marginBottom: 3 }}>{e.title}</div>
-              <div style={{ fontFamily: SANS, fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.6, maxWidth: 460 }}>{e.body}</div>
-            </div>
-          ))}
+        {/* Request path */}
+        <div className="section-label" style={{ fontFamily: MONO }}>How a request moves</div>
+        <div style={{ maxWidth: 400, margin: '0 auto 40px' }}>
+          <Shot
+            src="/projects/load-balancer/request-path.svg"
+            alt="Diagram: a GET request passes the AIMD soft limit, a 64-slot semaphore and a per-client token bucket, then the picker chooses a backend and the reverse proxy forwards it, retrying another backend on a connection error. Below, the health check, outlier check and AIMD controller loops, and the /metrics and access log outputs."
+            width={400}
+            height={1010}
+            caption="Diagram drawn from main.go and serverpool.go. Each step can turn a request away before it reaches a backend."
+          />
         </div>
+
+        {/* Test rig */}
+        <div className="section-label" style={{ fontFamily: MONO }}>How I tested it</div>
+        <p style={{ ...PROSE, margin: '0 0 40px' }}>
+          __RIG__
+        </p>
+
+        {/* Strategies */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Four strategies, one slow backend</div>
+        <p style={{ ...PROSE, margin: '0 0 20px' }}>
+          __STRAT_PROSE__
+        </p>
+        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+          <Shot
+            src="/projects/load-balancer/strategies.webp"
+            alt="__STRAT_ALT__"
+            width={960}
+            height={1000}
+            caption="__STRAT_CAPTION__"
+          />
+        </div>
+        <div data-reveal style={{ overflowX: 'auto', marginBottom: 24 }}>
+          <table style={{ borderCollapse: 'collapse', fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg-dim)', minWidth: 420 }}>
+            <thead>
+              <tr style={{ color: 'var(--muted)', textAlign: 'right' }}>
+                {['strategy', 'slow share', 'p50', 'p95', 'p99'].map((h, i) => (
+                  <th key={h} style={{ fontWeight: 400, padding: '0 0 8px', paddingLeft: i ? 16 : 0, textAlign: i ? 'right' : 'left' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {STRATEGY_ROWS.map((r) => (
+                <tr key={r[0]}>
+                  {r.map((c, i) => (
+                    <td key={i} style={{ padding: '4px 0', paddingLeft: i ? 16 : 0, textAlign: i ? 'right' : 'left', color: i ? 'var(--fg-dim)' : 'var(--fg)', fontVariantNumeric: 'tabular-nums' }}>{c}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div data-reveal style={{ maxWidth: 400, margin: '0 auto 40px' }}>
+          <Shot
+            src="/projects/load-balancer/p2c-ewma.svg"
+            alt="Diagram: a request samples two of three backends at random, sends the request to the one with the lower EWMA (21 ms over 122 ms), and the EWMA update rule, 0.2 times the latest plus 0.8 times the old value."
+            width={400}
+            height={400}
+            caption="Diagram. The two EWMA values are the ones /metrics reported at the end of a P2C run."
+          />
+        </div>
+
+        {/* Failover */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Killing a backend mid-run</div>
+        <p style={{ ...PROSE, margin: '0 0 20px' }}>
+          __FO_PROSE__
+        </p>
+        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+          <Shot
+            src="/projects/load-balancer/failover.webp"
+            alt="__FO_ALT__"
+            width={960}
+            height={920}
+            caption="__FO_CAPTION__"
+          />
+        </div>
+        <LogBlock label="lb.log, the same run" text={FAILOVER_LOG} />
+        <p style={{ ...PROSE, fontSize: 'var(--text-sm)', color: 'var(--muted)', margin: '0 0 24px' }}>
+          __FO_LOG_NOTE__
+        </p>
+        <LogBlock label="GET /metrics at the end of the run" text={FAILOVER_METRICS} />
+        <p style={{ ...PROSE, margin: '12px 0 40px' }}>
+          __RETRY_PROSE__
+        </p>
+
+        {/* Overload */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Overload, with AIMD on and off</div>
+        <p style={{ ...PROSE, margin: '0 0 20px' }}>
+          __AIMD_PROSE__
+        </p>
+        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+          <Shot
+            src="/projects/load-balancer/aimd.webp"
+            alt="__AIMD_ALT__"
+            width={960}
+            height={1520}
+            caption="__AIMD_CAPTION__"
+          />
+        </div>
+        <LogBlock label="lb.log and /metrics, AIMD off" text={OVERLOAD_LOG} />
+        <p style={{ ...PROSE, margin: '12px 0 40px' }}>
+          __AIMD_AFTER__
+        </p>
 
         {/* Key decisions */}
         <div className="section-label" style={{ fontFamily: MONO }}>Key technical decisions</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
-          {DECISIONS.map(([a, b, note], i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 12 }}>
-              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--accent)', paddingTop: 2 }}>0{i + 1}</span>
-              <div>
-                <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', marginBottom: 4 }}>
-                  <span style={{ color: GREEN }}>{a}</span>
-                  <span style={{ color: 'var(--muted-2)' }}> › </span>
-                  <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
-                </div>
-                <div style={{ fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.6 }}>{note}</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 40 }}>
+          {DECISIONS.map(([a, b, note]) => (
+            <div key={a}>
+              <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', marginBottom: 6, lineHeight: 1.5 }}>
+                <span style={{ color: GREEN }}>{a}</span>
+                <span style={{ color: 'var(--muted)' }}> over </span>
+                <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
               </div>
+              <div style={{ ...PROSE }}>{note}</div>
             </div>
           ))}
         </div>
 
-        {/* AIMD */}
-        <div className="section-label" style={{ fontFamily: MONO }}>AIMD in practice</div>
-        <div style={{ marginBottom: 12 }}>
-          <CodeBlock lines={AIMD_LINES} filename="AIMD concurrency" lang="go" />
+        {/* What the tests found */}
+        <div className="section-label" style={{ fontFamily: MONO }}>What I would fix next</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 40 }}>
+          {FIXES.map(([head, body]) => (
+            <div key={head} style={{ ...PROSE }}>
+              <span style={{ color: 'var(--fg)', fontWeight: 600 }}>{head}</span> {body}
+            </div>
+          ))}
         </div>
-        <p style={{ fontFamily: SANS, fontSize: 15, color: 'var(--muted)', lineHeight: 1.65, marginBottom: 28 }}>
-          The same algorithm TCP uses for congestion control, applied to backend concurrency. Grows aggressively when backends are healthy, backs off hard on the first timeout. Works without coordination between backends.
-        </p>
 
         {/* Stack */}
         <div className="section-label" style={{ fontFamily: MONO }}>Stack</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 28 }}>
-          {[
-            { label: 'Language', items: 'Go 1.23' },
-            { label: 'Strategies', items: 'Round-Robin · Weighted RR · Least-Connections · P2C-EWMA · IP-Hash' },
-            { label: 'Resilience', items: 'AIMD concurrency · token-bucket rate limiting · circuit breakers · outlier quarantine · warm-up ramp · global semaphore' },
-            { label: 'Observability', items: 'Prometheus /metrics · slog JSON logging · /admin/metrics/json' },
-            { label: 'Admin', items: 'dynamic backend add/remove · live strategy switching · canary rollout · /admin/selftest · /debug/config' },
-          ].map(({ label, items }) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 40 }}>
+          {STACK.map(([label, items]) => (
             <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
-              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', textTransform: 'uppercase', letterSpacing: '0.08em', width: 80, flexShrink: 0 }}>{label}</span>
-              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{items}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', width: 104, flexShrink: 0 }}>{label}</span>
+              <span style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg-dim)', lineHeight: 1.6 }}>{items}</span>
             </div>
           ))}
         </div>
 
         {/* Footer actions */}
-        <div style={{ display: 'flex', gap: 8, paddingTop: 18, flexWrap: 'wrap' }}>
-          <a href="https://github.com/clupai8o0/load-balancer" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}><Icon name="github" size={11} /> source</a>
-          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO, fontSize: 'var(--text-xs)' }}>← back to projects</Link>
+        <div style={{ display: 'flex', gap: 8, paddingTop: 8, flexWrap: 'wrap' }}>
+          <a href="https://github.com/clupai8o0/load-balancer" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> source</a>
+          <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO }}>← back to projects</Link>
         </div>
 
       </div>

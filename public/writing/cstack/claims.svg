@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="t d">
+  <title id="t">Two sessions, one file</title>
+  <desc id="d">Timeline in five steps. 1: session A edits a file and claims it in claude-claims.json, kept in the git common dir. 2: session B tries to edit the same file, reads the claim and is blocked; in another worktree it would only get a warning. 3: B messages A with SendMessage and A gets a handoff: done, branch, files, tests, what is left. 4: A releases the claim. 5: B edits the file.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#8b8b93"/>
+    </marker>
+    <marker id="aha" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#3b82f6"/>
+    </marker>
+    <style>
+      .m { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-variant-ligatures: none; }
+      .s { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .box { fill: #141417; stroke: #2e2e35; stroke-width: 1.5; }
+      .t { fill: #ededef; }
+      .mu { fill: #8b8b93; }
+      .ln { fill: none; stroke: #8b8b93; stroke-width: 2; }
+      .la { fill: none; stroke: #3b82f6; stroke-width: 2; }
+    </style>
+  </defs>
+  <rect width="1200" height="680" fill="#0a0a0b"/>
+
+  <!-- lane labels -->
+  <text class="s mu" x="30" y="128" font-size="24">session</text>
+  <text class="m t" x="30" y="174" font-size="44" font-weight="700">A</text>
+  <text class="s mu" x="30" y="493" font-size="24">session</text>
+  <text class="m t" x="30" y="539" font-size="44" font-weight="700">B</text>
+
+  <!-- 1: A claims -->
+  <rect class="box" x="150" y="40" width="196" height="200" rx="14"/>
+  <text class="m mu" x="168" y="80" font-size="24">1</text>
+  <text class="s t" x="168" y="124" font-size="28" font-weight="600">edits file</text>
+  <circle cx="176" cy="160" r="7" fill="#199e70"/>
+  <text class="s" x="192" y="168" font-size="24" fill="#199e70">claims it</text>
+
+  <!-- shared claims file -->
+  <path class="ln" d="M248 240 V272" marker-end="url(#ah)"/>
+  <text class="s mu" x="260" y="266" font-size="24">writes</text>
+  <rect class="box" x="150" y="280" width="402" height="100" rx="14" style="stroke:#3b82f6"/>
+  <text class="m t" x="172" y="322" font-size="26">claude-claims.json</text>
+  <text class="s mu" x="172" y="358" font-size="24">in the git common dir</text>
+  <path class="ln" d="M454 380 V412" marker-end="url(#ah)"/>
+  <text class="s mu" x="466" y="406" font-size="24">reads</text>
+
+  <!-- 2: B blocked -->
+  <rect class="box" x="356" y="420" width="196" height="170" rx="14" style="stroke:#d95926"/>
+  <text class="m mu" x="374" y="460" font-size="24">2</text>
+  <text class="s t" x="374" y="504" font-size="28" font-weight="600">same file</text>
+  <circle cx="382" cy="540" r="7" fill="#d95926"/>
+  <text class="s" x="398" y="548" font-size="24" fill="#d95926">blocked</text>
+  <circle cx="364" cy="632" r="7" fill="#c98500"/>
+  <text class="s" x="380" y="640" font-size="24" fill="#c98500">another worktree: a warning only</text>
+
+  <!-- 3: B messages A -->
+  <rect class="box" x="562" y="420" width="196" height="170" rx="14"/>
+  <text class="m mu" x="580" y="460" font-size="24">3</text>
+  <text class="s t" x="580" y="504" font-size="28" font-weight="600">messages A</text>
+  <text class="s mu" x="580" y="546" font-size="24">one handoff</text>
+  <path class="la" d="M660 420 V248" marker-end="url(#aha)"/>
+  <text class="m" x="674" y="342" font-size="24" fill="#3b82f6">SendMessage</text>
+  <rect class="box" x="562" y="40" width="196" height="200" rx="14"/>
+  <text class="m mu" x="580" y="80" font-size="24">3</text>
+  <text class="s t" x="580" y="124" font-size="28" font-weight="600">handoff</text>
+  <text class="s mu" x="580" y="160" font-size="24">done, branch,</text>
+  <text class="s mu" x="580" y="190" font-size="24">files, tests,</text>
+  <text class="s mu" x="580" y="220" font-size="24">what is left</text>
+
+  <!-- 4: A releases -->
+  <rect class="box" x="768" y="40" width="196" height="200" rx="14"/>
+  <text class="m mu" x="786" y="80" font-size="24">4</text>
+  <text class="s t" x="786" y="124" font-size="28" font-weight="600">releases</text>
+  <text class="s mu" x="786" y="160" font-size="24">claim dropped</text>
+  <path class="ln" d="M866 240 V380 H1072 V412" marker-end="url(#ah)"/>
+
+  <!-- 5: B edits -->
+  <rect class="box" x="974" y="420" width="196" height="170" rx="14" style="stroke:#199e70"/>
+  <text class="m mu" x="992" y="460" font-size="24">5</text>
+  <text class="s t" x="992" y="504" font-size="28" font-weight="600">edits file</text>
+  <circle cx="1000" cy="540" r="7" fill="#199e70"/>
+  <text class="s" x="1016" y="548" font-size="24" fill="#199e70">allowed</text>
+</svg>

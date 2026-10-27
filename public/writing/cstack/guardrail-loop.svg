@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="t d">
+  <title id="t">How one failure becomes a rule for every session</title>
+  <desc id="d">A loop in four steps. 1: something breaks once, for example a bare git stash took the uncommitted work of other live sessions. 2: guardrails.py learn writes a rule to guardrails.json with one of four actions: warn, stop, queue or deny. 3: every later session, in all six agents, checks each command and edit against the rules before it runs. 4: on a STOP the session checks the edge case; if it applies it fixes it or tells the user, if not it acks with what it checked. The next failure starts the loop again.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#8b8b93"/>
+    </marker>
+    <marker id="aha" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#3b82f6"/>
+    </marker>
+    <style>
+      .m { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-variant-ligatures: none; }
+      .s { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .box { fill: #141417; stroke: #2e2e35; stroke-width: 1.5; }
+      .t { fill: #ededef; }
+      .mu { fill: #8b8b93; }
+      .ln { fill: none; stroke: #8b8b93; stroke-width: 2; }
+      .la { fill: none; stroke: #3b82f6; stroke-width: 2; }
+    </style>
+  </defs>
+  <rect width="1200" height="700" fill="#0a0a0b"/>
+
+  <!-- 1 -->
+  <rect class="box" x="40" y="40" width="520" height="270" rx="16" style="stroke:#d95926"/>
+  <text class="m mu" x="72" y="90" font-size="26">1</text>
+  <text class="s t" x="108" y="90" font-size="32" font-weight="600">It breaks once</text>
+  <text class="m t" x="72" y="160" font-size="30">git stash</text>
+  <text class="s mu" x="72" y="208" font-size="26">took the uncommitted work</text>
+  <text class="s mu" x="72" y="244" font-size="26">of other live sessions</text>
+
+  <path class="la" d="M560 175 H632" marker-end="url(#aha)"/>
+
+  <!-- 2 -->
+  <rect class="box" x="640" y="40" width="520" height="270" rx="16" style="stroke:#3b82f6"/>
+  <text class="m mu" x="672" y="90" font-size="26">2</text>
+  <text class="s t" x="708" y="90" font-size="32" font-weight="600">It becomes a rule</text>
+  <text class="m t" x="672" y="152" font-size="26">guardrails.py learn</text>
+  <text class="m mu" x="672" y="192" font-size="26">→ guardrails.json</text>
+  <rect x="672" y="226" width="96" height="48" rx="24" fill="none" stroke="#c98500" stroke-width="1.5"/>
+  <text class="m" x="720" y="258" font-size="24" fill="#c98500" text-anchor="middle">warn</text>
+  <rect x="782" y="226" width="96" height="48" rx="24" fill="#d95926" fill-opacity="0.16" stroke="#d95926" stroke-width="1.5"/>
+  <text class="m" x="830" y="258" font-size="24" fill="#d95926" text-anchor="middle" font-weight="700">STOP</text>
+  <rect x="892" y="226" width="110" height="48" rx="24" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+  <text class="m" x="947" y="258" font-size="24" fill="#3b82f6" text-anchor="middle">queue</text>
+  <rect x="1016" y="226" width="100" height="48" rx="24" fill="none" stroke="#d95926" stroke-width="1.5"/>
+  <text class="m" x="1066" y="258" font-size="24" fill="#d95926" text-anchor="middle">deny</text>
+
+  <path class="la" d="M900 310 V382" marker-end="url(#aha)"/>
+
+  <!-- 3 -->
+  <rect class="box" x="640" y="390" width="520" height="270" rx="16"/>
+  <text class="m mu" x="672" y="440" font-size="26">3</text>
+  <text class="s t" x="708" y="440" font-size="32" font-weight="600">Every session checks</text>
+  <text class="s mu" x="672" y="504" font-size="26">each command and edit,</text>
+  <text class="s mu" x="672" y="540" font-size="26">before it runs,</text>
+  <text class="s mu" x="672" y="576" font-size="26">in all six agents</text>
+
+  <path class="la" d="M640 525 H568" marker-end="url(#aha)"/>
+
+  <!-- 4 -->
+  <rect class="box" x="40" y="390" width="520" height="270" rx="16"/>
+  <text class="m mu" x="72" y="440" font-size="26">4</text>
+  <text class="s t" x="108" y="440" font-size="32" font-weight="600">On STOP: check the case</text>
+  <circle cx="80" cy="495" r="7" fill="#199e70"/>
+  <text class="s t" x="98" y="504" font-size="26">applies: fix it, or tell the user</text>
+  <circle cx="80" cy="551" r="7" fill="#8b8b93"/>
+  <text class="s t" x="98" y="560" font-size="26">doesn't: ack with what</text>
+  <text class="s t" x="98" y="594" font-size="26">was checked, then retry</text>
+
+  <!-- loop back -->
+  <path class="ln" d="M300 390 V318" marker-end="url(#ah)" stroke-dasharray="7 7"/>
+  <text class="s mu" x="316" y="362" font-size="24">next failure</text>
+</svg>

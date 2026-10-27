@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 840" width="400" height="840" role="img" aria-labelledby="t d">
+  <title id="t">Bed monitor system diagram</title>
+  <desc id="d">A thermistor, a force sensor mat and a tap button feed the SAMD21's ADC and external interrupt controller. Four FreeRTOS tasks sample them and build one telemetry frame a second, which goes out through SERCOM0 and USB to a Python dashboard that stores every frame in SQLite.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 12px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 400 12px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .zone { fill: #0e0e11; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.2; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+  </style>
+  <rect width="400" height="840" fill="#050505"/>
+
+  <!-- zones first, so arrows sit on top -->
+  <rect class="zone" x="4" y="124" width="392" height="96" rx="4"/>
+  <rect class="zone" x="4" y="262" width="392" height="300" rx="4"/>
+  <rect class="zone" x="4" y="696" width="392" height="140" rx="4"/>
+
+  <!-- sensors -->
+  <text class="s" x="12" y="20">SENSORS</text>
+  <rect class="box" x="12" y="30" width="120" height="58" rx="3"/>
+  <text class="k" x="22" y="54">thermistor</text>
+  <text class="s" x="22" y="74">A0 · PA02</text>
+  <rect class="box" x="140" y="30" width="120" height="58" rx="3"/>
+  <text class="k" x="150" y="54">FSR bed mat</text>
+  <text class="s" x="150" y="74">D4 · PA07</text>
+  <rect class="box" x="268" y="30" width="120" height="58" rx="3"/>
+  <text class="k" x="278" y="54">tap button</text>
+  <text class="s" x="278" y="74">D2 · PB10</text>
+
+  <!-- peripherals -->
+  <text class="s" x="388" y="140" text-anchor="end">SAMD21 REGISTERS</text>
+  <rect class="box" x="12" y="150" width="184" height="58" rx="3"/>
+  <text class="k" x="22" y="174">ADC</text>
+  <text class="s" x="22" y="194">AIN0 + AIN7, 12 bit</text>
+  <rect class="box" x="204" y="150" width="88" height="58" rx="3"/>
+  <text class="k" x="214" y="174">EIC</text>
+  <text class="s" x="214" y="194">EXTINT10</text>
+  <rect class="box" x="300" y="150" width="88" height="58" rx="3"/>
+  <text class="k" x="310" y="174">TC3</text>
+  <text class="s" x="310" y="194">blinks LED</text>
+
+  <!-- RTOS -->
+  <text class="s" x="388" y="278" text-anchor="end">FREERTOS</text>
+  <rect class="hot" x="12" y="288" width="376" height="54" rx="3"/>
+  <text class="k" x="22" y="310">vMatTask · prio 5 · 10 ms</text>
+  <text class="s" x="22" y="330">samples the mat, drains tapQueue</text>
+  <rect class="box" x="12" y="350" width="376" height="54" rx="3"/>
+  <text class="k" x="22" y="372">vCommandTask · prio 4 · 50 ms</text>
+  <text class="s" x="22" y="392">reads !CONNECT, !RESET, !STUB</text>
+  <rect class="box" x="12" y="412" width="376" height="54" rx="3"/>
+  <text class="k" x="22" y="434">vLinkTask · prio 3 · 1 s</text>
+  <text class="s" x="22" y="454">decides occupancy, builds a frame</text>
+  <rect class="box" x="12" y="474" width="376" height="54" rx="3"/>
+  <text class="k" x="22" y="496">vTempTask · prio 1 · 5 min</text>
+  <text class="s" x="22" y="516">reads the thermistor, sets the band</text>
+  <text class="s" x="12" y="550">adcMutex · monMutex · usartMutex</text>
+
+  <!-- link -->
+  <rect class="box" x="12" y="600" width="376" height="54" rx="3"/>
+  <text class="k" x="22" y="622">SERCOM0, then USB serial</text>
+  <text class="s" x="22" y="642">each byte out on D6, back on D7</text>
+
+  <!-- laptop -->
+  <text class="s" x="388" y="712" text-anchor="end">LAPTOP</text>
+  <rect class="box" x="12" y="720" width="376" height="54" rx="3"/>
+  <text class="k" x="22" y="742">bed_link.py</text>
+  <text class="s" x="22" y="762">parses frames, checks the XOR sum</text>
+  <rect class="box" x="12" y="782" width="184" height="46" rx="3"/>
+  <text class="k" x="22" y="802">SQLite</text>
+  <text class="s" x="22" y="819">readings, events</text>
+  <rect class="box" x="204" y="782" width="184" height="46" rx="3"/>
+  <text class="k" x="214" y="802">Tk dashboard</text>
+  <text class="s" x="214" y="819">alarm, reset</text>
+
+  <!-- arrows last -->
+  <path class="ar" d="M72 88 V146" marker-end="url(#a)"/>
+  <path class="ar" d="M200 88 V112 H150 V146" marker-end="url(#a)"/>
+  <path class="ar" d="M328 88 V112 H248 V146" marker-end="url(#a)"/>
+  <path class="ar" d="M72 208 V258" marker-end="url(#a)"/>
+  <path class="ar" d="M150 208 V258" marker-end="url(#a)"/>
+  <path class="ar" d="M248 208 V284" marker-end="url(#a)"/>
+  <text class="x" x="256" y="244">tapQueue</text>
+  <path class="ar" d="M120 562 V596" marker-end="url(#a)"/>
+  <text class="x" x="128" y="584">$AC frame / s</text>
+  <path class="ar" d="M120 654 V716" marker-end="url(#a)"/>
+  <text class="x" x="128" y="680">frames</text>
+  <path class="gr" d="M280 720 V658" marker-end="url(#g)"/>
+  <text class="s" x="288" y="680">!commands</text>
+</svg>
