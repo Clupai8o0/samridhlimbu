@@ -91,6 +91,26 @@ const SECTIONS = [
     ],
   },
   {
+    label: 'Research papers',
+    rows: [
+      {
+        head: 'Batched dispatch for a driverless-taxi fleet · SIT314 HD paper',
+        meta: 'Aug 2026',
+        body: "Adapted DiDi's batched order assignment (KDD 2017) to my own Node.js dispatch service and tested it on a 2,000-car simulation. Under load, mean pickup distance fell 24% (1,068 m to 814 m) while p95 match latency rose from 51 to 112 ms. Written up on samridhlimbu.com/writing.",
+      },
+      {
+        head: 'RLiG · reinforcement learning for Bayesian network structure · SIT320 HD paper',
+        meta: 'Oct 2026',
+        body: 'Implemented the RLiG decision process and trained tabular, linear and DQN agents to learn Bayesian network structure, against my own hill climbing, GES and PC baselines. With the generative reward off, the linear agent learned the best structure on three of six networks over ten seeds, and the paper reports that the generative reward mostly did not pay for its cost. 55 unit tests.',
+      },
+      {
+        head: 'Where Is the Algorithm? · two tic-tac-toe players · SIT320 HD position paper',
+        meta: 'Sep 2026',
+        body: 'Built a dynamic programming player and a Q-learning player and scored both exactly over the whole 5,478-position game graph. Argued that "the algorithm" depends on the level of description and gave a three-part test for which run-time state belongs to it. The learner picked an optimal move in 108 of the 109 states it met in play but in only 90.6% of all 2,423 decision states. Designed a two-hour lab built on the two players (not yet run with a class). Self-published on samridhlimbu.com/writing.',
+      },
+    ],
+  },
+  {
     label: 'Awards',
     rows: [
       {
@@ -124,6 +144,16 @@ const SECTIONS = [
         body: 'Implemented round-robin, weighted, least-connections and power-of-two-choices (EWMA latency) routing in Go across 21 iterations. Added AIMD adaptive concurrency limits, per-client token-bucket rate limiting, circuit breakers and outlier ejection. Exports Prometheus metrics and changes backends at runtime without a restart.',
       },
       {
+        head: 'Fleet platform · driverless-taxi backend',
+        meta: 'Node.js · MQTT · Node-RED · PostgreSQL · AWS Fargate · SQS · SIT314',
+        body: 'Built the backend for a simulated 2,000-car taxi fleet: MQTT ingest, live vehicle state and a dispatch service that matched about 950 rides a second on one laptop. Moved matching to AWS Fargate behind SQS, where it scaled from one task to six on queue depth.',
+      },
+      {
+        head: 'Aged-care bed monitor · FreeRTOS on a SAMD21',
+        meta: 'C · FreeRTOS · Arduino Nano 33 IoT · Python · SQLite · SIT329',
+        body: 'Wrote register-level drivers and four FreeRTOS tasks that track fever, bed occupancy and a five-tap call for help, with a Python dashboard that logs to SQLite. Ran it on the board with a thermistor and pressure mat; 874 checks pass across the firmware and dashboard.',
+      },
+      {
         head: 'R1GPT · NEM connection-approval audit engine',
         meta: 'Next.js 14 · TypeScript · OpenAI gpt-4o · Zod · pdf-parse',
         body: 'Audits R1 grid-connection packages clause by clause against AEMO PSMG v3.0 and NER S5.2. Six deterministic assessors produce a readiness index and trace every finding to its regulatory section. Outputs predicted RFIs and rectification plans. 24/24 deterministic test cases pass. Built with Aarav.',
@@ -140,8 +170,8 @@ const SECTIONS = [
       },
       {
         head: 'cstack · shared layer for coding agents',
-        meta: 'Shell · Claude Code · Codex · DeepSeek',
-        body: 'Cut cost per task 2.7× ($0.33 vs $0.90) at the same benchmark score by routing tasks between models. Built one set of rules, hooks and skills shared by six coding agents.',
+        meta: 'Python · Shell · Claude Code · Codex · DeepSeek',
+        body: 'Built one set of rules, hooks and skills shared by six coding-agent CLIs. Pinning subagents to low effort cut cost per task 2.7× ($0.33 vs $0.90 at extra-high) with no meaningful loss in score; test-checked coding went to a cheaper model at 58% of the cost.',
       },
       {
         head: 'TapCraft Studio · headless commerce',

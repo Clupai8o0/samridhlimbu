@@ -2601,6 +2601,1100 @@ except aiohttp.ClientError as e:
       },
     ],
   },
+  {
+    slug: 'sit314-batched-assignment',
+    title: 'Batched assignment in a driverless-taxi fleet',
+    date: '2026-08-27',
+    readMin: 11,
+    tags: ['iot', 'scalability', 'algorithms', 'node'],
+    excerpt:
+      'I swapped my taxi dispatcher\'s first-come, nearest-car rule for a batched hill climb adapted from a 2017 DiDi paper. Under load, mean pickup distance fell by about a quarter and p95 match latency roughly doubled. The first sweep also broke the worker, most likely through my code rather than the algorithm.',
+    content: [
+      {
+        type: 'paragraph',
+        dropCap: true,
+        html:
+          'My SIT314 project was the cloud backend for a fleet of simulated driverless taxis. A rider asks for a car and a dispatch service picks one. For the High Distinction task I had to find the state of the art on one part of my own system, apply it, and measure what changed. I wrote it for SIT314 Software Architecture and Scalability for the Internet of Things at Deakin, in Trimester 2 2026. This post is that paper, cut down. The walkthrough comes first, then the numbers, then what I would not claim from them.',
+      },
+      { type: 'heading', level: 2, text: 'The system it applies to' },
+      {
+        type: 'paragraph',
+        html:
+          'The project also moved its queue, dispatch worker and state service to AWS, but every measurement in this post ran on one laptop. 2,000 simulated taxis publish telemetry over MQTT. A Node-RED flow filters the stream, a state service keeps live per-car state and answers "which free cars are near this point", and ride requests go on a queue. Dispatch workers pull requests off the queue, ask for candidates and claim a car. An autoscaler adds workers when the backlog grows. The service area is a box about 20 km by 16 km centred on the Melbourne CBD, split into nine zones.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The load harness ramps requests through five stages: 200, 800, 1,600 and 3,000 a second, then back to 800. A matched car is held for 300 ms to stand in for a trip. In the project report the platform topped out near 950 matches a second at the peak stage, with about 61,000 requests left without a car, while match latency stayed flat. I read the limit as the number of free cars, though my instrumentation could not cleanly separate an empty candidate list from cars claimed first by someone else.',
+      },
+      {
+        type: 'image',
+        src: '/writing/sit314-batched-assignment/fleet-ceiling.webp',
+        alt: 'Line chart of rides matched per second against offered requests per second. Both runs follow the offered line up to about 800, then flatten near 950 matches a second while the offered line keeps rising to 3,000.',
+        caption: 'From the project report. One dispatch worker and an autoscaled set hit the same ceiling. The last stage drops back to 800 a second, which is why each line doubles back.',
+        lightBg: true,
+      },
+      { type: 'heading', level: 2, text: 'The decision I went looking for' },
+      {
+        type: 'paragraph',
+        html:
+          'The dispatch worker pulls up to eight requests off the queue at once. Then it throws that grouping away. Each request races for its own nearest free car, with no reference to the other seven in its hand.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'DiDi Chuxing describe a close relative of this arrangement as the thing they replaced: each order matched on its own to its best-scoring driver. <a href="https://doi.org/10.1145/3097983.3098138" target="_blank" rel="noopener noreferrer">Zhang et al. (2017)</a> call it Model 1 and say it "was used at Didi Chuxing until the method of this paper was proposed". Their replacement optimises over a whole batch. They ran it live for a day on Beijing traffic against two models used in industry, one of them DiDi\'s own previous dispatcher, splitting drivers and orders into three flows by phone number. Global success rate went from 79.8% on the old model to 84.4% on theirs.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          '<a href="https://doi.org/10.1287/msom.2024.1074" target="_blank" rel="noopener noreferrer">Eom and Toriello (2026)</a> give the theory for when this should help and when it should not. They compare matching straight away with holding requests and solving over the pool. On a Manhattan ride-sharing instance they report that "the modified greedy and batching policies are both already within 91% of optimal for a sojourn period of 6", reaching 95% or better at 18, while plain greedy "achieves less than 70% in all cases". The cost is that under batching "agents wait in the system on average for half of the sojourn period".',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'One paper says the mechanism works in production. The other says the size of the win depends on how thick the market is. So even a null result would have told me something.',
+      },
+      { type: 'heading', level: 2, text: 'What does not transfer' },
+      {
+        type: 'paragraph',
+        html:
+          'DiDi\'s Algorithm 1 is a hill climb. Seed every driver with the order it scores highest on and work out the mean success rate. Then, for each order, walk the drivers not holding it and keep any swap that raises the mean. The objective for order <em>i</em> is:',
+      },
+      {
+        type: 'equation',
+        html: 'E<sub>i</sub> = 1 − ∏<sub>j</sub> (1 − p<sub>ij</sub>)<sup>a<sub>ij</sub></sup>',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Here <em>p<sub>ij</sub></em> is a learned probability that driver <em>j</em> accepts order <em>i</em>, and <em>a<sub>ij</sub></em> is 1 when order <em>i</em> is sent to driver <em>j</em>. The product is there because an order goes out to several drivers and any one of them may take it. More drivers on an order means a better chance somebody says yes.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'I transliterated that first. My system has no acceptance model, so I swapped <em>p<sub>ij</sub></em> for a score from the pickup distance, <code>1 / (1 + metres / 500)</code>. It came out worse than the greedy matcher it was meant to beat. Over 500 batches of eight requests against 200 free cars it averaged 736 m of pickup distance. Greedy averaged 660 m, so that is 11.5% worse. The adapted version below averaged 657 m.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'That is not a bug in their algorithm. A driverless car does not refuse a job. Once the claim succeeds <em>p<sub>ij</sub></em> is effectively 1, the product collapses to one term, and putting five cars on one request stops being insurance. It becomes four cars sent to the wrong place.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'So I kept the search and dropped the broadcast. Each request gets at most one car and each car at most one request. <em>E<sub>i</sub></em> becomes the score of whichever car holds request <em>i</em>.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Two parts of my version are mine rather than theirs. Algorithm 1 seeds by giving every driver its own best order. Mine seeds with the greedy answer and only accepts moves that raise the total score, so it starts from what the project already did. And Algorithm 1 moves one driver at a time, while mine does a two-way swap when the car it wants is already held, which the one-to-one rule makes necessary. Both versions live in <code>lib/assign.js</code> and both were measured.',
+      },
+      {
+        type: 'code',
+        lang: 'javascript',
+        label: 'lib/assign.js, the adapted hill climb after the greedy seed (one comment edited)',
+        code: `var moved = true, passes = 0;
+while (moved && passes < 4) {               // capped at four passes
+    moved = false;
+    passes++;
+    for (var i3 = 0; i3 < N; i3++) {
+        for (var vid in score[i3]) {
+            if (holder[i3] === vid) continue;
+            var other = owner[vid];
+            var before, after;
+            if (other === undefined) {
+                // free car. only request i3 changes.
+                before = val(i3, holder[i3]);
+                after = val(i3, vid);
+                if (after > before) {
+                    if (holder[i3] !== null) delete owner[holder[i3]];
+                    holder[i3] = vid; owner[vid] = i3;
+                    moved = true;
+                }
+            } else {
+                // held by another request, so this is a swap and both move.
+                // my car only goes to the other request if it is actually a
+                // candidate for it, otherwise that request comes away empty.
+                var mine = holder[i3];
+                var mineFitsOther = mine !== null && score[other][mine] !== undefined;
+                before = val(i3, mine) + val(other, vid);
+                after = val(i3, vid) + (mineFitsOther ? val(other, mine) : 0);
+                if (after > before) {
+                    holder[i3] = vid; owner[vid] = i3;
+                    if (mineFitsOther) { holder[other] = mine; owner[mine] = other; }
+                    else { holder[other] = null; if (mine !== null) delete owner[mine]; }
+                    moved = true;
+                }
+            }
+        }
+    }
+}`,
+      },
+      { type: 'heading', level: 2, text: 'Designing it in' },
+      {
+        type: 'paragraph',
+        html:
+          'The change is in the dispatch worker. A <code>MATCH</code> environment variable picks the policy, so one binary runs both arms and nothing else about a run differs. In batch mode the worker keeps receiving until a time window runs out or the batch is full.',
+      },
+      {
+        type: 'code',
+        lang: 'javascript',
+        label: 'dispatch_worker.js, the receive loop (simplified)',
+        code: `if (MATCH === 'batch') {
+  var deadline = Date.now() + WINDOW_MS;
+  while (running && Date.now() < deadline && msgs.length < MAX_BATCH) {
+    var more = await get(QUEUE + '/queue/rides/receive?max=' + BATCH);
+    if (more.messages && more.messages.length) msgs = msgs.concat(more.messages);
+    else await sleep(5);
+  }
+  await handleBatch(msgs);
+} else {
+  await Promise.all(msgs.map(m => handle(m)));
+}`,
+      },
+      {
+        type: 'paragraph',
+        html:
+          '<code>handleBatch</code> asks the state service for candidates for every request in the batch, solves the assignment, then claims. A claim can still lose a race to another worker. When that happens the request falls back down its own candidate list rather than being dropped.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The load harness already had the number I needed and was throwing it away. The worker publishes the pickup distance in metres on every match. The harness subscribed to that topic and ignored the field, so recording it was a small change.',
+      },
+      { type: 'heading', level: 2, text: 'Offline: where batching pays and where it does not' },
+      {
+        type: 'paragraph',
+        html:
+          'Before touching the running system I measured the decision on its own. An offline bench builds batches of requests against a 2,000-car fleet with a set share of cars already busy, and runs both policies on identical inputs. Queueing, claim races and the batch window are out of the picture. The knob that matters is how many free cars there are per request in the batch.',
+      },
+      {
+        type: 'table',
+        headers: ['Batch', 'Free cars', 'Cars per request', 'Greedy (m)', 'Batched (m)', 'Change', 'Batches won'],
+        rows: [
+          ['8', '800', '100.0', '322', '321', '−0.1%', '5 of 300'],
+          ['8', '10', '1.3', '4,607', '4,224', '−8.3%', '235 of 300'],
+          ['32', '800', '25.0', '325', '323', '−0.7%', '86 of 300'],
+          ['32', '10', '0.3', '5,505', '1,838', '−66.6%', '300 of 300'],
+          ['128', '800', '6.3', '338', '332', '−1.7%', '291 of 300'],
+          ['128', '10', '0.1', '5,427', '833', '−84.7%', '300 of 300'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Each row is 300 batches. A batch counts as won when, on the same input, the hill climb matched more riders than greedy, or the same number with less total distance.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'In a thick market the two policies are the same thing. With 800 free cars and eight requests, the nearest car to one request is almost never the nearest car to another. There is nothing to trade, and 295 of 300 batches came out identical. As the market thins, greedy\'s ordering starts to matter. At 128 requests against 10 free cars, both policies serve 10 riders per batch. Greedy serves the first 10 to ask and the search serves the 10 nearest the free cars, so the 85% shorter mean comes partly from serving different riders.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'This fits Eom and Toriello\'s picture, where a bigger pool lets batching get close to optimal while plain greedy stays well short. Their pool grows with waiting time and mine with requests per free car, so I am drawing an analogy and have not replicated their result.',
+      },
+      { type: 'heading', level: 2, text: 'End to end, on the running platform' },
+      {
+        type: 'paragraph',
+        html:
+          'The offline result says the mechanism works. The project needed to know whether it survives queueing, claim races and a fleet whose cars come and go. I used the same five-stage ramp as the project report: 2,000 vehicles, one dispatch worker, a matched car held for 300 ms, everything else held still. The greedy arm ran twice and its figures are the mean of the two. The batched arm holds requests for up to 250 ms or until it has 64, whichever comes first.',
+      },
+      {
+        type: 'table',
+        headers: ['Offered/s', 'Greedy mean m', 'Greedy p95 m', 'Greedy p95 ms', 'Batched mean m', 'Change', 'Batched p95 m', 'Batched p95 ms'],
+        rows: [
+          ['200', '238', '500', '29', '237', '−0.4%', '497', '283'],
+          ['800', '1,189', '6,412', '34', '861', '−27.6%', '3,528', '112'],
+          ['1,600', '968', '4,260', '40', '777', '−19.7%', '3,029', '111'],
+          ['3,000', '1,044', '4,868', '94', '796', '−23.8%', '3,065', '111'],
+          ['800', '1,074', '5,154', '36', '820', '−23.6%', '3,326', '113'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Across the four loaded stages, greedy averaged 1,068 m of pickup distance and the batched arm averaged 814 m. At the 95th percentile the gap was wider, 5,174 m against 3,237 m. The rider who was going to wait longest gained most, which is the half of the distribution I care about. Match latency went the other way. At the 95th percentile it rose from 51 ms to 112 ms.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The first stage is the control, and it is the most useful row in the table. At 200 requests a second the fleet is thick. Pickup distance is the same to within a metre, so they are probably picking the same cars, and the batched arm pays the whole latency cost for nothing. That is the offline finding showing up unchanged in the live system.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The fallback has a cost too. When the solver\'s car has gone, or the solver left the request without one, the worker walks that request\'s own candidate list. In the 250 ms run it fell back 683 times in 79,942 matches, a little under 1%. The fallback also does not know what the solver promised the other requests in the same batch, so it can take a car a batchmate was about to claim. At under 1% it probably does not move the means much. It does mean the assignment that runs is not always exactly the one the hill climb computed.',
+      },
+      { type: 'heading', level: 3, text: 'The knob that actually moves it' },
+      {
+        type: 'paragraph',
+        html:
+          'I ran the batch window at 250, 500 and 1,000 ms and it barely mattered: 814, 818 and 858 m across the loaded stages. The window is not what ends a batch at these rates. At 800 requests a second, 64 requests arrive in about 80 ms, so the size limit is hit long before the window runs out. I did not time batches, so that is arithmetic and not a measurement.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Batch size is the real knob. For this sweep I held the window at 2,000 ms so it never binds, and labelled each row by the batch size the worker actually reached. The receive call takes up to eight messages before the size limit is checked, so eight is the floor and asking for four gets eight. That is a bug in my loop. It gave me a free replicate, since the runs at 4 and 8 are the same condition. They came out at 1,062 and 1,051 m, eleven metres apart. Their p95 latencies were 42 and 152 ms, so the 97 ms in the table is an average of two quite different runs.',
+      },
+      {
+        type: 'table',
+        headers: ['Mean batch', 'Runs', 'Mean m', 'vs greedy', 'p95 m', 'p95 ms'],
+        rows: [
+          ['greedy, up to 8 at once', '2', '1,068', '–', '5,174', '51'],
+          ['8', '2', '1,056', '−1.1%', '5,048', '97'],
+          ['16', '1', '1,018', '−4.8%', '4,595', '86'],
+          ['32', '1', '998', '−6.6%', '4,564', '110'],
+          ['65', '1', '828', '−22.5%', '3,336', '115'],
+          ['129', '1', '667', '−37.6%', '2,416', '167'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Mean pickup distance falls at every step as the batch grows, and the total matched barely moves: 80,183 for greedy against 79,847 at a batch of 128, a 0.4% difference. So batching is not buying shorter trips by refusing riders. It sends the same number of cars to better places. The latency column is noisier, because a batch that fills early and one that waits out its window behave differently. I would want more than one run per row before reading much into any single latency figure.',
+      },
+      { type: 'heading', level: 2, text: 'The failure I found by sweeping that knob' },
+      {
+        type: 'paragraph',
+        html:
+          'The first time I ran that sweep it broke. This is the harness output at a batch of 128, with four latency columns cut out to fit the page.',
+      },
+      {
+        type: 'image',
+        src: '/writing/sit314-batched-assignment/size128-collapse.webp',
+        alt: 'Terminal output of the load harness at a batch size of 128. Stage one matched 3,422 of 4,000 requests, stage two matched 4 of 16,000, and stages three and four matched none.',
+        caption: 'The first size sweep at a batch of 128. From stage two it matched almost nothing, and from stage three nothing at all. The fifth stage, also zero, is left off.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'At a batch of 128 the worker matched almost nothing from stage two, and nothing at all from stage three. At 64 it fell over during the last stage. The likely cause was in my own code. <code>handleBatch</code> asked the state service for candidates one request at a time, in a loop, awaiting each one. So the wall-clock cost of a batch grew with its size. The queue hides a received message for 20 seconds, and a batch that takes longer than that has lost its claim on the work before it finishes.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'I have to be careful how far I push that. I never timed a batch, the 20 seconds is the queue\'s setting rather than a measurement, and how the run failed to recover is inference. The log also shows every request answered with no vehicle, which I cannot fully explain. The serial version is not in git either, so the before code rests on the paper alone. What is measured is that the serial version stopped matching under load at 128 and the parallel version does not. The fix was to send the lookups together and settle the claims together.',
+      },
+      {
+        type: 'code',
+        lang: 'javascript',
+        label: 'dispatch_worker.js, handleBatch after the fix',
+        code: `var cands = await Promise.all(reqs.map(r =>
+  get(STATE + '/candidates?lat=' + r.lat + '&lng=' + r.lng +
+      '&minBattery=' + MIN_BATTERY + '&limit=10')
+    .then(c => c.candidates || [])
+    .catch(() => [])));
+
+var picked = assign.hillClimb(reqs, cands);
+
+await Promise.all(msgs.map((m, j) => settle(m, picked[j], cands[j])));`,
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Every number above is from after that change. The algorithm was fine at every batch size I tried. What failed was a serial loop inside a service whose input size I had just made variable. It failed the way the unit warns about: work pushed past a timeout somewhere else in the system, so a slowdown turns into a retry storm. I learned more from it than from the headline result.',
+      },
+      { type: 'heading', level: 2, text: 'What it says, and what it does not' },
+      {
+        type: 'paragraph',
+        html:
+          'Batching is worth having on this system, for a reason I only found by measuring. My fleet is thick at low load and thin at high load, and the thin case is where riders wait longest. A policy that only helps in the thin case helps exactly where it matters. The price is a p95 match latency that roughly doubles. For a taxi that is a fair trade for about 250 m less driving per pickup. For a service that has to answer fast it would not be.',
+      },
+      { type: 'paragraph', html: 'Five things I would not claim from this:' },
+      {
+        type: 'list',
+        items: [
+          '<strong>That I built DiDi\'s system.</strong> My score is a distance. Their first stage is a learned model of whether a human driver takes the job, and I deleted it because my cars cannot refuse. I implemented their optimiser, and their 84.4% success rate is not a number my result can be compared with.',
+          '<strong>That it wins every batch.</strong> The hill climb maximises a distance score, not mean distance, and a swap can leave one request without a car. At 32 requests against 40 free cars it was 10.8% better overall and still worse than greedy on 43 of 300 batches, 41 of them because it matched one rider fewer. Most batched live rows are a single run, so a gap of a percent or two between two batched rows is inside the noise.',
+          '<strong>That it adds capacity.</strong> The project report concluded that at 3,000 requests a second the limit is the number of cars, though my instrumentation could not cleanly separate the two possible causes. Batching sends the cars I have to better places. It does not make more of them.',
+          '<strong>Anything about a real network.</strong> Every run in this post was on one laptop with no network between tiers. Greedy sends its lookups in groups of up to eight and the batched arm in groups of up to 64, so a real hop to the state service would be spread over more requests by the batched arm. I expect the trade looks better with a network in the path, but I have not measured it.',
+          '<strong>Anything about clustered demand.</strong> Requests and cars are spread evenly over the box. Real demand clusters, and I did not test that.',
+        ],
+      },
+      { type: 'heading', level: 2, text: 'References' },
+      {
+        type: 'list',
+        items: [
+          'Zhang, L. et al. (2017). <a href="https://doi.org/10.1145/3097983.3098138" target="_blank" rel="noopener noreferrer"><em>A Taxi Order Dispatch Model based On Combinatorial Optimization</em></a>. KDD \'17, Halifax, Canada.',
+          'Eom, M. and Toriello, A. (2026). <a href="https://doi.org/10.1287/msom.2024.1074" target="_blank" rel="noopener noreferrer"><em>Batching and Greedy Policies: How Good Are They in Dynamic Matching?</em></a> Manufacturing &amp; Service Operations Management 28(2). I read the author manuscript dated 26 August 2025, so the quoted figures are the manuscript\'s.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          '<a href="/writing/sit314-batched-assignment/paper.pdf" target="_blank" rel="noopener noreferrer">Read the full paper (PDF)</a>. It is the paper as submitted, so a few points this post corrects are still in it.',
+      },
+    ],
+  },
+  {
+    slug: 'rlig-reinforcement-learning-bayesian-networks',
+    title: 'RLiG: learning Bayesian network structure with reinforcement learning, and the reward that did not pay for itself',
+    date: '2026-10-04',
+    readMin: 17,
+    tags: ['algorithms', 'reinforcement-learning', 'bayesian-networks', 'python', 'sit320'],
+    excerpt:
+      'I built an agent that learns the shape of a Bayesian network by editing it one edge at a time, with a reward that mixes BIC with how well the network generates data. With the generative half switched off, my linear agent beat hill climbing on five of six networks. The generative reward mostly did not help.',
+    content: [
+      {
+        type: 'paragraph',
+        dropCap: true,
+        html:
+          'RLiG learns the structure of a Bayesian network with reinforcement learning. An agent edits a graph one edge at a time, and its reward mixes the usual BIC score with a second score for how well the learned network generates data. That second score is expensive, so the agent only pays for it at chosen steps. I wrote this up as the High Distinction task for <strong>SIT320 Advanced Algorithms</strong> at Deakin in T2 2026. This post is that paper, shortened, with the marking parts taken out.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The unit\'s task sheet set the RLiG problem: the hybrid reward, the tiles and the baselines. My part was the implementation, the difference-form reward, the β calibration, the agents and the experiments.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The headline is a negative result, and I think it is the most useful part. The expensive half of the reward, which is the part I could not find in the literature, mostly did not help. What did well was the linear agent with the generative half switched off.',
+      },
+      { type: 'heading', level: 2, text: 'The problem' },
+      {
+        type: 'paragraph',
+        html:
+          'A Bayesian network is a directed acyclic graph (a DAG) over some variables, plus a probability table for each variable given its parents. Learning the structure means finding the graph from data. The normal way is a greedy search over DAGs: add, delete or reverse whichever edge improves a score like BIC the most, and stop when nothing improves it. Nothing but the score guides it.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'RLiG changes two things. It turns the search into a sequential decision problem, so an edit can be worth making even when it lowers the score right now. And it adds a second term that asks how good the network is at the job it often gets built for, which is generating realistic data.',
+      },
+      { type: 'heading', level: 2, text: 'The decision process' },
+      {
+        type: 'paragraph',
+        html:
+          'Given <em>N</em> rows of discrete data over <em>d</em> variables:',
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>State.</strong> The current DAG as a boolean adjacency matrix, the position inside the tile (<em>t</em> mod <em>L</em>), and a few summary numbers: BIC per row, edge count, progress through the episode, in-degree, a stall counter, the last measured generative score and how much of the generative budget is spent.',
+          '<strong>Actions.</strong> (op, <em>i</em>, <em>j</em>) with op one of add, delete or reverse, so 3<em>d</em><sup>2</sup> in the raw encoding. An action is legal only if the graph stays acyclic and no node gets more than <em>k</em> parents.',
+          '<strong>Episodes</strong> end after <em>T</em> edits, or after 15 steps with no BIC improvement.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Write BIC<sub><em>N</em></sub> for BIC divided by the number of rows, and Gen(<em>G</em>) for the generation score, which sits between 0 and 1. The hybrid score is:',
+      },
+      {
+        type: 'equation',
+        html: '<em>H</em>(<em>G</em>) = α · BIC<sub><em>N</em></sub>(<em>G</em>) + β · Gen(<em>G</em>)',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'At an ordinary step the reward is just the change in α · BIC<sub><em>N</em></sub>. At a generative step it also adds β times the change in Gen since the last generative step, because Gen was never measured on the graph in between.',
+      },
+      { type: 'heading', level: 3, text: 'Why the reward is a difference' },
+      {
+        type: 'paragraph',
+        html:
+          'With no discounting (γ = 1) a difference reward telescopes. Add up every step and the BIC part collapses to the change from the first graph to the last. So maximising the return is close to maximising the hybrid score of the final graph. That is the whole reason to use RL here. An edit that lowers the score is allowed, it just has to be paid back before the episode ends, and a greedy hill climber cannot do that at all. A test in the notebook checks this identity to six decimal places.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'It is not quite the clean <em>H</em>(<em>G<sub>T</sub></em>) − <em>H</em>(<em>G</em><sub>0</sub>), for two reasons. Gen is never measured on the starting graph, so the first measured graph becomes the baseline. And with tiles, the generative part only telescopes between generative steps.',
+      },
+      { type: 'heading', level: 3, text: 'Tiles, and what they save' },
+      {
+        type: 'paragraph',
+        html:
+          'Step <em>t</em> is generative when <em>t</em> mod <em>L</em> is in a set <em>I<sub>g</sub></em>. With <em>L</em> = 5, <em>I<sub>g</sub></em> = {0} and <em>T</em> = 40, an episode schedules eight simulate-and-compare calls instead of forty. A cheap step is a cached BIC change for each legal action, while a generative step also has to fit the probability tables, simulate <em>N<sub>s</sub></em> rows and compare them with real data. I timed both.',
+      },
+      {
+        type: 'image',
+        src: '/writing/sit320-rlig/cost.webp',
+        alt: 'Bar chart of milliseconds per environment step on six networks, on a log scale. Cheap steps sit well below generative steps at 200, 1000 and 5000 simulated rows.',
+        caption: 'Milliseconds per environment step, log scale. Grey is a cheap BIC-only step, the coloured bars are generative steps at three simulation sizes.',
+        lightBg: true,
+      },
+      {
+        type: 'table',
+        headers: ['Network', 'd', 'Cheap step (ms)', 'Generative step (ms)', 'Ratio'],
+        rows: [
+          ['synthetic', '10', '0.06', '0.71', '12.0×'],
+          ['asia', '8', '0.05', '0.52', '10.5×'],
+          ['sachs', '11', '0.08', '0.81', '10.5×'],
+          ['child', '20', '0.16', '2.02', '12.9×'],
+          ['insurance', '27', '0.29', '2.44', '8.3×'],
+          ['alarm', '37', '0.77', '3.51', '4.5×'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Those timings use <em>N<sub>s</sub></em> = 1000. The main runs simulate 5000 rows, where the ratio reaches 36× on Child. That ratio shrinks on the widest network because a cheap step has to score every legal edit, and ALARM has a lot of them. Tiling therefore pays best on smaller networks and big simulations.',
+      },
+      { type: 'heading', level: 2, text: 'The two halves of the score' },
+      {
+        type: 'paragraph',
+        html:
+          'BIC splits into one term per variable and its parents. That split is the only reason any of this runs fast, because an edit touches one family (two for a reversal) and every family score is cached:',
+      },
+      {
+        type: 'equation',
+        html:
+          'BIC(<em>G</em>) = Σ<sub><em>i</em></sub> [ Σ<sub><em>j</em>,<em>k</em></sub> <em>N<sub>ijk</sub></em> log(<em>N<sub>ijk</sub></em> / <em>N<sub>ij</sub></em>) − (log <em>N</em> / 2) · <em>q<sub>i</sub></em>(<em>r<sub>i</sub></em> − 1) ]',
+        caption: 'Higher is better, in nats. The penalty is Schwarz (1978). The per-family form follows de Campos (2006).',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Gen(<em>G</em>) fits every probability table on the training rows with a Dirichlet prior of 1, simulates <em>N<sub>s</sub></em> rows, and compares the one-way and two-way marginals against a held-out reference split using Jensen-Shannon divergence in bits (Lin, 1991). Its value is 1 minus the average divergence. JS in bits is bounded by 1, so Gen stays between 0 and 1 whatever the number of variables. I hold the reference split out on purpose. Scoring a simulation against the rows its own tables were fitted to would reward a graph for copying noise.',
+      },
+      { type: 'heading', level: 3, text: 'Calibrating β' },
+      {
+        type: 'paragraph',
+        html:
+          'The two halves turned out to be about two orders of magnitude apart, which I did not expect. On ASIA at 500 rows, going from the empty graph to hill climbing\'s graph moves BIC<sub><em>N</em></sub> by about 0.65 and Gen by about 0.0062. At α = β = 1 the generative term would do nothing, and a sweep over β would look like it measured something when it did not. For each dataset I set:',
+      },
+      {
+        type: 'equation',
+        html:
+          'β* = [ BIC<sub><em>N</em></sub>(<em>G</em><sub>hc</sub>) − BIC<sub><em>N</em></sub>(∅) ] / [ Gen(<em>G</em><sub>hc</sub>) − Gen(∅) ]',
+        caption: 'The β at which one unit of movement in each half is worth the same.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Every run quotes β as a multiple ρ of that. ρ = 1 is balanced by construction, and I fixed it before looking at any result. The ρ = 0 rows were added after the sweep, once ρ = 0 kept doing better. β* comes out at about 104 on ASIA and about 1837 on ALARM, which is why a raw β cannot carry across networks but ρ can.',
+      },
+      { type: 'heading', level: 2, text: 'Three agents' },
+      {
+        type: 'list',
+        items: [
+          '<strong>Tabular Q-learning</strong> (Watkins and Dayan, 1992), keyed on the graph bytes and the tile position. Exact, and only feasible while the table stays small.',
+          '<strong>Linear Q</strong> over fifteen hand-built features. Anything that is the same for every action in a state cannot change which action wins, so state variables only appear multiplied by something that varies, like the BIC change of that action.',
+          '<strong>A DQN</strong> (Mnih et al., 2015) with learned embeddings for <em>i</em>, <em>j</em> and the operator, so one network covers any edit at any graph width. Illegal actions are masked before the argmax and before the bootstrap max (Huang and Ontañón, 2022), so it never has to learn acyclicity.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The BIC change is an input feature for both learned agents on purpose. RLiG only has to learn when following the score is the wrong move. I expected uniform exploration to waste steps, since a sparse ALARM graph offers roughly thirteen hundred legal edits, so RLiG explores with a Boltzmann draw over the BIC change. In the small two-seed ablation, uniform was actually ahead on ASIA and Child, so that choice is untested.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'One episode, as pseudocode:',
+      },
+      {
+        type: 'code',
+        lang: 'text',
+        label: 'RLiG, one episode',
+        code: `G <- init()                          # empty, random, or a hill-climb warm start
+for t = 0 .. T-1:
+    A <- feasible_edits(G)           # cycle and in-degree masks off one closure
+    D <- bic_deltas(G, A)            # cached local scores, two for a reversal
+    a <- policy(s_t, A, D)           # argmax on Q, Boltzmann on D when exploring
+    G' <- apply(a, G)
+    if (t mod L) in I_g:             # or the meta-head says spend, and budget remains
+        r <- alpha*dBIC_N + beta*(Gen(G')-g_last)  # N_s rows from G', compare
+        remember (H(G'), G')         # only measured graphs can be the answer
+    else:
+        r <- alpha * (BIC_N(G') - BIC_N(G))
+    update(s_t, a, r, s_{t+1});  G <- G'
+return the graph with the best measured H`,
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The last line matters more than it looks. Only graphs seen at a generative step can be returned, so with <em>L</em> = 5 the answer comes from one in five of the graphs visited.',
+      },
+      { type: 'heading', level: 2, text: 'Setup' },
+      {
+        type: 'paragraph',
+        html:
+          'Five discrete benchmark networks from the <a href="https://www.bnlearn.com/bnrepository/" target="_blank" rel="noopener noreferrer">bnlearn Bayesian Network Repository</a> (Scutari), plus one synthetic network with a known true graph. None of it is real-world data. Each network gets one sampled dataset: 500 rows to fit the tables and the BIC, 2000 as the reference for Gen, and 5000 held out for the final metrics only. 500 training rows is deliberate. With 5000 rows BIC is close to consistent on these networks and a second objective has little left to add.',
+      },
+      {
+        type: 'table',
+        headers: ['Network', 'Variables', 'Arcs', 'Max parents', 'β*'],
+        rows: [
+          ['synthetic', '10', '12', '3', '166'],
+          ['asia (Lauritzen and Spiegelhalter, 1988)', '8', '8', '2', '104'],
+          ['sachs (Sachs et al., 2005)', '11', '17', '3', '145'],
+          ['child', '20', '25', '2', '523'],
+          ['insurance (Binder et al., 1997)', '27', '52', '3', '1016'],
+          ['alarm (Beinlich et al., 1989)', '37', '46', '4', '1837'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The in-degree cap is <em>k</em> = 3. ALARM has a node with four parents, so its true graph is out of reach for every capped method, and a non-zero error is forced there.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'I wrote all four baselines myself, because the searchers are the thing being compared: hill climbing on BIC, the same with a tabu list, GES following Chickering (2002) with Meek\'s orientation rules (Meek, 1995), and PC with a G² test (Spirtes et al., 2000). My GES has two stated deviations from Chickering. It only enumerates subsets up to size three, and its delete step respects the in-degree cap. My notebook has 55 tests that run in 2.4 seconds. They include checking the action masks against applying every edit for real, and checking the equivalence-class code against every DAG on three, four and five nodes, which is 29281 graphs at five.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Structure is scored as structural Hamming distance (SHD) on the equivalence class, the way Tsamardinos et al. (2006) define it. A reversed edge that the data cannot tell apart costs nothing. Lower is better. Each learned agent runs ten seeds. One dataset is drawn per network and every method sees the same draw, so a seed changes the agent and not the data.',
+      },
+      { type: 'heading', level: 2, text: 'Results' },
+      {
+        type: 'paragraph',
+        html:
+          'SHD on the equivalence class, mean ± one standard deviation over ten seeds where it varies. ρ = 1 is the hybrid reward. ρ = 0 switches the generative half off.',
+      },
+      {
+        type: 'table',
+        headers: ['Network', 'Hill climb', 'GES', 'PC', 'Linear, ρ=0', 'Linear, ρ=1', 'DQN, ρ=0'],
+        rows: [
+          ['synthetic', '5.0', '4.0', '11.0', '1.0', '2.7 ± 2.3', '1.0'],
+          ['asia', '4.0', '5.0', '8.0', '1.0', '3.4 ± 2.2', '1.0'],
+          ['sachs', '5.0', '13.0', '7.0', '13.0', '7.2 ± 2.6', '13.0'],
+          ['child', '18.0', '13.0', '21.0', '13.0', '12.4 ± 1.6', '20.3 ± 3.7'],
+          ['insurance', '40.0', '36.0', '46.0', '35.2 ± 1.0', '37.7 ± 4.5', '51.2 ± 3.6'],
+          ['alarm', '41.0', '31.0', '34.0', '36.4 ± 2.7', '41.5 ± 3.8', '47.8 ± 2.6'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          '<strong>With the generative half off, the linear agent is the best structure learner in the table on three of six networks</strong>, sharing first place with the DQN on two of them. On the synthetic network and ASIA it hits SHD 1.0 on every seed, where hill climbing and GES are four or five off. Its ASIA graph even has a better BIC than the true graph, −1107 against −1110. Insurance goes its way too, 35.2 against 36.0 for GES, but that gap is smaller than its own seed spread.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'It does not come first on the other three: it loses ALARM and Sachs and ties Child. On ALARM, GES is clearly ahead at 31.0, and that is the one clean win for equivalence-class search here. Child ends in a tie: the agent lands in GES\'s equivalence class on every seed, same BIC and same SHD of 13.0. Child is also the one place the hybrid at ρ = 1 beats every other method, 12.4 against 13.0, but that is inside its spread and beats 13 on only four seeds of ten, so I would not lean on it.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'On Sachs, hill climbing gets SHD 5.0 at a BIC of −4066. GES and the ρ = 0 agent both find the better BIC of −4062 and both land on 13.0. Two unrelated searches reaching a better score and the same worse graph points at the score itself at this sample size, though it does not prove they returned the same graph. Here the ρ = 1 runs do better, 7.2 ± 2.6 for the linear agent and 8.4 ± 3.2 for the DQN, against 13.0 on every seed at ρ = 0. That gap is larger than the seed spread, so it is the one clear structural gain from the generative half, and it cuts against my headline. My ρ sweep did not cover Sachs, so I cannot say much more.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          '<strong>The DQN is the weakest agent, and it loses on the wide networks.</strong> At ρ = 0 it matches the linear agent on the three smallest, then falls to 51.2 on Insurance and 47.8 on ALARM. ALARM gives it about 13000 gradient steps for about 15000 parameters, and its bootstrap target only looks at a shortlist of 24 actions out of about 1300. Both are fixable with compute. The linear agent\'s fifteen features may also be a strong built-in bias that happens to land close to right, and I cannot tell how much of the gap that explains.',
+      },
+      { type: 'heading', level: 3, text: 'Learning curves' },
+      {
+        type: 'image',
+        src: '/writing/sit320-rlig/curves.webp',
+        alt: 'Two line charts of greedy episode return against training episode for ASIA and Child, for tabular, linear and DQN agents, with shaded bands for one standard deviation.',
+        caption: 'Greedy return against training episode, mean and one standard deviation over ten seeds. Each point comes from a separate greedy evaluation episode, so decaying exploration cannot pass for learning.',
+        lightBg: true,
+      },
+      {
+        type: 'paragraph',
+        html:
+          'By episode 100 the tabular curve on ASIA has climbed to about 1.10, and after that it barely moves. Tabular finishes highest on both, but its table grows fast: about 490 distinct states on ASIA against about 4800 on Child, so it will not scale far past that.',
+      },
+      { type: 'heading', level: 2, text: 'Does the generative half help?' },
+      {
+        type: 'paragraph',
+        html:
+          'I swept ρ from 0 to 4 on three networks with two agents, ten seeds each, to find out.',
+      },
+      {
+        type: 'image',
+        src: '/writing/sit320-rlig/rho.webp',
+        alt: 'Six panels sweeping rho from 0 to 4 on ASIA, Child and the synthetic network. The top row shows SHD rising with rho for most curves. The bottom row shows held-out log-likelihood.',
+        caption: 'Sweeping ρ, where β = ρ · β*. Top row SHD (lower is better), bottom row held-out log-likelihood per row (higher is better), one standard deviation over ten seeds.',
+        lightBg: true,
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Mostly it does not. Four of the six curves have their best SHD at ρ = 0. Both exceptions are Child: the linear agent is flat and noisy across the whole range, 11.3 to 13.9, and the DQN\'s best point sits inside its own ρ = 0 spread. Two-way JS is the thing the generative half is meant to improve. Five of six curves do best above zero, but no gap clears the seed spread.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'I expected a trade-off, with better generation bought with worse structure. One seed at a smaller budget seemed to show it. Ten seeds did not.',
+      },
+      { type: 'heading', level: 3, text: 'Why the marginal score is too flat' },
+      {
+        type: 'paragraph',
+        html:
+          'Gen averages divergences over one-way and two-way marginals, and many different graphs reproduce those about equally well. On ASIA its whole range between the empty graph and hill climbing\'s graph is about 0.0062. Re-running the whole grid at five times the simulated rows only widened that from 0.0045, while a generative step on ASIA went from 10.5 to 32.0 times the cost of a cheap one. So the problem is more what Gen measures than how precisely it is measured.',
+      },
+      { type: 'heading', level: 3, text: 'Tiling' },
+      {
+        type: 'table',
+        headers: ['Network', 'No tiles (BIC only)', 'L = 5, every 5th step', 'Every step', 'Learned tiler'],
+        rows: [
+          ['asia', '2.7 (0 sims)', '6.7 (1929)', '4.5 (8689)', '8.5 (1538)'],
+          ['child', '19.1 (0)', '23.4 (2479)', '19.5 (11326)', '23.0 (2056)'],
+          ['synthetic', '2.0 (0)', '2.8 (1933)', '3.1 (8267)', '5.7 (1577)'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'SHD with the number of simulate-and-compare calls in brackets, DQN, ten seeds. Tiling works as a cost control, since <em>L</em> = 5 spends 22 to 23 percent of what evaluating every step spends. On structure, that tile beats evaluating every step on only one of three networks. The BIC-only control, at zero generative cost, has the best SHD on all three, though on Child it only ties the best tiling, 19.1 against 19.2 with two generative steps per tile. On held-out likelihood it loses to tiling on all three.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'I also built a learned tiler: a second head that decides at each step whether to spend one of the episode\'s generative evaluations, capped at the same budget as the fixed tile. Against that fixed tile it was better on Child by 0.4 SHD, worse on the other two, and worse on held-out likelihood on all three. I read that as a result about my controller rather than about learned tiling in general, because the two heads share a return and never coordinate.',
+      },
+      { type: 'heading', level: 3, text: 'Ablations' },
+      {
+        type: 'paragraph',
+        html:
+          'These ablations are DQN runs, two seeds each. I expected exploration to matter most, and it did not. Summed over the three networks, two changes hurt most: dropping the BIC change from the action features, which cost 3.0, 12.0 and 7.0 SHD on ASIA, Child and the synthetic network, and switching to the level-form reward, which cost 3.0, 12.5 and 3.5. Warm-starting from hill climbing and setting γ = 0.9 both helped on Child, 15.0 against 25.5. These are two seeds each, so read them as sketches.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The BIC-feature result also means the DQN is mostly learning how much weight to give the structural score.',
+      },
+      { type: 'heading', level: 2, text: 'Two extensions: noise, and a better generative score' },
+      { type: 'heading', level: 3, text: 'How much can noise in Gen hurt?' },
+      {
+        type: 'paragraph',
+        html:
+          'Gen is estimated from simulated rows, so the agent sees the true score plus some noise. If that noise is bounded by ε, the telescoping above leaves only two measured graphs in the return, so the return is off by at most 2βε. The level-form reward adds Gen at every generative step, so its error can reach <em>m</em>βε over <em>m</em> generative steps. At <em>L</em> = 5 and <em>T</em> = 40 that is four times worse. Two tests check both bounds on the real environment with made-up noise.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'The returned graph is also picked as the maximum of noisy scores, so its recorded score should be optimistic on average. Graphs whose noise came out high are the ones that win, and the runs below confirm that.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'For the discriminator score below, Hoeffding\'s inequality (Hoeffding, 1963) with a union bound over <em>K</em> scored graphs gives a size for part of that noise. It leaves out the noise from training the classifier and from which real rows it is tested on:',
+      },
+      {
+        type: 'equation',
+        html: 'ε = √( ln(2<em>K</em>/δ) / (2<em>m</em>) )',
+        caption: 'm is the number of held-out simulated rows, K the graphs scored in a run, 1 − δ the probability.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'At 1000 rows, <em>K</em> = 2000 and δ = 0.05, that gives ε = 0.0751. Getting it to 0.01 would take 56449 rows. The discriminator score gets its own β*, about 3 on ASIA. With that, 2βε is 0.461, most of the 0.65 gap between hill climbing\'s graph and the empty one. As a guarantee it says little at this size.',
+      },
+      { type: 'heading', level: 3, text: 'A learned discriminator in place of the marginal score' },
+      {
+        type: 'paragraph',
+        html:
+          'MMD-GAN (<a href="https://arxiv.org/abs/1705.08584" target="_blank" rel="noopener noreferrer">Li et al., 2017</a>) swaps a fixed kernel for one learned adversarially, so the test looks wherever two samples differ most. I took the simplest form of that idea, a classifier two-sample test (<a href="https://arxiv.org/abs/1610.06545" target="_blank" rel="noopener noreferrer">Lopez-Paz and Oquab, 2017</a>). Simulate rows from the graph, train a small network to tell them from real rows, and test it on rows it never saw. If it cannot tell them apart, the graph generates well. The score is 1 minus the gap between the classifier\'s average output on real and simulated test rows.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'This score is sharper. Against held-out likelihood it ranks graphs better on all three test networks, with rank correlations of 0.90, 0.93 and 0.95 against 0.80, 0.77 and 0.86 for the marginal score. Speed is the catch: about 30 ms per score against 1.3 to 5.0 ms, because every score is a small training run.',
+      },
+      {
+        type: 'table',
+        headers: ['Network, agent', 'ρ = 0', 'Marginal, ρ = 1', 'Discriminator, ρ = 1'],
+        rows: [
+          ['synthetic, linear', '1.0', '2.7 ± 2.3', '0.0'],
+          ['synthetic, DQN', '1.0', '2.8 ± 1.3', '2.3 ± 2.1'],
+          ['asia, linear', '1.0', '3.4 ± 2.2', '2.6 ± 1.4'],
+          ['asia, DQN', '1.0', '6.7 ± 1.8', '5.3 ± 2.6'],
+          ['child, linear', '13.0', '12.4 ± 1.6', '12.8 ± 3.0'],
+          ['child, DQN', '20.3 ± 3.7', '23.4 ± 3.9', '23.8 ± 1.6'],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Across the 12 cells (three networks, two agents, ρ = 1 and 4), the discriminator gets the better mean SHD than the marginal score in 8 and the better held-out likelihood in 9. The clearest case is the synthetic network with the linear agent: at ρ = 1 it lands in the true equivalence class on all ten seeds. Child with the linear agent at ρ = 4 also beats ρ = 0, 12.0 against 13.0. But on ASIA and for the DQN, ρ = 0 still wins on structure. Part of the problem was the score, then, and part of it was not.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Optimism shows up as predicted. Rescoring the returned graph five more times gives a lower average than the recorded score in every row where Gen has weight, and no clear gap in any ρ = 0 row.',
+      },
+      { type: 'heading', level: 2, text: 'Limits' },
+      {
+        type: 'list',
+        items: [
+          'Seed variance is large. On 16 of the 20 rows that vary at all, the standard deviation over ten seeds is wider than the gap to the nearest other method. For the linear agent at ρ = 1 on ALARM, SHD ranges from 32 to 47 across seeds.',
+          'ALARM\'s numbers are relative, since <em>k</em> = 3 puts its true graph out of reach.',
+          'Ablations and the sample-size study are two seeds each.',
+          'Episode counts were set to fit a runtime budget, and the runs may not have converged. Nothing was tuned, and a tuned DQN might close some of the gap.',
+          'My literature search did not find anyone putting simulation fidelity in the reward. Reinforcement learning over DAGs is not new, and paying for an expensive reward only sometimes has been studied (<a href="https://arxiv.org/abs/2011.06709" target="_blank" rel="noopener noreferrer">Krueger et al., 2020</a>). A search that finds nothing is weak evidence, so I treat the hybrid objective as new only modestly.',
+        ],
+      },
+      { type: 'heading', level: 2, text: 'What I took from it' },
+      {
+        type: 'paragraph',
+        html:
+          'The part I would keep is the sequential framing. With ρ = 0 the linear agent beat hill climbing on five of six networks, and the DQN beat it on two. My reading is that an agent that keeps editing past the first move that fails to improve the score (for up to 15 such steps) can walk through the point where a greedy search stops, and sometimes climbs out the other side.',
+      },
+      {
+        type: 'paragraph',
+        html:
+          'Nothing in my grid varied <em>T</em>, though, so that reading is still untested. Sweeping the edit budget is the experiment I would run next.',
+      },
+      { type: 'heading', level: 2, text: 'Papers this builds on' },
+      {
+        type: 'list',
+        items: [
+          'Schwarz (1978), the BIC penalty. de Campos (2006), the per-family BIC form.',
+          'Cooper and Herskovits (1992) and Heckerman, Geiger and Chickering (1995), Dirichlet priors for the probability tables.',
+          'Chickering (2002), GES and equivalence classes. Meek (1995), orientation rules.',
+          'Tsamardinos, Brown and Aliferis (2006), SHD on the equivalence class.',
+          'Spirtes, Glymour and Scheines (2000), the PC algorithm.',
+          'Sutton and Barto (2018). Watkins and Dayan (1992), Q-learning. Mnih et al. (2015), DQN. Huang and Ontañón (2022), invalid action masking.',
+          'Lin (1991), Jensen-Shannon divergence. Gretton et al. (2012), MMD.',
+          'Hoeffding (1963), the concentration bound.',
+          '<a href="https://arxiv.org/abs/1610.06545" target="_blank" rel="noopener noreferrer">Lopez-Paz and Oquab (2017)</a>, classifier two-sample tests. <a href="https://arxiv.org/abs/1705.08584" target="_blank" rel="noopener noreferrer">Li et al. (2017)</a>, MMD-GAN.',
+          '<a href="https://arxiv.org/abs/2011.06709" target="_blank" rel="noopener noreferrer">Krueger, Leike, Evans and Salvatier (2020)</a>, rewards observed at a cost.',
+          'Networks from the <a href="https://www.bnlearn.com/bnrepository/" target="_blank" rel="noopener noreferrer">bnlearn repository</a>: ASIA (Lauritzen and Spiegelhalter, 1988), Sachs (Sachs et al., 2005), Insurance (Binder et al., 1997), ALARM (Beinlich et al., 1989) and Child.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html:
+          '<a href="/writing/sit320-rlig/paper.pdf" target="_blank" rel="noopener noreferrer">Read the full paper (PDF)</a>. It has every table, the ablations, posterior predictive checks and the full reference list.',
+      },
+    ],
+  },
+  {
+    slug: 'where-is-the-algorithm',
+    title: 'Where Is the Algorithm? Two tic-tac-toe players and what they mean for teaching algorithms',
+    date: '2026-09-25',
+    readMin: 21,
+    tags: ['algorithms', 'reinforcement-learning', 'dynamic-programming', 'teaching', 'sit320'],
+    excerpt: 'I built two tic-tac-toe players, one solved by dynamic programming and one that learned by playing 200,000 games. Both end as tables nobody typed. I argue that "the algorithm" depends on the level you describe a system at, give a three-part test for which run-time state belongs to it, and propose a two-hour lab I have not yet run with a class.',
+    content: [
+      {
+        type: 'paragraph',
+        html: 'I built two tic-tac-toe players. One solves the game by dynamic programming. The other learns it by playing 200,000 games and never sees a model of the game at all. Both finish as a table of numbers I did not type, and neither contains a rule anyone wrote about where to open. That is the puzzle people raise about language models and learned agents, sitting inside an exercise from an undergraduate algorithms unit.',
+        dropCap: true,
+      },
+      {
+        type: 'paragraph',
+        html: 'I wrote this as the High Distinction position paper for <strong>SIT320 Advanced Algorithms</strong> at Deakin in T2 2026. I shaped it as a computing education research paper, then decided to publish it here myself rather than send it to a conference. This post is the paper, shortened. The full PDF is linked at the end.',
+      },
+      {
+        type: 'paragraph',
+        html: 'My answer is that "the algorithm" is relative to a level of description. Relative to the generic executor, the table a player reads is input. Relative to the deployed player, that table is part of the procedure that runs. The boundary I draw runs between a generic executor and the persistent state it reads, and whether a person or a training run wrote that state makes no difference to it. That boundary is already inside dynamic programming.',
+      },
+      { type: 'heading', level: 2, text: 'The questions' },
+      {
+        type: 'paragraph',
+        html: 'The overall question is where the word "algorithm" points in a learned system, and what an algorithms unit should do about it. I split it into three research questions.',
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>RQ1.</strong> At which levels of description can "the algorithm" name a part of a learned system, and what does it name at each level?',
+          '<strong>RQ2.</strong> Which run-time state belongs to a deployed algorithm, and does it matter whether a person wrote that state?',
+          '<strong>RQ3.</strong> What should an undergraduate algorithms unit change because of the answers, and how could the change be tested?',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'The method is conceptual analysis. I state candidate answers and test each one against a fixed set of cases, against five conditions I set out before the analysis, and against what the two players actually printed. None of the conditions fixes which verdict an answer has to reach. They ask, for example, that an answer give a verdict on two bit-identical tables run by the same executor, one fitted and one typed, and that it say where it stops.',
+      },
+      { type: 'heading', level: 2, text: 'What has already been argued' },
+      {
+        type: 'paragraph',
+        html: 'Some of what I might have claimed as news was argued twenty years ago. Blass and Gurevich (2003) survey the attempts at an absolute definition and say "the notion of algorithm is richer these days than it was in Turing\'s days". Gurevich (2012) puts it harder: "the notion of algorithm cannot be rigorously defined in full generality, at least for the time being". Moschovakis (2001) argues that algorithms are recursive definitions, while machines model implementations. So the claim that the classical definition is incomplete belongs to them, and none of their reasons is machine learning. My part is narrower. I ask where the word points inside a running learned system, and what a curriculum should do about it.',
+      },
+      {
+        type: 'paragraph',
+        html: 'Wegner (1997) argued that interaction is more powerful than algorithms. <a href="https://doi.org/10.1093/comjnl/bxl062" target="_blank" rel="noopener noreferrer">Cockshott and Michaelson (2007)</a> replied to a later version of that argument that the input stream of an interactive run can be recorded and fed to an ordinary tape machine. I try to stay out of that fight by making a claim about description and not about computational power. Nothing here says a learned system computes a function no Turing machine can.',
+      },
+      {
+        type: 'paragraph',
+        html: 'In computing education, <a href="https://doi.org/10.1145/1067445.1067467" target="_blank" rel="noopener noreferrer">Perrenet, Groote and Kaasenbrood (2005)</a> describe four levels at which students think about the concept of algorithm, from one run on a concrete machine up to a black box chosen for a problem. None of the four has a place for state that is neither the program nor an input and that every run reads. <a href="https://doi.org/10.1145/3571785.3574125" target="_blank" rel="noopener noreferrer">Lonati and colleagues (2022)</a> leave out, on purpose, programs whose logic is "machine produced" and, following Janlert, call them "dark". This paper takes up the case they scoped out. The level split itself goes back to <a href="https://doi.org/10.1093/mind/LIX.236.433" target="_blank" rel="noopener noreferrer">Turing (1950)</a>, who wrote that the rules which change in a learning machine "are of a rather less pretentious kind, claiming only an ephemeral validity".',
+      },
+      { type: 'heading', level: 2, text: 'Two players for the same game' },
+      {
+        type: 'paragraph',
+        html: 'Tic-tac-toe has 5478 reachable board positions. Of those, 2423 are unfinished with X to move, and those are the states my players have to decide in. O has its own 2097. Every number below comes from my notebook\'s saved output, and every win rate is exact, scored over the whole game graph rather than counted from sample games.',
+      },
+      {
+        type: 'paragraph',
+        html: '<strong>The solved player</strong> treats the game as a Markov decision process, with the opponent folded into the transition probabilities. Value iteration converges in 9 sweeps, and the last sweep changes nothing. The empty board comes out at 0.994791666667, and a backward induction over the same graph in exact fractions gives exactly 191/192. Policy iteration, run separately, picks the same move as value iteration in all 2423 decision states. Against a uniformly random opponent this player wins 0.994792 of games and loses none. Against a perfect opponent every game is a draw.',
+      },
+      {
+        type: 'paragraph',
+        html: '<strong>The learned player</strong> is the tabular Q-learning of <a href="https://doi.org/10.1007/BF00992698" target="_blank" rel="noopener noreferrer">Watkins and Dayan (1992)</a>. It gets the legal moves, the board it lands on after each move and the result of each finished game, and it never sees a model of the game. I used a constant step size of 0.3, no discount, and an epsilon that starts at 1.0 and is multiplied by 0.99995 after every episode, ending at 0.00005. A win scores +1, a loss −1 and a draw 0. Both players break ties on the lowest cell index. After 200,000 episodes against a random opponent, its table covers 2420 of the 2423 decision states. It wins 0.989583 of games against that opponent, loses none, and draws every game against a perfect one. The whole run, including exact scoring of 100 checkpoints, took 0.9 seconds.',
+      },
+      {
+        type: 'paragraph',
+        html: 'Watkins and Dayan prove convergence for step sizes that shrink. Mine stayed at 0.3, so their theorem does not cover this run, and the evidence that the learner plays well is the exact scoring.',
+      },
+      {
+        type: 'image',
+        src: '/writing/sit320-where-is-the-algorithm/two-players.webp',
+        alt: 'Table comparing the two players. Dynamic programming needs the whole model, works over and stores 5478 states, plays from a policy over 2423 states, takes 9 sweeps, wins 0.994792 against a random O and opens on a corner. Q-learning learns one game at a time, works over 2423 states, stores 2420, plays from its Q table, takes 200,000 episodes, wins 0.989583 and opens on the centre. Neither loses to a random or a perfect O.',
+        caption: 'Table 1 from the paper. "Plays from" is what each player reads at move time.',
+        lightBg: true,
+      },
+      {
+        type: 'paragraph',
+        html: 'They differ on the opening. The solved player opens on a corner, and all four corners are worth 191/192 against a random opponent. The learner\'s final table opens on the centre, which is worth 95/96. That choice never settled. The greedy policy opened on a corner at 21 of the 100 checkpoints I saved during training, 16 of them in the second half, and the centre is where the last checkpoint happened to land.',
+      },
+      {
+        type: 'paragraph',
+        html: 'Then the part I did not expect. The learner\'s greedy move matches an optimal move in 0.9059 of all 2423 decision states. Of the 109 decision states that come up when it plays a random opponent, 108 are optimal, and the one it gets wrong is the empty board, which is the centre opening again. Its values are much further out than its moves are. Over the 8622 legal state-action pairs in the states it stored, the gap between its Q values and the true ones has a mean of 0.3423 and a maximum of 1.157. Picking the largest of the legal entries survives a lot of error spread across them.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The notebook also trained the learner on five more seeds, in a shorter setup of 100,000 episodes, and saved only summaries for those runs. Their win rate against the random opponent printed as 0.9885 ± 0.0013, and between them they opened on cells 1, 4 and 6, which are an edge, the centre and a corner. So the same learning procedure gave deployed players that open in three different places.',
+      },
+      { type: 'heading', level: 2, text: 'Three levels' },
+      {
+        type: 'paragraph',
+        html: 'Most of the disagreement here is people meaning different things by the same word, so I fix my terms first. An <em>executor</em> is the execution procedure a program runs on, such as an interpreter, a virtual machine or the forward pass of a network. <em>Persistent control state</em> is state the executor reads to decide what to do. It outlives any one input and is read again on the next. A comparator passed into a sort is persistent control state. So are a parser table, a script fed to an interpreter, the policy a dynamic programming solver reads off its value table, and a weight vector.',
+      },
+      {
+        type: 'paragraph',
+        html: 'Whenever I write "the algorithm" I say which of three levels I mean.',
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>Executor level.</strong> The algorithm is the generic machinery, and everything it reads is input.',
+          '<strong>Deployed level.</strong> The algorithm is the particular procedure running on this task, executor and control state together.',
+          '<strong>System level.</strong> The algorithm would be the whole arrangement, including the people and the feedback.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'The first two carry their weight as answers to where the algorithm is. The third gives no answer until it says where it stops.',
+      },
+      { type: 'heading', level: 2, text: 'Five places it could be' },
+      {
+        type: 'paragraph',
+        html: '<strong>The learning procedure.</strong> Gradient descent, value iteration and Q-learning are classical algorithms in the full sense. Each stops on a rule you set, and you can state its complexity. But the same Q-learning update gave me a centre opener on the main run and an edge, a centre and a corner across the five shorter ones. So the learning procedure is an algorithm, and it is not the algorithm that plays.',
+      },
+      {
+        type: 'paragraph',
+        html: '<strong>The inference procedure.</strong> My move selector is a few lines in each player. It takes the largest entry among the legal cells and breaks ties on the lowest index. Handed a different table, either player plays differently, so the selector is not the whole answer. Strength is not always concentrated in the parameters either. AlphaGo Zero\'s raw network, picking its most probable move with no search, rated 3055 Elo against 5185 for the full system with Monte Carlo tree search (Silver et al., 2017). The competence there is split between a learned artefact and a procedure.',
+      },
+      {
+        type: 'paragraph',
+        html: '<strong>The parameters.</strong> At the executor level they are input, and at the deployed level they are part of the procedure. They are never the algorithm alone. A table with nothing to read it is an inert array.',
+      },
+      {
+        type: 'paragraph',
+        html: '<strong>The interaction between model and user.</strong> This can be written down as a loop, so it deserves a real answer. A chat with a model whose weights and prompt stay fixed is one run of a deployed algorithm, and the conversation so far is that run\'s input. A recommender that refits on your clicks is different. Every refit changes the control state, so a new deployed algorithm starts at each one, and the loop is the learning procedure running online with the user supplying its data.',
+      },
+      {
+        type: 'paragraph',
+        html: '<strong>All of it together.</strong> This sounds the most reasonable and I think it is the weakest. If the algorithm includes the model and the user, does it include the people who wrote the training data, the engineers who set the reward, or the electricity? Each of those changes the output if you change it, so a test built on causal influence has no way to exclude any of them.',
+      },
+      { type: 'heading', level: 2, text: 'The strongest objection' },
+      {
+        type: 'paragraph',
+        html: 'A universal machine has a fixed transition procedure and reads a program off a tape. Change the tape and it computes a different function, but the tape is not part of the universal machine\'s algorithm. Inference code plus weights has exactly that shape. So, the objection goes, the weights are input to the inference algorithm, and classical theory already has every word it needs.',
+      },
+      {
+        type: 'paragraph',
+        html: 'I think that is right at the executor level, and it kills a tempting move. The move says that swapping the weights changes the output, so the weights are part of the algorithm. That proves too much. Swap the comparator in a sort, the tape in a universal machine or the table in a table-driven parser, and each computes something different. If determining the output made a thing part of the procedure, the input would be part of the algorithm too.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The compilation analogy, that weights are like machine code, runs the wrong way as well, because machine code is not part of the CPU. It does show that being found by optimisation rather than typed does not stop a thing being program-like, which is the point <a href="https://karpathy.medium.com/software-2-0-a64152b37c35" target="_blank" rel="noopener noreferrer">Karpathy (2017)</a> was reaching for.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The objection leaves the deployed level alone, though. When I ask which sorting algorithm a process is running, I do not answer "the CPU". I name what the code encodes. Partial evaluation gives that level a classical form. Specialise an interpreter to one fixed program and the result "behaves exactly the same" as that program, which is the first Futamura projection as Williams and Perugini (2016) present it. <a href="https://doi.org/10.4204/EPTCS.66.8" target="_blank" rel="noopener noreferrer">Cook and Lämmel (2011)</a> work a case close to mine, an interpreter for table-driven state machines, where in the result they aim for "The accept states and the transition table are no longer present as data structures". My solved player does a version of this by hand. It runs the move selector over its value table once for every position before any game, and at move time only the policy is left to read.',
+      },
+      {
+        type: 'paragraph',
+        html: 'So the objection forces a distinction between levels, but it does not pick one.',
+      },
+      { type: 'heading', level: 2, text: 'The test for what belongs' },
+      {
+        type: 'paragraph',
+        html: 'My answer to RQ2 is that computational knowledge can be part of an algorithm, at the deployed level. Run-time state counts as part of a deployed algorithm when three things hold.',
+      },
+      {
+        type: 'list',
+        items: [
+          'It is persistent.',
+          'The executor reads it to decide what to do.',
+          'The deployment holds it fixed across the inputs the procedure ranges over, instead of taking it as one of them.',
+        ],
+        ordered: true,
+      },
+      {
+        type: 'paragraph',
+        html: 'That admits weights, a Q table, the policy my solved player reads, a comparator, a parser table and a script fed to an interpreter. For my solved player the value table itself is out, because nothing reads it at move time. A memo table that fills while a program runs is persistent and gets read, but the deployment does not hold it fixed, so it is out too. A system prompt held fixed across a deployment is in, and the words a user types in one conversation are not. The user, the training data and the hardware are not run-time state at all, which is what stops the composite answer spreading out to the power grid.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The price is that the test does not care where the state came from. Two systems running bit-identical tables under the same executor have the same status, whether the table was fitted, evolved, copied off a disk or typed by hand. So the category is not one machine learning invented. It is large and old, and neural networks are a recent and extreme member of it. Breiman (2001) made the same move in statistics, calling the fitted predictor "an algorithm that operates on <em>x</em> to predict the responses <em>y</em>".',
+      },
+      {
+        type: 'paragraph',
+        html: 'The same test says when two deployed algorithms are one: same executor, same tie rule and same state. I checked this with a second solver that plans against a worst-case opponent. With ties going to the lowest index, the policy read off its table wins 0.994792 against a random opponent. With ties going to the worst of the tied best moves, worst as scored against the random opponent, it wins 0.848958. Not one value in the table changed. A different tie rule over the same table gives a different deployed algorithm.',
+      },
+      { type: 'heading', level: 2, text: 'Where the behaviour nobody wrote comes from' },
+      {
+        type: 'paragraph',
+        html: 'Nothing in my learner was told to open on the centre, and nothing in the solved player was told to open on a corner. In both, I wrote a general update rule, a way of scoring an outcome and a way of picking among scores, and then a lot of arithmetic ran. <a href="https://doi.org/10.1093/mind/LIX.236.433" target="_blank" rel="noopener noreferrer">Turing (1950)</a> took on this worry as Lady Lovelace\'s objection, that the Analytical Engine "can do <em>whatever we know how to order it</em> to perform". To the variant that a machine can never surprise us, he replied "Machines take me by surprise with great frequency", and he argued that thinking otherwise assumes every consequence of a fact arrives in the mind together with the fact. I could not have predicted the corner opening by reading the Bellman equation, or the centre opening by reading the Q-learning update. Specifying a process is not the same as listing its results, and algorithms have worked that way since long before anyone fitted one to data.',
+      },
+      { type: 'heading', level: 2, text: 'What this means for teaching' },
+      {
+        type: 'paragraph',
+        html: 'If the split between a procedure and the state it reads is old, the fix belongs inside the algorithms unit that already exists. Denning (2003) wrote that the great principles of computing have been "interred beneath layers of technology in our understanding and our teaching", and he turned down the picture of a pantheon with one pillar per principle. An extra pillar for learned computation would be that picture. I would make three changes.',
+      },
+      { type: 'heading', level: 3, text: 'Teach the table as the artefact' },
+      {
+        type: 'paragraph',
+        html: 'The way I was taught it, dynamic programming is a recurrence and the assessment is the recurrence. The table is scaffolding, printed once for a small example and then thrown away. But the play comes from the table. A student who has filled a memo table and is then asked what that table is after the run, whether it is data or program, and whether it would still work if the opponent changed, has met the whole question on ground where they can check the answer.',
+      },
+      { type: 'heading', level: 3, text: 'Teach the level question directly' },
+      {
+        type: 'paragraph',
+        html: 'Ask where the algorithm is for a short list of cases and require the level to be named in the answer. The trained digit classifier is the case worth the time. The same convolution code with a different weight file could sort small photos of clothes, so at the executor level the code is the whole algorithm and the weights are its argument. Anyone who uses it still calls it a digit recogniser. Students should be able to give both answers without finding either evasive, and to spot the slide between them in a paper or an argument.',
+      },
+      { type: 'heading', level: 3, text: 'Teach correctness of the state as well as of the steps' },
+      {
+        type: 'paragraph',
+        html: 'This is the one I would fight for. A loop invariant proves the steps. It does not tell you whether the table those steps produced is right in the places nobody looked. My learner\'s policy is optimal in 0.9059 of the 2423 positions overall, and in 108 of the 109 positions it meets against a random opponent. The update rule says where errors are likely, in rarely met states and near-ties, but it cannot say which moves are wrong. For that I had to score the learner against a solved reference. The one wrong state it meets in play is the empty board, where the corner beats the centre by 1/192 against a random opponent. That gap is small next to the 0.3423 mean error in its values.',
+      },
+      {
+        type: 'paragraph',
+        html: 'So alongside the classical tools, students need generalisation treated as a correctness notion, PAC-style guarantees and what they assume (Valiant, 1984), and the habit of holding out a reference and measuring where the two disagree. This is my version of the point <a href="https://doi.org/10.1145/3488042.3488053" target="_blank" rel="noopener noreferrer">Tedre, Denning and Toivonen (2021)</a> make about correctness.',
+      },
+      { type: 'heading', level: 2, text: 'A two-hour lab' },
+      {
+        type: 'paragraph',
+        html: 'The three changes fit in one lab, written for students who have met dynamic programming but not reinforcement learning. The teacher hands out the notebook code for both players and the worst-case solver, with its tie rules and seeds, so the good answers are what that code prints. Students work in pairs. By the end of the lab a student should be able to do three things.',
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>LO1.</strong> Name the level (executor, deployed or system) whenever they say where the algorithm is in a system, and say what the word picks out at that level.',
+          '<strong>LO2.</strong> Apply the three-part test to a piece of run-time state and justify whether it belongs to the deployed algorithm.',
+          '<strong>LO3.</strong> Check a learned table against a solved reference, and explain what reasoning about the update rule alone can and cannot tell you about where the two disagree.',
+        ],
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>Before, 0 to 10 minutes.</strong> Each student writes a definition of "algorithm" in their own words and hands it in.',
+          '<strong>Solve, 10 to 30 minutes.</strong> After a short briefing on Markov decision processes and the Q update, students run value iteration and read the policy off the table. A good answer has 9 sweeps, an empty-board value of 191/192 and a corner opening, and notes that all four corners are worth the same.',
+          '<strong>Learn, 30 to 55 minutes.</strong> Train the learner on several seeds at 100,000 episodes each and pool the opening cells. A good answer notices that the openings can differ while the update rule never changed. If a class gets the same opening every time, the main run\'s checkpoints still show it moving, with a corner opening at 21 of the 100.',
+          '<strong>Swap the tie rule, 55 to 70 minutes.</strong> Read two policies off the worst-case solver\'s table and score both. A good answer has 0.994792 and 0.848958, and says that no value in the table moved.',
+          '<strong>Score, 70 to 90 minutes.</strong> Compare the main run\'s greedy moves with the solved player\'s optimal ones in every decision state, then only in the states met against the random opponent. A good answer finds the second rate much higher than the first (mine were 0.9059 and 108 of 109) and says the update rule can point at rarely met states and near-ties but cannot say which moves are wrong.',
+          '<strong>Six cases, 90 to 105 minutes.</strong> In groups, fill in the answer key below from its first column only, then find the level slide in a short paragraph the teacher hands out.',
+          '<strong>After, 105 to 120 minutes.</strong> Each student writes the definition again, without seeing the first one.',
+        ],
+        ordered: true,
+      },
+      {
+        type: 'image',
+        src: '/writing/sit320-where-is-the-algorithm/answer-key.webp',
+        alt: 'Answer key table with four columns: case, executor, state the deployment holds fixed, and input to one run. Sorting: the sort routine, the comparator, the list. Universal machine: its transition procedure, the program on the tape, the data on the tape. Table driven parser: the parser driver, the parse table, the token string. Dynamic programming player: a policy lookup, the policy read once off the value table, the board. Q-learning player: the greedy selector and its tie rule, the Q table, the board. Trained digit classifier: the forward pass, the weight file, the image.',
+        caption: 'Table 2 from the paper, the lab\'s answer key. At the executor level the algorithm is the second column on its own. At the deployed level it is the second and third columns together. The fourth column is input at both levels.',
+        lightBg: true,
+      },
+      {
+        type: 'paragraph',
+        html: 'The paragraph for step 6 can be short. This is the one I wrote to slide on purpose.',
+      },
+      {
+        type: 'blockquote',
+        html: 'The network reads its weights on every input and they stay fixed once the model ships, so the weights are part of the algorithm. But the weights are only numbers the inference code reads, so every model trained this way runs the same algorithm.',
+      },
+      {
+        type: 'paragraph',
+        html: 'The first sentence works at the deployed level and the second at the executor level, and nothing in the text marks the change. A good answer finds the word changing level between the two sentences and says both can be true once the level is named.',
+      },
+      {
+        type: 'paragraph',
+        html: 'LO1 goes after a gap in a workshop study by <a href="https://doi.org/10.1145/3626252.3630950" target="_blank" rel="noopener noreferrer">Bellettini and colleagues (2024)</a>. Over nine workshops they coded definitions of "algorithm" written by 27 groups of students and teachers. Most asked for unambiguous steps, but only three of the 27 mentioned an interpreter or executor, and the authors say getting the interpreter named was often the turning point. <a href="https://doi.org/10.15388/infedu.2021.27" target="_blank" rel="noopener noreferrer">Mirolo, Izu, Lonati and Scapin (2021)</a> report the advice that students "should be made aware of any change of abstraction level", and LO1 is one way to do that.',
+      },
+      { type: 'heading', level: 2, text: 'How the lab could be evaluated' },
+      {
+        type: 'paragraph',
+        html: 'I have not run this lab and I have not studied any learners. What follows is a plan, and running it would need ethics approval and consent from each student first.',
+      },
+      {
+        type: 'list',
+        items: [
+          '<strong>Primary measure.</strong> After the lab each student works alone on four new items: a route planner\'s map, a chat deployment where they sort the system prompt from the user\'s messages, a new paragraph that slides between levels, and a handful of learned values set next to the solved ones. The same items come back a week later to separate learning from recall.',
+          '<strong>Secondary measure.</strong> Code the before and after definitions with the scheme Bellettini and colleagues used, count how many name an executor, and place each one on Perrenet\'s levels. Perrenet and colleagues report a Cohen\'s kappa of .64 for their level coding, after dropping four items, so I expect that coding to be the hard part.',
+          '<strong>Analysis.</strong> Within a class, compare the before and after definitions with McNemar\'s test. Between classes, compare the lab class with a class that does a dynamic programming lab that never asks the level question.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'The plan says in advance what would count against the lab. If the lab class does no better than the comparison class on the new items, or loses the gain a week later, the lab did not do its main job. If students name a level on the six cases and then miss the slide in the paragraph, they have learned the level words as labels and are not using them.',
+      },
+      { type: 'heading', level: 2, text: 'Limits' },
+      {
+        type: 'list',
+        items: [
+          'My evidence is one game with 5478 states, two solvers and one learner, all tabular. A Q table is a much friendlier object than a weight vector. I can diff it against an exact answer, which is the only reason I can quote 0.9059 at all. The analogy to large models is about shape, an executor plus persistent control state, and I am not claiming a network is as legible as a Q table.',
+          'Provenance changes how you audit a table even when it changes nothing about how the table runs. My value table can be checked against the recurrence that produced it. Nothing that produced my Q table gives me a check like that, so I scored it against a solved reference instead.',
+          'For a network the executor is less generic than an interpreter, because the forward pass fixes an architecture. My line is cleanest for tables and blurrier for networks. The next case to build is a digit classifier with one executor and two weight files.',
+          'I wrote the definitions, the test and the cases myself, so the cases may fit the test partly because I chose them.',
+          'The numbers come from one main run with one pair of seeds. The five other seeds ran a shorter setup with only summaries saved, so I cannot say how much the 200,000-episode player varies from seed to seed.',
+          'This is a paper about teaching with no data about learners. I have not run the lab with a class, and I do not know whether the level distinction is teachable in an undergraduate unit or just sounds like hair-splitting to someone who has not yet been surprised by a table.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'Two things would change my mind. One is a criterion for membership that turns on how the state was produced and still survives the bit-identical case. The other is a demonstration that every question we ask about a trained model can be answered at the executor level, with the weights treated as input. That would collapse my position into the objection. I do not think it can be done, because naming which program a process is running is not optional, but I have not proved it.',
+      },
+      { type: 'heading', level: 2, text: 'The answers in one table' },
+      {
+        type: 'table',
+        headers: ['RQ', 'Answer', 'Evidence and test cases'],
+        rows: [
+          [
+            '1',
+            'The executor at one level, the executor with its state at the next. The system level gives no answer until it says where it stops.',
+            'One update rule, five seeds, three openings. The universal machine objection holds at the executor level only.',
+          ],
+          [
+            '2',
+            'State that is persistent, read to decide what to do and held fixed by the deployment. Who wrote it does not matter.',
+            'The tie rule moves 0.994792 to 0.848958 with no value changed. The bit-identical case.',
+          ],
+          [
+            '3',
+            'Teach the table as the artefact, the level question, and correctness of the state, and test it with the lab.',
+            '108 of 109 met states against 0.9059 overall. No learner data yet.',
+          ],
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: 'Two tables, one game, both written by a machine. The classical one has been in the syllabus the whole time, and I was taught around it.',
+      },
+      { type: 'heading', level: 2, text: 'Papers this builds on' },
+      {
+        type: 'list',
+        items: [
+          'Knuth (1997), the five features of an algorithm. Turing (1936), the analysis of what a person following a fixed procedure can compute.',
+          'Blass and Gurevich (2003), Gurevich (2012) and Moschovakis (2001), on whether algorithm can be defined.',
+          'Wegner (1997) and <a href="https://doi.org/10.1093/comjnl/bxl062" target="_blank" rel="noopener noreferrer">Cockshott and Michaelson (2007)</a>, on interaction and computational power.',
+          '<a href="https://doi.org/10.1093/mind/LIX.236.433" target="_blank" rel="noopener noreferrer">Turing (1950)</a>, learning machines and Lady Lovelace\'s objection.',
+          '<a href="https://doi.org/10.1145/1067445.1067467" target="_blank" rel="noopener noreferrer">Perrenet, Groote and Kaasenbrood (2005)</a>, levels of abstraction in the concept of algorithm. Marr and Poggio (1976), levels of description. <a href="https://doi.org/10.15388/infedu.2021.27" target="_blank" rel="noopener noreferrer">Mirolo, Izu, Lonati and Scapin (2021)</a>, abstraction in computing education.',
+          '<a href="https://doi.org/10.1145/3626252.3630950" target="_blank" rel="noopener noreferrer">Bellettini and colleagues (2024)</a>, the notion of algorithm according to students and teachers. <a href="https://doi.org/10.1145/3571785.3574125" target="_blank" rel="noopener noreferrer">Lonati and colleagues (2022)</a>, what we talk about when we talk about programs.',
+          'Sorva (2012) and <a href="https://doi.org/10.1145/3437800.3439202" target="_blank" rel="noopener noreferrer">Fincher et al. (2020)</a>, notional machines. <a href="https://doi.org/10.1145/3488042.3488053" target="_blank" rel="noopener noreferrer">Tedre, Denning and Toivonen (2021)</a>, CT 2.0.',
+          '<a href="https://doi.org/10.1007/BF00992698" target="_blank" rel="noopener noreferrer">Watkins and Dayan (1992)</a>, Q-learning. Silver et al. (2017), AlphaGo Zero. Valiant (1984), a theory of the learnable.',
+          '<a href="https://karpathy.medium.com/software-2-0-a64152b37c35" target="_blank" rel="noopener noreferrer">Karpathy (2017)</a>, Software 2.0. Breiman (2001), the two cultures. Denning (2003), great principles of computing.',
+          'Williams and Perugini (2016), the Futamura projections. <a href="https://doi.org/10.4204/EPTCS.66.8" target="_blank" rel="noopener noreferrer">Cook and Lämmel (2011)</a>, online partial evaluation.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        html: '<a href="/writing/sit320-where-is-the-algorithm/paper.pdf" target="_blank" rel="noopener noreferrer">Read the full paper (PDF)</a>. It has the method and its five conditions, the full lab and evaluation plan, and every reference.',
+      },
+    ],
+  },
 ]
 
 export const ALL_TAGS: string[] = Array.from(

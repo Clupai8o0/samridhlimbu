@@ -401,6 +401,19 @@ export function ResumeDocument() {
               51 tests, systemd watchdog.
             </Text>
           </View>
+
+          <View style={s.entry} wrap={false}>
+            <View style={s.entryHeader}>
+              <Text style={s.entryHead}>Fleet platform · driverless-taxi backend (SIT314)</Text>
+              <Text style={s.entryMeta}>2026</Text>
+            </View>
+            <Text style={s.projectStack}>Node.js · MQTT · PostgreSQL · AWS Fargate · SQS</Text>
+            <Text style={s.entryBody}>
+              Dispatch for a simulated 2,000-car fleet, about 950 matches a second on one laptop. Scaled
+              one to six Fargate tasks on SQS depth. HD paper: batched assignment cut mean pickup
+              distance 24% under load, at twice the p95 latency.
+            </Text>
+          </View>
         </View>
 
         {/* ── Skills ──────────────────────────────────────── */}
