@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
 import type { ChartBlock } from '@/lib/writing'
 
 // Categorical slots in fixed order. Slot 1 is the site accent. Checked with the
@@ -72,6 +72,15 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
   // Unknown until measured, so the first paint never draws at the wrong size.
   const [measured, setWidth] = useState<number | null>(null)
   const [active, setActive] = useState<number | null>(null)
+  const tipRef = useRef<HTMLDivElement>(null)
+  const [tipW, setTipW] = useState(180)
+
+  // Measure the tooltip so it can be kept inside the chart on narrow screens.
+  useLayoutEffect(() => {
+    if (tipRef.current) {
+      setTipW(tipRef.current.offsetWidth)
+    }
+  }, [active])
 
   useEffect(() => {
     const el = wrapRef.current
@@ -119,8 +128,11 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
   const labelW = Math.max(...categories.map(c => c.length)) * 6.6 + 8
   const every = Math.max(1, Math.ceil(labelW / band))
 
-  const groupW = Math.min(band * 0.72, series.length * BAR_MAX + (series.length - 1) * BAR_GAP)
-  const barW = Math.min(BAR_MAX, (groupW - (series.length - 1) * BAR_GAP) / series.length)
+  // Drop the gaps when the band is too narrow for them, and never go below 1px.
+  const gap = band * 0.72 >= series.length * 3 ? BAR_GAP : 0
+  const gaps = (series.length - 1) * gap
+  const barW = Math.max(1, Math.min(BAR_MAX, (band * 0.72 - gaps) / series.length))
+  const groupW = series.length * barW + gaps
 
   function pick(e: PointerEvent<SVGRectElement>) {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -138,8 +150,18 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
     }
   }
 
-  const tipLeft = active === null ? 0 : (xAt(active) / width) * 100
-  const tipFlip = active !== null && xAt(active) > width * 0.6
+  // Right of the point, else left of it, else pinned inside the chart.
+  let tipX = 0
+  if (active !== null) {
+    const x = xAt(active)
+    if (x + 14 + tipW <= width) {
+      tipX = x + 14
+    } else if (x - 14 - tipW >= 0) {
+      tipX = x - 14 - tipW
+    } else {
+      tipX = Math.max(0, width - tipW)
+    }
+  }
 
   return (
     <figure style={{ margin: '28px 0 30px', padding: '18px 18px 14px', background: 'var(--bg-2)', borderRadius: 8 }}>
@@ -166,7 +188,8 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
       <div
         ref={wrapRef}
         tabIndex={0}
-        role="group"
+        role="application"
+        aria-roledescription="chart"
         aria-label={`${block.title}. Use the arrow keys to read each value, or open the data table below.`}
         onKeyDown={onKey}
         onBlur={() => setActive(null)}
@@ -193,7 +216,7 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
           )}
 
           {kind === 'bar' && categories.map((_, i) => series.map((s, j) => {
-            const x = xAt(i) - groupW / 2 + j * (barW + BAR_GAP)
+            const x = xAt(i) - groupW / 2 + j * (barW + gap)
             return (
               <path
                 key={`${i}-${j}`}
@@ -246,12 +269,12 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
 
         {active !== null && (
           <div
+            ref={tipRef}
             aria-hidden="true"
             style={{
               position: 'absolute',
               top: PAD.top,
-              left: `${tipLeft}%`,
-              transform: tipFlip ? 'translateX(calc(-100% - 14px))' : 'translateX(14px)',
+              left: tipX,
               pointerEvents: 'none',
               background: 'var(--bg-3)',
               borderRadius: 6,
