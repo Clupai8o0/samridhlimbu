@@ -375,6 +375,7 @@ export const ARCHIVE: ArchiveItem[] = [
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
   { year: '2026', name: 'Dispatch · inbox and calendar agent', tech: 'TypeScript · Vercel AI SDK · Gmail API · React · Vite', link: 'private', slug: 'dispatch' },
   { year: '2026', name: 'Recall · local-first screen memory', tech: 'Swift · OCR · Ollama · Whisper.cpp', link: 'github' },
+  { year: '2026', name: 'Art Gallery · SIT331', tech: 'Express · MongoDB · Next.js · NextAuth · Jest', link: 'uni', slug: 'art-gallery' },
   { year: '2026', name: 'Robot controller API · SIT331', tech: 'C# · ASP.NET Core · PostgreSQL · Npgsql', link: 'uni', slug: 'robot-api' },
   { year: '2026', name: 'Voice light controller · SIT210', tech: 'Python · Raspberry Pi · BLE · Arduino · Gemini · ElevenLabs', link: 'uni', slug: 'voice-controller' },
   { year: '2026', name: 'Fleet platform · SIT314', tech: 'Node.js · MQTT · Node-RED · Postgres · AWS Fargate · SQS', link: 'uni', slug: 'fleet-platform' },
