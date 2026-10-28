@@ -1,6 +1,13 @@
 # Handoff: case studies (samridhlimbu-89), updated 28 Oct 2026, vivobook
 
-**Status: 7 case studies built, reviewed, swept and pushed on `case-studies-cstack-morgue`. Art Gallery: in progress.**
+**Status: LIVE. Merged into main and deployed 28 Oct 2026 (evening). Art Gallery: not merged, still in progress.**
+
+## Live (28 Oct, merge `f8a60f8` on main; `f92b165` merged case-studies-cstack-morgue first)
+- No conflicts; `npm run build` passed; privacy scan of `origin/main..main` clean (no client/employer names, keys, home paths or emails). Vercel git integration deployed `f8a60f8` on push.
+- https://samridhlimbu.com/projects/cstack
+- https://samridhlimbu.com/projects/morgue
+- https://samridhlimbu.com/writing/cstack-one-layer-six-agents
+- Also live: /projects/load-balancer, notes-app, govchat, farmers-intuition, lock-in, bed-monitor, fleet-platform. All returned 200.
 
 ## Done
 | Step | Result |
@@ -15,7 +22,7 @@
 
 ## Left, in order
 1. Art Gallery case study (agent running; see below once updated).
-2. Sam: merge this branch, then `cstack-post-20261028`. The two branches both touch `src/app/writing/[slug]/page.tsx`, in different spots; expect an easy merge.
+2. Done 28 Oct: both branches merged into main and live (see above).
 3. Optional: grow the footer "x" tap target to 44x44.
 4. After merge: `podman rm art-gallery-showcase`, and delete `.claude/tmp/*-shots` when no longer needed.
 
@@ -28,7 +35,7 @@
 - **CASCADE (SIT282)**: left off. Add it only if it was your own submission (Shambhavi co-committed).
 
 ## Branch and commands
-- Branch `case-studies-cstack-morgue`, pushed. Never push main.
+- Branch `case-studies-cstack-morgue`, pushed and merged. Sam lifted "never push main" for samridhlimbu on 28 Oct.
 - Review: `python3 ~/Documents/Obsidian/brain/skills/_core/token-economy/scripts/second_opinion.py - --cwd . --review --base 7d0d303 --ladder codex --codex-effort high`
 - Sweep (Linux): copy `~/Documents/Obsidian/brain/skills/design/portfolio-showcase/scripts/sweep.py`, set `EXE` to `~/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome`, run with `~/.venvs/showcase/bin/python3 sweep.py OUTDIR ROUTES...` against `npx next start -p 3311`.
 - One heavy thing at a time on the vivobook: the last session was killed for running a server, a browser and a dev server together.
