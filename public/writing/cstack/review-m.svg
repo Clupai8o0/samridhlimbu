@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 624" role="img" aria-labelledby="t d">
+  <title id="t">A review on the diff</title>
+  <desc id="d">Six steps. 1: git diff, only the change, not the whole repo. 2: second_opinion.py --review adds a findings-only brief. 3: model-policy.json: confidential folders get Codex only; open and personal folders allow more models. 4: sandbox-exec: outside CLIs run sandboxed; Codex uses its own sandbox. 5: fallback ladder: codex first; if it fails or is out of quota, the next route. 6: findings go back to the session, which fixes what it confirms.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#8b8b93"/>
+    </marker>
+    <marker id="aha" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#3b82f6"/>
+    </marker>
+    <style>
+      .m { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-variant-ligatures: none; }
+      .s { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .box { fill: #141417; stroke: #2e2e35; stroke-width: 1.2; }
+      .t { fill: #ededef; }
+      .mu { fill: #8b8b93; }
+      .ln { fill: none; stroke: #8b8b93; stroke-width: 1.5; }
+      .la { fill: none; stroke: #3b82f6; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="360" height="624" fill="#0a0a0b"/>
+  <rect class="box" x="12" y="12" width="336" height="65" rx="10"/>
+  <text class="m mu" x="26" y="38" font-size="13">1</text>
+  <text class="m t" x="46" y="38" font-size="15">git diff</text>
+  <text class="s mu" x="26" y="62" font-size="13.5">only the change, not the whole repo</text>
+  <path class="la" d="M42 77 V101" marker-end="url(#aha)"/>
+  <rect class="box" x="12" y="103" width="336" height="65" rx="10"/>
+  <text class="m mu" x="26" y="129" font-size="13">2</text>
+  <text class="m t" x="46" y="129" font-size="15">second_opinion.py --review</text>
+  <text class="s mu" x="26" y="153" font-size="13.5">adds a findings-only brief</text>
+  <path class="la" d="M42 168 V192" marker-end="url(#aha)"/>
+  <rect class="box" x="12" y="194" width="336" height="88" rx="10"/>
+  <text class="m mu" x="26" y="220" font-size="13">3</text>
+  <text class="m t" x="46" y="220" font-size="15">model-policy.json</text>
+  <circle cx="30" cy="239.5" r="4" fill="#c98500"/>
+  <text class="s" x="40" y="244" font-size="13.5" fill="#c98500">confidential: Codex only</text>
+  <circle cx="30" cy="260.5" r="4" fill="#199e70"/>
+  <text class="s" x="40" y="265" font-size="13.5" fill="#199e70">open, personal: more models</text>
+  <path class="la" d="M42 282 V306" marker-end="url(#aha)"/>
+  <rect class="box" x="12" y="308" width="336" height="84" rx="10"/>
+  <text class="m mu" x="26" y="334" font-size="13">4</text>
+  <text class="m t" x="46" y="334" font-size="15">sandbox-exec</text>
+  <text class="s mu" x="26" y="358" font-size="13.5">outside CLIs run sandboxed;</text>
+  <text class="s mu" x="26" y="377" font-size="13.5">Codex uses its own sandbox</text>
+  <path class="la" d="M42 392 V416" marker-end="url(#aha)"/>
+  <rect class="box" x="12" y="418" width="336" height="84" rx="10"/>
+  <text class="m mu" x="26" y="444" font-size="13">5</text>
+  <text class="m t" x="46" y="444" font-size="15">fallback ladder</text>
+  <text class="s mu" x="26" y="468" font-size="13.5">codex first; if it fails or is out</text>
+  <text class="s mu" x="26" y="487" font-size="13.5">of quota, the next route</text>
+  <path class="la" d="M42 502 V526" marker-end="url(#aha)"/>
+  <rect class="box" x="12" y="528" width="336" height="84" rx="10" style="stroke:#3b82f6"/>
+  <text class="m mu" x="26" y="554" font-size="13">6</text>
+  <text class="m t" x="46" y="554" font-size="15">findings</text>
+  <text class="s mu" x="26" y="578" font-size="13.5">back to the session, which fixes</text>
+  <text class="s mu" x="26" y="597" font-size="13.5">what it confirms</text>
+</svg>

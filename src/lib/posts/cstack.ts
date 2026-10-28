@@ -13,7 +13,7 @@ export const CSTACK_POST: Post = {
   readMin: 14,
   tags: ['ai-agents', 'tooling', 'benchmarks', 'python'],
   excerpt:
-    'cstack is the shared set of rules, hooks and skills that six coding-agent CLIs use on my Mac, so parallel sessions stop editing the same files and starting the same stacks. Most of its token rules come from benchmarks on my own work. The biggest single saving was effort: Opus 5 subagents at low effort cost $0.33 a task against $0.90 at extra-high, and still scored 96-100% on every task.',
+    'cstack is the shared set of rules, hooks and skills that six coding-agent CLIs use on my Mac, so parallel sessions stop editing the same files and starting the same stacks. Most of its token rules come from benchmarks on my own work. The biggest single saving was effort: Opus 5 subagents at low effort cost $0.33 a task against $0.90 at extra-high, and still scored 96-100% on the four tasks marked right or wrong, with better writing.',
   featured: true,
   content: [
     {
@@ -36,6 +36,7 @@ export const CSTACK_POST: Post = {
     {
       type: 'image',
       src: '/writing/cstack/layer.svg',
+      mobileSrc: '/writing/cstack/layer-m.svg',
       alt: 'Diagram of the cstack folder, holding rules/CLAUDE.md, agents/*/DELTA.md, hooks, core skills, mods and model-policy.json. Claude Code gets the rules by symlink. scripts/sync-agents.py sends AGENTS.md, skills and hooks to Codex, OpenCode, dsh and kimi. Grok Build reads Claude\'s files itself and gets only a DELTA.md. The same hooks run in all six agents.',
       caption: 'One folder feeds all six agents. Claude Code by symlink, four CLIs through sync-agents.py, and Grok Build through its own Claude compatibility plus a DELTA.md.',
     },
@@ -81,6 +82,7 @@ export const CSTACK_POST: Post = {
     {
       type: 'image',
       src: '/writing/cstack/claims.svg',
+      mobileSrc: '/writing/cstack/claims-m.svg',
       alt: 'Timeline in five steps. Session A edits a file and claims it in claude-claims.json in the git common dir. Session B tries the same file, reads the claim and is blocked; from another worktree it would only get a warning. The sessions exchange one handoff over SendMessage covering what is done, the branch, files, tests and what is left. A releases the claim, and B\'s edit is allowed.',
       caption: 'Two sessions, one file. B is blocked, the two exchange one handoff, A releases its claim, and then B can edit.',
     },
@@ -108,6 +110,7 @@ export const CSTACK_POST: Post = {
     {
       type: 'image',
       src: '/writing/cstack/guardrail-loop.svg',
+      mobileSrc: '/writing/cstack/guardrail-loop-m.svg',
       alt: 'A four-step loop. 1: it breaks once, for example git stash took the uncommitted work of other live sessions. 2: it becomes a rule, written by guardrails.py learn into guardrails.json, with the action warn, STOP, queue or deny. 3: every session checks each command and edit before it runs, in all six agents. 4: on STOP, check the case; if it applies, fix it or tell the user; if it does not, ack with what was checked and retry. A dashed arrow leads from step 4 back to step 1 for the next failure.',
       caption: 'A failure becomes a rule that every later session checks before it runs a command or edits a file.',
     },
@@ -231,7 +234,8 @@ export const CSTACK_POST: Post = {
     {
       type: 'image',
       src: '/writing/cstack/routing.svg',
-      alt: 'Diagram of which model takes which kind of job in cstack: Opus 5.5 at low effort as the main worker, Opus 5.5 at high effort for text people read and final reviews, Sonnet 5.5 or Haiku 5.5 at low effort for coding a test decides, Fable 5.1 for the hardest coding, DeepSeek V4 Flash for bulk work followed by a review, and Codex reviewing every diff.',
+      mobileSrc: '/writing/cstack/routing-m.svg',
+      alt: 'Diagram of which model takes which kind of job in cstack: Sonnet 5.5 at low effort for coding a test decides, or Haiku 5.5 low for a short job; Opus 5.5 at low effort as the main worker; Opus 5.5 at high effort for text people read, reviews and judging; Fable 5.1 for the hardest coding; DeepSeek V4 Flash for bulk work on open or personal folders, followed by a review pass; then Codex reviews the diff of every code change.',
       caption: 'Where each kind of job goes, after the benchmark and the bake-off.',
     },
     {
@@ -264,8 +268,9 @@ export const CSTACK_POST: Post = {
     {
       type: 'image',
       src: '/writing/cstack/review.svg',
-      alt: 'Diagram of the review step: second_opinion.py --review takes the git diff of a change and sends it to Codex with a findings-only brief, and the findings come back before the change counts as done.',
-      caption: 'The reviewer gets the git diff of the change and a brief that asks for findings only.',
+      mobileSrc: '/writing/cstack/review-m.svg',
+      alt: 'Six steps of a review. 1: git diff, only the change. 2: second_opinion.py --review adds a findings-only brief. 3: model-policy.json decides which models may see the folder: Codex only for confidential folders, more for open and personal ones. 4: outside CLIs run under sandbox-exec, and Codex uses its own sandbox. 5: a fallback ladder tries Codex first and moves to the next route if it fails or is out of quota. 6: the findings go back to the session, which fixes what it confirms.',
+      caption: 'The reviewer gets only the diff and a findings-only brief, through the same policy, sandbox and fallback as every outside call.',
     },
     {
       type: 'paragraph',
@@ -275,9 +280,9 @@ export const CSTACK_POST: Post = {
     {
       type: 'chart',
       kind: 'bar',
-      title: 'Of the reviewers I route to, Opus 5.5 at high effort found the most bugs',
+      title: 'Opus 5.5 at high effort found the most bugs',
       subtitle: 'Bugs found of 17 known bugs across 5 real changes, first run, Opus grader, higher is better',
-      caption: 'Opus 5.5 high found 9 on its second run. Fable 5.1 found 4 on its second run. Gemini 4 Argon also found 10, at about twice the price per review, and is not routed.',
+      caption: 'Second runs: Opus 5.5 high found 9, Fable 5.1 found 4. Gemini 4 Argon found 10 and then 8, at about twice the price, and is not routed. Sonnet and GPT-6.1 Sol were tested but are not used as reviewers.',
       xLabel: 'reviewer',
       unit: 'bugs',
       categories: ['Opus 5.5', 'DeepSeek', 'GLM-5.3', 'Grok 4.7', 'Sonnet', 'Fable', 'Astra', 'Kimi K3', 'GPT-6.1'],

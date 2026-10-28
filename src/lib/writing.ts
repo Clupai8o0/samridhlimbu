@@ -5,7 +5,7 @@ export type ContentBlock =
   | { type: 'blockquote'; html: string }
   | { type: 'heading'; text: string; level: 2 | 3 }
   | { type: 'code'; lang?: string; code: string; label?: string }
-  | { type: 'image'; src: string; alt: string; caption?: string; lightBg?: boolean }
+  | { type: 'image'; src: string; alt: string; caption?: string; lightBg?: boolean; mobileSrc?: string }
   | { type: 'video'; href: string; label: string }
   | { type: 'list'; items: string[]; ordered?: boolean }
   | { type: 'table'; headers: string[]; rows: string[][] }

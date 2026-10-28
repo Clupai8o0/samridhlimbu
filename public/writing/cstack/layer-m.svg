@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 579" role="img" aria-labelledby="t d">
+  <title id="t">One folder, six agents</title>
+  <desc id="d">The cstack folder holds rules/CLAUDE.md, agents/*/DELTA.md, hooks, core skills, mods and model-policy.json. Claude Code gets it by symlink and runs the hooks natively. scripts/sync-agents.py gives Codex, OpenCode, dsh and kimi an AGENTS.md, skills and hooks. Grok Build reads Claude&#x27;s files itself and gets only a DELTA.md. The same hooks run in all six agents; agent_hook.py adapts them for the five outside CLIs.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#8b8b93"/>
+    </marker>
+    <marker id="aha" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#3b82f6"/>
+    </marker>
+    <style>
+      .m { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-variant-ligatures: none; }
+      .s { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .box { fill: #141417; stroke: #2e2e35; stroke-width: 1.2; }
+      .t { fill: #ededef; }
+      .mu { fill: #8b8b93; }
+      .ln { fill: none; stroke: #8b8b93; stroke-width: 1.5; }
+      .la { fill: none; stroke: #3b82f6; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="360" height="579" fill="#0a0a0b"/>
+  <rect class="box" x="12" y="12" width="336" height="178" rx="10" style="stroke:#3b82f6"/>
+  <text class="m" x="26" y="38" font-size="15" fill="#3b82f6">cstack/</text>
+  <text class="m t" x="26" y="62" font-size="14">rules/CLAUDE.md</text>
+  <text class="m t" x="26" y="84" font-size="14">agents/*/DELTA.md</text>
+  <text class="m t" x="26" y="106" font-size="14">hooks/</text>
+  <text class="m t" x="26" y="128" font-size="14">skills/_core/</text>
+  <text class="m t" x="26" y="150" font-size="14">mods/</text>
+  <text class="m t" x="26" y="172" font-size="14">model-policy.json</text>
+  <path class="ln" d="M26 190 V401"/>
+  <rect class="box" x="48" y="206" width="300" height="65" rx="10"/>
+  <text class="s t" x="62" y="232" font-size="16" font-weight="600">Claude Code</text>
+  <text class="s mu" x="62" y="256" font-size="13.5">by symlink; hooks run natively</text>
+  <path class="ln" d="M26 228 H46" marker-end="url(#ah)"/>
+  <rect class="box" x="48" y="283" width="300" height="84" rx="10"/>
+  <text class="s t" x="62" y="309" font-size="16" font-weight="600">Codex, OpenCode, dsh, kimi</text>
+  <text class="s mu" x="62" y="333" font-size="13.5">sync-agents.py writes AGENTS.md,</text>
+  <text class="s mu" x="62" y="352" font-size="13.5">links skills and hooks</text>
+  <path class="la" d="M26 305 H46" marker-end="url(#aha)"/>
+  <rect class="box" x="48" y="379" width="300" height="84" rx="10"/>
+  <text class="s t" x="62" y="405" font-size="16" font-weight="600">Grok Build</text>
+  <text class="s mu" x="62" y="429" font-size="13.5">reads Claude&#x27;s files itself,</text>
+  <text class="s mu" x="62" y="448" font-size="13.5">gets only a DELTA.md</text>
+  <path class="la" d="M26 401 H46" marker-end="url(#aha)"/>
+  <rect class="box" x="12" y="483" width="336" height="84" rx="10"/>
+  <text class="s t" x="26" y="509" font-size="16" font-weight="600">The same hooks run in all six</text>
+  <text class="s mu" x="26" y="533" font-size="13.5">agent_hook.py adapts them for the</text>
+  <text class="s mu" x="26" y="552" font-size="13.5">five outside CLIs</text>
+</svg>

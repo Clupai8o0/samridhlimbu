@@ -309,22 +309,24 @@ function renderBlock(block: ContentBlock, key: number) {
   if (block.type === 'image') {
     return (
       <figure key={key} style={{ margin: '24px 0', textAlign: 'center' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={block.src}
-          alt={block.alt}
-          style={{
-            maxWidth: '100%',
-            height: 'auto',
-            borderRadius: 4,
-            ...(block.lightBg ? {
-              background: '#e8e8ea',
-              border: '1px solid var(--border)',
-              padding: 12,
-              boxSizing: 'border-box' as const,
-            } : {}),
-          }}
-        />
+        <picture>
+          {block.mobileSrc && <source media="(max-width: 640px)" srcSet={block.mobileSrc} />}
+          <img
+            src={block.src}
+            alt={block.alt}
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+              borderRadius: 4,
+              ...(block.lightBg ? {
+                background: '#e8e8ea',
+                border: '1px solid var(--border)',
+                padding: 12,
+                boxSizing: 'border-box' as const,
+              } : {}),
+            }}
+          />
+        </picture>
         {block.caption && (
           <figcaption style={{
             fontFamily: MONO,

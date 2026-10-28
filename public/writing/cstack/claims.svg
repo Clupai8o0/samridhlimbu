@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="t d">
   <title id="t">Two sessions, one file</title>
-  <desc id="d">Timeline in five steps. 1: session A edits a file and claims it in claude-claims.json, kept in the git common dir. 2: session B tries to edit the same file, reads the claim and is blocked; in another worktree it would only get a warning. 3: B messages A with SendMessage and A gets a handoff: done, branch, files, tests, what is left. 4: A releases the claim. 5: B edits the file.</desc>
+  <desc id="d">Timeline in five steps. 1: session A edits a file and claims it in claude-claims.json, kept in the git common dir. 2: session B tries to edit the same file, reads the claim and is blocked; in another worktree it would only get a warning. 3: B messages A with SendMessage and A sends one handoff: done, branch, files, tests, what is left. 4: A releases the claim. 5: B edits the file.</desc>
   <defs>
     <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M1 1 L11 6 L1 11 z" fill="#8b8b93"/>
