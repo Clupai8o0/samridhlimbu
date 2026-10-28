@@ -192,12 +192,13 @@ export default function VoiceControllerPage() {
         </div>
 
         {/* Hero */}
-        <div data-stagger-item style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+        <div data-stagger-item style={{ margin: '0 auto 24px' }}>
           <Shot
             src="/projects/voice-controller/system.svg"
             alt="System diagram. A Mac running mac_audio_sensor.py records 16 kHz mono WAV and sends it over TCP port 9876 to a Raspberry Pi 5. On the Pi, receive_audio_file, transcribe, parse_intent, speak and send_ble_command run in order; transcribe and speak call ElevenLabs, parse_intent calls Gemini 2.5 Flash-Lite. send_ble_command writes fan_on over BLE to an Arduino named LightController, whose handleCommand switches LEDs on D2 bathroom, D3 hallway and D4 fan, and notifies OK:fan_on back."
             width={400}
             height={680}
+            wide={{ src: '/projects/voice-controller/system-wide.svg', width: 900, height: 534 }}
             caption="Diagram of the system, with the file, function and pin names from the code."
             priority
           />
