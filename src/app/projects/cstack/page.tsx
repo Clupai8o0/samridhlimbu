@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
+import { ArticleChart } from '@/components/article-chart'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'cstack is one shared layer of rules, hooks and skills for six coding agents, from Claude Code and Codex to DeepSeek and Grok Build. Running subagents at low effort instead of extra-high cut the cost per task 2.7x ($0.33 vs $0.90) with no meaningful loss in score. Open source, MIT.'
@@ -33,9 +35,14 @@ const GREEN = 'var(--term-green)'
 
 const PROSE = { fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.65, maxWidth: 640 }
 
+const WRITE_UP = '/writing/cstack-one-layer-six-agents'
+
 const METRICS = [
   { k: 'coding agents, one layer', v: '6' },
   { k: 'cheaper per task, low vs extra-high effort', v: '2.7×' },
+  { k: 'hooks shared by every agent', v: '12' },
+  { k: 'active guardrails, 27 Oct 2026', v: '76' },
+  { k: 'lines of Python', v: '9,607' },
   { k: 'licence', v: 'MIT' },
 ]
 
@@ -48,18 +55,84 @@ const SHAPE: [string, string][] = [
   ['bakeoff/', 'run the same model bake-off on your own repo'],
 ]
 
-const DECISIONS = [
-  ['measured routing', 'one model for everything', 'Subagents run Opus at low effort, always pinned. In the routing benchmark, Opus 5 at low effort scored 96-100% on every task, against 100% at extra-high, for $0.33 a task instead of $0.90. Coding that a test can judge goes to cheaper models. Most rules in the table come from these runs; the README marks the few that are estimates.'],
-  ['reviews on the diff', 'a reviewer that explores the repo', 'Every code change gets an outside review before it counts as done. Codex does the review, so it costs almost no Claude usage. The script sends only the git diff with a findings-only brief, which keeps the reviewer from wandering the repo.'],
-  ['file claims between sessions', 'hoping two sessions never collide', 'Several agent sessions often work on one repo at once. A hook claims each file a session edits and blocks a second session from editing it in the same worktree. Status notes and their history show what was already done or tried.'],
-  ['hooks that fail open', 'hooks that can block work', 'A broken script never stops a session. The cost is that a fresh install has to be checked by hand, which the README says plainly.'],
+type Figure = { src: string; alt: string; caption: string; width?: number; height?: number }
+
+const DECISIONS: { a: string; b: string; note: string; figure?: Figure }[] = [
+  {
+    a: 'measured routing',
+    b: 'one model for everything',
+    note: 'Subagents run Opus at low effort, always pinned. In the benchmark, Opus 5 at low effort cost $0.33 a task instead of $0.90 at extra-high, with no meaningful loss in score. Coding that a test can judge goes to cheaper models, and outside models only see folders their policy allows. Most rules in the table come from measured runs; the README marks the few that are estimates.',
+    figure: {
+      src: '/writing/cstack/routing.svg',
+      alt: 'How cstack routes work: which model and effort each kind of task goes to, and which outside models each folder policy allows',
+      caption: 'Routing. The model and effort for each kind of work, set from the benchmark and bake-off.',
+    },
+  },
+  {
+    a: 'reviews on the diff',
+    b: 'a reviewer that explores the repo',
+    note: 'Every code change gets an outside review before it counts as done. Codex does the review, so it costs almost no Claude usage. The script sends only the git diff with a findings-only brief, which keeps the reviewer from wandering the repo.',
+  },
+  {
+    a: 'guardrails learned from failures',
+    b: 'the same mistake in the next session',
+    note: 'When a session hits a failure another session could repeat, it adds a rule that warns, stops or queues matching commands. Every later session, in any of the six agents, checks it first. As of 27 Oct 2026 there are 76 active rules, learned since 18 Sep.',
+    figure: {
+      src: '/writing/cstack/guardrail-loop.svg',
+      alt: 'A loop in four steps: something breaks once, guardrails.py learn turns it into a rule with an action of warn, stop, queue or deny, every session checks each command and edit against the rules, and on a stop the session checks the case and either fixes it or acknowledges and retries',
+      caption: 'One failure becomes a rule that every later session checks.',
+      width: 1200,
+      height: 700,
+    },
+  },
+  {
+    a: 'hooks that fail open',
+    b: 'hooks that can block work',
+    note: 'A broken script never stops a session. The cost is that a fresh install has to be checked by hand, which the README says plainly.',
+  },
 ]
+
+const EFFORT_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'bar',
+  title: 'Opus 5 cost per task, by effort',
+  subtitle: 'Routing benchmark, 17 Sep 2026: 5 tasks from real work with planted bugs, 2 runs each, API list price.',
+  caption: 'Low effort scored 96-100% on every task, against 100% at extra-high, and its writing scored higher (8.0 vs 6.8 out of 10).',
+  xLabel: 'effort',
+  unit: 'USD',
+  categories: ['low', 'medium', 'high', 'extra-high'],
+  series: [{ name: 'Opus 5', values: [0.33, 0.42, 0.53, 0.9] }],
+}
+
+const BAKEOFF_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'bar',
+  title: 'Cost to code 10 real tasks, by model',
+  subtitle: 'Bake-off on the git history of a production React Native + Firebase app. Every model here passed 10/10. Haiku, Sonnet and Opus are 5.5 unless marked.',
+  caption: 'DeepSeek V4 Flash is approximate. One app, one run per model, Sep-Oct 2026.',
+  unit: 'USD',
+  categories: ['Haiku low', 'DeepSeek', 'Sonnet low', 'Opus low', 'Opus high', 'Opus 5', 'Fable 5.1'],
+  series: [{ name: 'cost', values: [1.44, 1.5, 4.78, 8.22, 16.12, 20.6, 26.95] }],
+}
 
 const STACK: [string, string[]][] = [
   ['Agents', ['Claude Code', 'Codex', 'OpenCode', 'DeepSeek', 'Kimi', 'Grok Build']],
   ['Code', ['Python', 'Shell']],
   ['Infra', ['macOS launchd', 'sandbox-exec', 'kitty']],
 ]
+
+function Diagram({ src, alt, caption, width, height }: Figure)
+{
+  return (
+    <figure style={{ margin: 0 }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={alt} width={width} height={height} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 4 }} />
+      <figcaption style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', marginTop: 8, letterSpacing: '0.02em', lineHeight: 1.5 }}>
+        {caption}
+      </figcaption>
+    </figure>
+  )
+}
 
 export default function CstackPage() {
   return (
@@ -85,6 +158,7 @@ export default function CstackPage() {
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <a href="https://github.com/Clupai8o0/cstack" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> Clupai8o0/cstack</a>
+            <Link href={WRITE_UP} className="btn" style={{ fontFamily: MONO }}>read the write-up →</Link>
           </div>
         </div>
 
@@ -102,7 +176,7 @@ export default function CstackPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>The problem</div>
           <p style={{ ...PROSE, margin: 0 }}>
-            I run several agent sessions on the same repos at once, across more than one coding agent. Each tool wants its own rules file, its own skills and its own hooks, and several copies kept in step by hand drift apart. Sessions could edit the same file without knowing about each other. And subagents inherited whatever effort the session ran at, so tokens went on the most expensive setting without anyone deciding they should.
+            I run several agent sessions on the same repos at once, across more than one coding agent. Each tool wants its own rules file, skills and hooks, and copies kept in step by hand drift apart. Sessions edited the same file without knowing about each other, and subagents ran at the most expensive effort without anyone deciding they should.
           </p>
         </div>
 
@@ -110,13 +184,25 @@ export default function CstackPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>The fix</div>
           <p style={{ ...PROSE, margin: 0 }}>
-            cstack keeps one copy of everything. Claude Code links the rules and skills directly; a sync script writes each of the other agents its own rules file, links the same skills and points it at the same hooks, so a guardrail learned in one session applies in all of them. Then I measured: a routing benchmark built from real work with planted bugs, and a bake-off on real commits from one app. Most of the routing rules in the README come from those runs.
+            cstack keeps one copy of everything, so a guardrail learned in one session applies in all of them. Then I measured: a routing benchmark built from real work with planted bugs, and a bake-off on real commits from one app.
           </p>
         </div>
 
-        {/* System shape */}
-        <div className="section-label" style={{ fontFamily: MONO }}>System shape</div>
-        <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 2, padding: '14px 16px', marginBottom: 14, lineHeight: 1.8 }}>
+        {/* How it fits together */}
+        <div className="section-label" style={{ fontFamily: MONO }}>How it fits together</div>
+        <p style={{ ...PROSE, margin: '0 0 18px' }}>
+          Claude Code links the rules and skills straight from the cstack folder. A sync script writes Codex, OpenCode, DeepSeek and Kimi their own AGENTS.md, and Grok Build reads Claude&apos;s files itself plus one short DELTA file. The same hooks run in all six.
+        </p>
+        <div data-reveal style={{ marginBottom: 20 }}>
+          <Diagram
+            src="/writing/cstack/layer.svg"
+            alt="The cstack folder holds the rules, agent deltas, hooks, core skills, mods and model policy. Claude Code gets the rules by symlink, sync-agents.py writes AGENTS.md, skill links and hook config for Codex, OpenCode, dsh and kimi, and Grok Build reads Claude's files itself and gets only a DELTA.md"
+            caption="One source, six agents. Edit a rule once and run the sync."
+            width={1200}
+            height={770}
+          />
+        </div>
+        <div data-reveal style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 2, padding: '14px 16px', marginBottom: 40, lineHeight: 1.8 }}>
           {SHAPE.map(([part, desc]) => (
             <div key={part} style={{ display: 'flex', flexWrap: 'wrap', columnGap: 16 }}>
               <span style={{ color: 'var(--accent)', width: 200, flexShrink: 0 }}>{part}</span>
@@ -124,14 +210,26 @@ export default function CstackPage() {
             </div>
           ))}
         </div>
-        <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
-          The rule that holds it together: rules, skills and hooks live once, and every agent gets them by link or by generated file. Changing a rule means changing one file and running the sync.
+
+        {/* Two sessions, one file */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Two sessions, one file</div>
+        <p style={{ ...PROSE, margin: '0 0 18px' }}>
+          A hook claims each file a session edits, in one JSON file every agent shares. A second session is blocked from that file in the same worktree and warned in another one. The two sessions then agree on a handoff, and the claim drops when the first one releases.
         </p>
+        <div data-reveal style={{ marginBottom: 40 }}>
+          <Diagram
+            src="/writing/cstack/claims.svg"
+            alt="Timeline in five steps: session A edits a file and claims it in claude-claims.json in the git common dir; session B tries the same file and is blocked, or only warned in another worktree; B messages A; A sends one handoff and releases; B edits the file"
+            caption="Session B is blocked until A hands over and releases the claim."
+            width={1200}
+            height={680}
+          />
+        </div>
 
         {/* Key decisions */}
         <div className="section-label" style={{ fontFamily: MONO }}>Engineering details</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 40 }}>
-          {DECISIONS.map(([a, b, note]) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 40 }}>
+          {DECISIONS.map(({ a, b, note, figure }) => (
             <div key={a}>
               <div style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', marginBottom: 6, lineHeight: 1.5 }}>
                 <span style={{ color: GREEN }}>{a}</span>
@@ -139,9 +237,39 @@ export default function CstackPage() {
                 <span style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{b}</span>
               </div>
               <div style={{ ...PROSE }}>{note}</div>
+              {figure ? (
+                <div style={{ marginTop: 16 }}>
+                  <Diagram {...figure} />
+                </div>
+              ) : null}
             </div>
           ))}
         </div>
+
+        {/* Measured */}
+        <div className="section-label" style={{ fontFamily: MONO }}>Measured</div>
+        <p style={{ ...PROSE, margin: 0 }}>
+          The routing rules come from two runs on my own work. For coding, every model below passed all 10 tasks, so cost and speed decided.
+        </p>
+        <div data-reveal>
+          <ArticleChart block={EFFORT_CHART} />
+        </div>
+        <div data-reveal>
+          <ArticleChart block={BAKEOFF_CHART} />
+        </div>
+        <p data-reveal style={{ ...PROSE, margin: '0 0 18px' }}>
+          On review, Opus 5.5 at high effort found 9-10 of 17 real bugs that had passed their tests. 4 of 5 security-rules bugs went unfound by every model, so those still need a person.
+        </p>
+        <div data-reveal style={{ marginBottom: 16 }}>
+          <Diagram
+            src="/writing/cstack/review.svg"
+            alt="Real bugs found out of 17 by each reviewer model in the bake-off"
+            caption="Bugs found of 17, per reviewer. Graded blind; small samples."
+          />
+        </div>
+        <p data-reveal style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
+          One person, one app, small samples, Sep-Oct 2026. The effort benchmark ran on Opus 5 and has not been re-run on 5.5.
+        </p>
 
         {/* Stack */}
         <div className="section-label" style={{ fontFamily: MONO }}>Stack</div>
@@ -157,6 +285,7 @@ export default function CstackPage() {
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 20, flexWrap: 'wrap' }}>
           <a href="https://github.com/Clupai8o0/cstack" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> source</a>
+          <Link href={WRITE_UP} className="btn" style={{ fontFamily: MONO }}>read the write-up</Link>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO }}>← back to projects</Link>
         </div>
 

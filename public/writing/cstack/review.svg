@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 754" role="img" aria-labelledby="t d">
+  <title id="t">How a code review runs</title>
+  <desc id="d">Six steps. 1: take the git diff, only the change. 2: second_opinion.py --review adds a findings-only brief. 3: model-policy.json decides which models may see this folder; confidential folders get Codex only, open and personal folders get more models. 4: outside CLIs run inside sandbox-exec; Codex uses its own sandbox. 5: a fallback ladder tries codex first and moves to the next route if it fails or is out of quota. 6: the findings go back to the session, which fixes what it confirms.</desc>
+  <defs>
+    <marker id="aha" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 z" fill="#3b82f6"/>
+    </marker>
+    <style>
+      .m { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-variant-ligatures: none; }
+      .s { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .box { fill: #141417; stroke: #2e2e35; stroke-width: 1.5; }
+      .t { fill: #ededef; }
+      .mu { fill: #8b8b93; }
+      .la { fill: none; stroke: #3b82f6; stroke-width: 2; }
+    </style>
+  </defs>
+  <rect width="1200" height="754" fill="#0a0a0b"/>
+  <rect class="box" x="40" y="40" width="540" height="84" rx="14"/>
+  <text class="m mu" x="66" y="91" font-size="26">1</text>
+  <text class="m t" x="106" y="92" font-size="28">git diff</text>
+  <path class="la" d="M310 124 V150" marker-end="url(#aha)"/>
+  <text class="s mu" x="620" y="76" font-size="26">only the change,</text>
+  <text class="s mu" x="620" y="110" font-size="26">not the whole repo</text>
+  <rect class="box" x="40" y="158" width="540" height="84" rx="14"/>
+  <text class="m mu" x="66" y="209" font-size="26">2</text>
+  <text class="m t" x="106" y="210" font-size="28">second_opinion.py --review</text>
+  <path class="la" d="M310 242 V268" marker-end="url(#aha)"/>
+  <text class="s mu" x="620" y="209" font-size="26">adds a findings-only brief</text>
+  <rect class="box" x="40" y="276" width="540" height="84" rx="14"/>
+  <text class="m mu" x="66" y="327" font-size="26">3</text>
+  <text class="m t" x="106" y="328" font-size="28">model-policy.json</text>
+  <path class="la" d="M310 360 V386" marker-end="url(#aha)"/>
+  <circle cx="628" cy="304" r="7" fill="#c98500"/>
+  <text class="s t" x="646" y="312" font-size="26">confidential: Codex only</text>
+  <circle cx="628" cy="338" r="7" fill="#199e70"/>
+  <text class="s t" x="646" y="346" font-size="26">open, personal: more models</text>
+  <rect class="box" x="40" y="394" width="540" height="84" rx="14"/>
+  <text class="m mu" x="66" y="445" font-size="26">4</text>
+  <text class="m t" x="106" y="446" font-size="28">sandbox-exec</text>
+  <path class="la" d="M310 478 V504" marker-end="url(#aha)"/>
+  <text class="s mu" x="620" y="430" font-size="26">outside CLIs run sandboxed;</text>
+  <text class="s mu" x="620" y="464" font-size="26">Codex uses its own sandbox</text>
+  <rect class="box" x="40" y="512" width="540" height="84" rx="14"/>
+  <text class="m mu" x="66" y="563" font-size="26">5</text>
+  <text class="m t" x="106" y="564" font-size="28">fallback ladder</text>
+  <path class="la" d="M310 596 V622" marker-end="url(#aha)"/>
+  <text class="s mu" x="620" y="548" font-size="26">codex first; if it fails or</text>
+  <text class="s mu" x="620" y="582" font-size="26">is out of quota, the next route</text>
+  <rect class="box" x="40" y="630" width="540" height="84" rx="14" style="stroke:#3b82f6"/>
+  <text class="m mu" x="66" y="681" font-size="26">6</text>
+  <text class="m t" x="106" y="682" font-size="28">findings</text>
+  <text class="s mu" x="620" y="666" font-size="26">back to the session, which</text>
+  <text class="s mu" x="620" y="700" font-size="26">fixes what it confirms</text>
+</svg>

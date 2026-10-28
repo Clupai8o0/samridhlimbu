@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 940" width="400" height="940" role="img" aria-labelledby="t d">
+  <title id="t">Farmers Intuition request flow</title>
+  <desc id="d">Asking a question: the browser records audio, a Vercel function sends it to ElevenLabs Scribe for text, the browser makes sure the API has readings, the FastAPI chat endpoint builds a prompt from the readings and advice, Gemini answers in at most three sentences, a second Vercel function turns the answer into speech with ElevenLabs, and the browser plays it. When an alert rule fires on the dashboard, the page calls chat with no message, the API asks Gemini for a short warning, and the voice page speaks it when you switch to it.</desc>
+  <defs>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 14px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .h { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; letter-spacing: 0.04em; }
+    .x { font: 400 12.5px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .n { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .dot { fill: #0e0e11; stroke: #3b82f6; stroke-width: 1.2; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.2; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+  </style>
+  <rect width="400" height="940" fill="#050505"/>
+  <text class="h" x="12" y="26">ASKING SAGE A QUESTION</text>
+  <circle cx="22" cy="71.0" r="12" class="dot"/>
+  <text class="n" x="22" y="75.5" text-anchor="middle">1</text>
+  <rect class="box" x="44" y="40" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="65">Tap the orb, speak</text>
+  <text class="x" x="378" y="65" text-anchor="end">browser</text>
+  <text class="s" x="56" y="87">MediaRecorder keeps webm audio</text>
+  <path class="gr" d="M22 83.0 V 143.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="159.0" r="12" class="dot"/>
+  <text class="n" x="22" y="163.5" text-anchor="middle">2</text>
+  <rect class="box" x="44" y="128" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="153">/api/stt</text>
+  <text class="x" x="378" y="153" text-anchor="end">vercel function</text>
+  <text class="s" x="56" y="175">ElevenLabs Scribe returns text</text>
+  <path class="gr" d="M22 171.0 V 231.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="247.0" r="12" class="dot"/>
+  <text class="n" x="22" y="251.5" text-anchor="middle">3</text>
+  <rect class="box" x="44" y="216" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="241">GET /environment</text>
+  <text class="x" x="378" y="241" text-anchor="end">browser</text>
+  <text class="s" x="56" y="263">seeds defaults if none yet</text>
+  <path class="gr" d="M22 259.0 V 319.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="335.0" r="12" class="dot"/>
+  <text class="n" x="22" y="339.5" text-anchor="middle">4</text>
+  <rect class="hot" x="44" y="304" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="329">POST /chat</text>
+  <text class="x" x="378" y="329" text-anchor="end">fastapi</text>
+  <text class="s" x="56" y="351">prompt = readings + advice</text>
+  <path class="gr" d="M22 347.0 V 407.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="423.0" r="12" class="dot"/>
+  <text class="n" x="22" y="427.5" text-anchor="middle">5</text>
+  <rect class="hot" x="44" y="392" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="417">Sage answers</text>
+  <text class="x" x="378" y="417" text-anchor="end">gemini</text>
+  <text class="s" x="56" y="439">max 3 sentences, uses numbers</text>
+  <path class="gr" d="M22 435.0 V 495.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="511.0" r="12" class="dot"/>
+  <text class="n" x="22" y="515.5" text-anchor="middle">6</text>
+  <rect class="box" x="44" y="480" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="505">/api/tts</text>
+  <text class="x" x="378" y="505" text-anchor="end">vercel function</text>
+  <text class="s" x="56" y="527">ElevenLabs returns mp3 audio</text>
+  <path class="gr" d="M22 523.0 V 583.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="599.0" r="12" class="dot"/>
+  <text class="n" x="22" y="603.5" text-anchor="middle">7</text>
+  <rect class="box" x="44" y="568" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="593">Play the reply</text>
+  <text class="x" x="378" y="593" text-anchor="end">browser</text>
+  <text class="s" x="56" y="615">bars follow the audio level</text>
+  <text class="h" x="12" y="678">WHEN A RULE FIRES ON THE DASHBOARD</text>
+  <circle cx="22" cy="723.0" r="12" class="dot"/>
+  <text class="n" x="22" y="727.5" text-anchor="middle">a</text>
+  <rect class="hot" x="44" y="692" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="717">POST /environment</text>
+  <text class="x" x="378" y="717" text-anchor="end">fastapi</text>
+  <text class="s" x="56" y="739">a rule fires: should_alert</text>
+  <path class="gr" d="M22 735.0 V 795.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="811.0" r="12" class="dot"/>
+  <text class="n" x="22" y="815.5" text-anchor="middle">b</text>
+  <rect class="hot" x="44" y="780" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="805">POST /chat, no message</text>
+  <text class="x" x="378" y="805" text-anchor="end">fastapi</text>
+  <text class="s" x="56" y="827">asks Gemini to "warn me concisely"</text>
+  <path class="gr" d="M22 823.0 V 883.0" marker-end="url(#g)"/>
+  <circle cx="22" cy="899.0" r="12" class="dot"/>
+  <text class="n" x="22" y="903.5" text-anchor="middle">c</text>
+  <rect class="box" x="44" y="868" width="344" height="62" rx="3"/>
+  <text class="k" x="56" y="893">Switch to the voice page</text>
+  <text class="x" x="378" y="893" text-anchor="end">browser</text>
+  <text class="s" x="56" y="915">plays the queued warning via TTS</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 700" width="440" height="700" role="img" aria-label="The scaling loop on AWS: queue backlog goes to two CloudWatch alarms; above 200 waiting messages a step policy adds one to three dispatch tasks, below 50 for two minutes another removes two, between one and six tasks">
+<title>The scaling loop on AWS: queue backlog goes to two CloudWatch alarms; above 200 waiting messages a step policy adds one to three dispatch tasks, below 50 for two minutes another removes two, between one and six tasks</title>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/></marker></defs>
+<rect width="440" height="700" fill="#050505"/>
+<text x="16" y="34" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa" letter-spacing="1">HOW THE TASK COUNT IS SET</text>
+<rect x="40" y="56" width="360" height="80" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="220.0" y="81.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">rides queue backlog</text>
+<text x="220.0" y="104.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">messages visible,</text>
+<text x="220.0" y="124.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">1-minute average</text>
+<path d="M130.0 136 L130.0 196" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<path d="M310.0 136 L310.0 196" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<rect x="40" y="200" width="170" height="92" rx="6" fill="#0a0a0b" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="125.0" y="231.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">backlog-high</text>
+<text x="125.0" y="254.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">avg &gt; 200</text>
+<text x="125.0" y="274.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">for 1 min</text>
+<rect x="230" y="200" width="170" height="92" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="315.0" y="231.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">backlog-low</text>
+<text x="315.0" y="254.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">avg &lt; 50</text>
+<text x="315.0" y="274.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">for 2 min</text>
+<path d="M125 292 L125 352" fill="none" stroke="#3b82f6" stroke-width="1.75" marker-end="url(#b)"/>
+<path d="M315 292 L315 352" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<rect x="40" y="356" width="170" height="116" rx="6" fill="#0a0a0b" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="125.0" y="399.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">sit314-out</text>
+<text x="125.0" y="422.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">+1 to +3 tasks</text>
+<text x="125.0" y="442.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">60 s cooldown</text>
+<rect x="230" y="356" width="170" height="116" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="315.0" y="399.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">sit314-in</text>
+<text x="315.0" y="422.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">−2 tasks</text>
+<text x="315.0" y="442.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">120 s cooldown</text>
+<path d="M125 472 L125 512 L200.0 512 L200.0 540" fill="none" stroke="#3b82f6" stroke-width="1.75" marker-end="url(#b)"/>
+<path d="M315 472 L315 512 L240.0 512 L240.0 540" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<rect x="40" y="544" width="360" height="80" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="220.0" y="580.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">ECS desired count</text>
+<text x="220.0" y="603.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">sit314-dispatch, 1 to 6</text>
+<text x="16" y="664" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">Step scaling, not target tracking.</text>
+<text x="16" y="686" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">+3 when the backlog passes 1,000.</text>
+</svg>

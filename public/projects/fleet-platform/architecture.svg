@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 900" width="440" height="900" role="img" aria-label="Fleet platform architecture: taxis publish telemetry over MQTT to Node-RED, which feeds the state service; riders go through a queue to autoscaled dispatch workers, which claim cars from the state service and send trips to Postgres">
+<title>Fleet platform architecture: taxis publish telemetry over MQTT to Node-RED, which feeds the state service; riders go through a queue to autoscaled dispatch workers, which claim cars from the state service and send trips to Postgres</title>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/></marker></defs>
+<rect width="440" height="900" fill="#050505"/>
+<text x="16" y="34" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa" letter-spacing="1.5">TELEMETRY</text>
+<text x="240" y="34" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa" letter-spacing="1.5">RIDES</text>
+<rect x="16" y="60" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="108.0" y="98.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">2,000 taxis</text>
+<text x="108.0" y="121.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">vehicle_sim.js</text>
+<rect x="16" y="194" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="108.0" y="232.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">Mosquitto</text>
+<text x="108.0" y="255.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">MQTT broker</text>
+<rect x="16" y="328" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="108.0" y="355.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">Node-RED</text>
+<text x="108.0" y="378.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">filter, dedupe,</text>
+<text x="108.0" y="398.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">tag 1 of 9 zones</text>
+<rect x="16" y="462" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="108.0" y="500.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">state service</text>
+<text x="108.0" y="523.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">live state per car</text>
+<rect x="16" y="596" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="108.0" y="634.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">monitor</text>
+<text x="108.0" y="657.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">battery, stale</text>
+<path d="M56 144 L56 190" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="68" y="175" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">every 2 s</text>
+<path d="M56 278 L56 324" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="68" y="309" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">telemetry</text>
+<path d="M56 412 L56 458" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="68" y="443" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">clean events</text>
+<path d="M16 370.0 L6 370.0 L6 638.0 L12 638.0" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<rect x="240" y="60" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="332.0" y="98.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">riders</text>
+<text x="332.0" y="121.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">rider_load.js</text>
+<rect x="240" y="194" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="332.0" y="232.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">rides queue</text>
+<text x="332.0" y="255.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">queue_service.js</text>
+<rect x="240" y="328" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="332.0" y="366.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">autoscaler</text>
+<text x="332.0" y="389.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">1 to 6 workers</text>
+<rect x="240" y="462" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="332.0" y="489.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">dispatch</text>
+<text x="332.0" y="512.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">claims the</text>
+<text x="332.0" y="532.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">nearest free car</text>
+<rect x="240" y="596" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="332.0" y="634.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">trip service</text>
+<text x="332.0" y="657.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">batched inserts</text>
+<rect x="240" y="730" width="184" height="84" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="332.0" y="768.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">Postgres 16</text>
+<text x="332.0" y="791.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">trips table</text>
+<path d="M280 144 L280 190" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="292" y="175" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">request</text>
+<path d="M280 278 L280 324" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="292" y="309" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">backlog</text>
+<path d="M280 412 L280 458" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="292" y="443" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">scales</text>
+<path d="M424 236.0 L434 236.0 L434 504.0 L428 504.0" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<path d="M236 504.0 L204 504.0" fill="none" stroke="#3b82f6" stroke-width="1.75" marker-start="url(#b)" marker-end="url(#b)"/>
+<path d="M280 546 L280 592" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="292" y="577" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">fleet/trip</text>
+<path d="M280 680 L280 726" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="292" y="711" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">500 rows/s max</text>
+<text x="16" y="856" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">All of this ran on one laptop.</text>
+<text x="16" y="880" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#3b82f6">Blue: the matching path.</text>
+</svg>

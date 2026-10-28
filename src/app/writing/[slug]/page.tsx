@@ -505,7 +505,7 @@ function renderBlock(block: ContentBlock, key: number) {
                   <td key={j} role="cell" data-label={block.headers[j]} style={{
                     padding: '10px 12px',
                     verticalAlign: 'top',
-                  }}>{cell}</td>
+                  }} dangerouslySetInnerHTML={{ __html: cell }} />
                 ))}
               </tr>
             ))}

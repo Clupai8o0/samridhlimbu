@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 900" width="440" height="900" role="img" aria-label="The AWS slice: a load harness on the laptop sends ride requests to an SQS queue, autoscaled Fargate dispatch tasks match them against a Fargate state service found through Cloud Map, and answers return on a second SQS queue. Telemetry ingest, the monitor and Postgres stayed on the laptop.">
+<title>The AWS slice: a load harness on the laptop sends ride requests to an SQS queue, autoscaled Fargate dispatch tasks match them against a Fargate state service found through Cloud Map, and answers return on a second SQS queue. Telemetry ingest, the monitor and Postgres stayed on the laptop.</title>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/></marker></defs>
+<rect width="440" height="900" fill="#050505"/>
+<text x="16" y="34" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa" letter-spacing="1">AWS, ap-southeast-2, 25–26 AUG 2026</text>
+<rect x="40" y="56" width="360" height="70" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="220.0" y="87.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">load harness</text>
+<text x="220.0" y="110.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">rider_load.js on my laptop</text>
+<path d="M160.0 126 L160.0 176" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="170.0" y="158" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">requests</text>
+<path d="M310.0 176 L310.0 126" fill="none" stroke="#8b8b94" stroke-width="1.75" marker-end="url(#a)"/>
+<text x="320.0" y="158" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">answers</text>
+<rect x="16" y="186" width="408" height="548" rx="10" fill="none" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="30" y="210" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa" letter-spacing="1">VPC, public subnets, no NAT</text>
+<rect x="40" y="222" width="170" height="74" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="125.0" y="255.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">SQS rides</text>
+<text x="125.0" y="278.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">HTTPS only</text>
+<rect x="230" y="222" width="170" height="74" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="315.0" y="255.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">SQS matches</text>
+<text x="315.0" y="278.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">HTTPS only</text>
+<path d="M125 296 L125 352" fill="none" stroke="#3b82f6" stroke-width="1.75" marker-end="url(#b)"/>
+<text x="135" y="330" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#3b82f6">receive</text>
+<path d="M315 352 L315 296" fill="none" stroke="#3b82f6" stroke-width="1.75" marker-end="url(#b)"/>
+<text x="325" y="330" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#3b82f6">send</text>
+<rect x="40" y="356" width="360" height="92" rx="6" fill="#0a0a0b" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="220.0" y="387.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">dispatch on Fargate</text>
+<text x="220.0" y="410.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">1 to 6 tasks, ARM64</text>
+<text x="220.0" y="430.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">0.25 vCPU, own task role</text>
+<path d="M220.0 448 L220.0 512" fill="none" stroke="#3b82f6" stroke-width="1.75" marker-start="url(#b)" marker-end="url(#b)"/>
+<text x="230.0" y="474" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#3b82f6">state.sit314.local</text>
+<text x="230.0" y="496" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">bearer token</text>
+<rect x="40" y="516" width="360" height="92" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="220.0" y="547.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">state on Fargate</text>
+<text x="220.0" y="570.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">2,000 cars from a snapshot</text>
+<text x="220.0" y="590.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">dispatch group only</text>
+<rect x="40" y="628" width="170" height="80" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="125.0" y="664.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">Cloud Map</text>
+<text x="125.0" y="687.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">private DNS</text>
+<rect x="230" y="628" width="170" height="80" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="315.0" y="664.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">Secrets Mgr</text>
+<text x="315.0" y="687.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">token by ARN</text>
+<rect x="40" y="756" width="360" height="74" rx="6" fill="#0a0a0b" stroke="#2c2c31" stroke-width="1.5"/>
+<text x="220.0" y="789.0" text-anchor="middle" font-family="Manrope, 'Inter', system-ui, sans-serif" font-weight="700" font-size="19" fill="#e5e5e5">IoT Core</text>
+<text x="220.0" y="812.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" fill="#a1a1aa">3 things, 1 cert each</text>
+<text x="16" y="862" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">Stayed on the laptop: Mosquitto,</text>
+<text x="16" y="884" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="15" font-weight="400" fill="#a1a1aa">Node-RED, monitor, trips, Postgres.</text>
+</svg>

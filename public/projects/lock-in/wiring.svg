@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 840" width="400" height="840" role="img" aria-labelledby="t d">
+  <title id="t">Lock-In Arduino Uno pin map</title>
+  <desc id="d">Inputs: PIR on D2 (interrupt 0), push button on D3 (interrupt 1, pull-up), HC-SR04 trigger D4 and echo D5, DHT22 on D7 with a 10 kilo-ohm pull-up, LDR on A0 in a divider with 10 kilo-ohms. Outputs: red LED D6, yellow LED D8, green LED D10, each through 220 ohms, and a passive piezo on D9. The Uno talks to the Raspberry Pi over USB serial at 115200 baud.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a1a1aa"/>
+    </marker>
+  </defs>
+  <style>
+    .n { font-family: Manrope, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 600; fill: #e5e5e5; }
+    .t { font-family: Manrope, 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #e5e5e5; }
+    .m { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #a1a1aa; }
+    .p { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #3b82f6; }
+    .box { fill: #0a0a0b; stroke: #3f3f46; stroke-width: 1.5; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.5; }
+    .ln { stroke: #a1a1aa; stroke-width: 1.5; fill: none; }
+  </style>
+  <rect width="400" height="840" fill="#050505"/>
+
+  <text class="m" x="20" y="28">INPUTS</text>
+  <rect class="box" x="20" y="40" width="360" height="272" rx="6"/>
+  <text class="n" x="36" y="72">PIR HC-SR501</text>
+  <text class="p" x="364" y="72" text-anchor="end">D2 · INT0</text>
+  <text class="n" x="36" y="120">Push button</text>
+  <text class="p" x="364" y="120" text-anchor="end">D3 · INT1</text>
+  <text class="m" x="36" y="140">active-low, internal pull-up</text>
+  <text class="n" x="36" y="180">HC-SR04</text>
+  <text class="p" x="364" y="180" text-anchor="end">D4 trig · D5 echo</text>
+  <text class="n" x="36" y="220">DHT22</text>
+  <text class="p" x="364" y="220" text-anchor="end">D7</text>
+  <text class="m" x="36" y="240">10 kΩ pull-up</text>
+  <text class="n" x="36" y="270">LDR</text>
+  <text class="p" x="364" y="270" text-anchor="end">A0</text>
+  <text class="m" x="36" y="290">divider with 10 kΩ</text>
+
+  <line class="ln" x1="200" y1="312" x2="200" y2="350" marker-end="url(#a)"/>
+
+  <rect class="hot" x="20" y="354" width="360" height="84" rx="6"/>
+  <text class="t" x="36" y="384">Arduino Uno</text>
+  <text class="m" x="36" y="408">1 Hz JSON frames; buzzer and</text>
+  <text class="m" x="36" y="426">LEDs driven on the Pi's command</text>
+
+  <line class="ln" x1="200" y1="438" x2="200" y2="476" marker-end="url(#a)"/>
+
+  <text class="m" x="20" y="470">OUTPUTS</text>
+  <rect class="box" x="20" y="480" width="360" height="196" rx="6"/>
+  <text class="n" x="36" y="512">Red LED</text>
+  <text class="p" x="364" y="512" text-anchor="end">D6 · 220 Ω</text>
+  <text class="n" x="36" y="552">Yellow LED</text>
+  <text class="p" x="364" y="552" text-anchor="end">D8 · 220 Ω</text>
+  <text class="n" x="36" y="592">Green LED</text>
+  <text class="p" x="364" y="592" text-anchor="end">D10 · 220 Ω</text>
+  <text class="n" x="36" y="632">Passive piezo</text>
+  <text class="p" x="364" y="632" text-anchor="end">D9</text>
+  <text class="m" x="36" y="652">tone() patterns</text>
+
+  <text class="m" x="20" y="720">USB SERIAL</text>
+  <rect class="box" x="20" y="732" width="360" height="88" rx="6"/>
+  <text class="n" x="36" y="764">Raspberry Pi</text>
+  <text class="p" x="364" y="764" text-anchor="end">115200 baud</text>
+  <text class="m" x="36" y="788">newline-delimited JSON,</text>
+  <text class="m" x="36" y="804">both directions</text>
+</svg>

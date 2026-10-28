@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 860" width="400" height="860" role="img" aria-labelledby="t d">
+  <title id="t">Lock-In system overview</title>
+  <desc id="d">Sensors feed an Arduino Uno, which sends JSON over USB serial to the Raspberry Pi orchestrator. The orchestrator also pulls webcam stills over HTTP and asks Gemini. It publishes a snapshot to a local MQTT broker; the Flask dashboard subscribes and pushes it to the browser over Server-Sent Events. Button presses travel back the same way.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a1a1aa"/>
+    </marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  <style>
+    .t { font-family: Manrope, 'Helvetica Neue', Arial, sans-serif; font-size: 17px; font-weight: 700; fill: #e5e5e5; }
+    .m { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #a1a1aa; }
+    .k { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #3b82f6; }
+    .g { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #e5e5e5; }
+    .box { fill: #0a0a0b; stroke: #3f3f46; stroke-width: 1.5; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.5; }
+    .zone { fill: #111114; }
+    .ln { stroke: #a1a1aa; stroke-width: 1.5; fill: none; }
+    .lb { stroke: #3b82f6; stroke-width: 1.5; fill: none; }
+    .dash { stroke: #71717a; stroke-width: 1.5; fill: none; stroke-dasharray: 5 5; }
+  </style>
+  <rect width="400" height="860" fill="#050505"/>
+
+  <!-- desk -->
+  <text class="m" x="20" y="28">ON THE DESK</text>
+  <rect class="box" x="20" y="42" width="360" height="72" rx="6"/>
+  <text class="t" x="36" y="68">Sensors</text>
+  <text class="m" x="36" y="92">PIR · HC-SR04 · DHT22</text>
+  <text class="m" x="36" y="108">LDR · push button</text>
+
+  <line class="ln" x1="200" y1="114" x2="200" y2="146" marker-end="url(#a)"/>
+
+  <rect class="box" x="20" y="150" width="236" height="72" rx="6"/>
+  <text class="t" x="36" y="176">Arduino Uno</text>
+  <text class="m" x="36" y="200">1 Hz frames, press</text>
+  <text class="m" x="36" y="216">patterns, interrupts</text>
+
+  <rect class="box" x="272" y="150" width="108" height="72" rx="6"/>
+  <text class="t" x="288" y="176">Outputs</text>
+  <text class="m" x="288" y="200">3 LEDs</text>
+  <text class="m" x="288" y="216">piezo</text>
+  <line class="ln" x1="256" y1="186" x2="268" y2="186" marker-end="url(#a)"/>
+
+  <!-- serial -->
+  <line class="ln" x1="110" y1="222" x2="110" y2="288" marker-end="url(#a)"/>
+  <line class="ln" x1="170" y1="288" x2="170" y2="226" marker-end="url(#a)"/>
+  <text class="g" x="188" y="250">USB serial</text>
+  <text class="m" x="188" y="268">115200 baud, JSON</text>
+
+  <!-- pi zone -->
+  <rect class="zone" x="10" y="294" width="380" height="372" rx="8"/>
+  <text class="m" x="20" y="316">RASPBERRY PI</text>
+
+  <rect class="hot" x="20" y="328" width="360" height="92" rx="6"/>
+  <text class="t" x="36" y="354">orchestrator.py</text>
+  <text class="m" x="36" y="378">8 asyncio tasks share one</text>
+  <text class="m" x="36" y="396">pure-logic FSM</text>
+  <text class="k" x="246" y="396">→ SQLite</text>
+
+  <line class="lb" x1="110" y1="420" x2="110" y2="476" marker-end="url(#b)"/>
+  <text class="k" x="122" y="446">lockin/snapshot</text>
+  <text class="m" x="122" y="464">2 Hz, retained</text>
+  <line class="ln" x1="360" y1="476" x2="360" y2="424" marker-end="url(#a)"/>
+  <text class="m" x="314" y="446">cmd</text>
+
+  <rect class="box" x="20" y="480" width="360" height="56" rx="6"/>
+  <text class="t" x="36" y="506">mosquitto</text>
+  <text class="m" x="36" y="526">local MQTT broker</text>
+
+  <line class="lb" x1="110" y1="536" x2="110" y2="572" marker-end="url(#b)"/>
+  <line class="ln" x1="360" y1="572" x2="360" y2="540" marker-end="url(#a)"/>
+
+  <rect class="box" x="20" y="576" width="360" height="72" rx="6"/>
+  <text class="t" x="36" y="602">Flask dashboard</text>
+  <text class="m" x="36" y="626">:8080, reads SQLite for</text>
+  <text class="m" x="36" y="642">history and distractions</text>
+
+  <!-- browser -->
+  <line class="lb" x1="110" y1="648" x2="110" y2="704" marker-end="url(#b)"/>
+  <text class="k" x="122" y="674">SSE /api/stream</text>
+  <line class="ln" x1="360" y1="704" x2="360" y2="652" marker-end="url(#a)"/>
+  <text class="m" x="208" y="692">POST /api/button</text>
+
+  <rect class="box" x="20" y="708" width="360" height="56" rx="6"/>
+  <text class="t" x="36" y="734">Browser</text>
+  <text class="m" x="36" y="754">phone or laptop on the LAN</text>
+
+  <!-- vision side inputs -->
+  <text class="m" x="20" y="800">ALSO INTO THE ORCHESTRATOR</text>
+  <text class="g" x="20" y="822">webcam still: HTTP GET /capture</text>
+  <text class="g" x="20" y="844">focus judgment: Gemini 2.5 Flash</text>
+</svg>
