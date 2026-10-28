@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const DETAIL_PAGES = new Set([
   'hoddle', 'kairos', 'aria', 'r1gpt', 'dsec', 'tempo', 'morgue', 'cstack', 'king-glazing', 'allarkive',
   'acknowledgement-force', 'krishnaveni', 'nmmun', 'tapcraft', 'notes-app', 'load-balancer', 'lock-in', 'ontrack',
-  'bed-monitor', 'fleet-platform', 'voice-controller', 'robot-api',
+  'bed-monitor', 'fleet-platform', 'voice-controller', 'robot-api', 'dispatch',
 ])
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
