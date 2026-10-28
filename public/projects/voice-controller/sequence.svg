@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 452" width="400" height="452" role="img" aria-labelledby="t d">
+  <title id="t">Message sequence for one spoken command</title>
+  <desc id="d">Five lifelines: Mac, Pi 5, ElevenLabs, Gemini and Arduino. The Mac sends a WAV clip over TCP. The Pi sends the audio to ElevenLabs and gets text back, sends the prompt and text to Gemini and gets JSON back, sends the reply text to ElevenLabs and gets MP3 back, plays it, and only then writes fan_on to the Arduino over BLE. The Arduino sets D4 high and notifies OK:fan_on.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 12px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 400 12px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .n { font: 400 11px "JetBrains Mono", Menlo, Consolas, monospace; fill: #8b8b94; }
+    .life { stroke: #2a2a2e; stroke-width: 1; stroke-dasharray: 3 4; }
+    .zone { fill: #0e0e11; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+    .ret { stroke: #8b8b94; stroke-width: 1.4; fill: none; stroke-dasharray: 4 3; }
+  </style>
+  <rect width="400" height="452" fill="#050505"/>
+
+  <!-- the step this page is about: speech before the switch -->
+  <rect class="zone" x="4" y="242" width="392" height="80" rx="4"/>
+  <rect class="zone" x="4" y="340" width="392" height="76" rx="4"/>
+
+  <!-- lifelines -->
+  <text class="k" x="40" y="22" text-anchor="middle">Mac</text>
+  <text class="k" x="120" y="22" text-anchor="middle">Pi 5</text>
+  <text class="k" x="200" y="22" text-anchor="middle">ElevenLabs</text>
+  <text class="k" x="280" y="22" text-anchor="middle">Gemini</text>
+  <text class="k" x="360" y="22" text-anchor="middle">Arduino</text>
+  <line class="life" x1="40" y1="34" x2="40" y2="440"/>
+  <line class="life" x1="120" y1="34" x2="120" y2="440"/>
+  <line class="life" x1="200" y1="34" x2="200" y2="440"/>
+  <line class="life" x1="280" y1="34" x2="280" y2="440"/>
+  <line class="life" x1="360" y1="34" x2="360" y2="440"/>
+
+  <!-- 1. clip -->
+  <text class="x" x="80" y="62" text-anchor="middle">WAV</text>
+  <path class="ar" d="M40 70 L118 70" marker-end="url(#a)"/>
+
+  <!-- 2. speech to text -->
+  <text class="s" x="160" y="102" text-anchor="middle">audio</text>
+  <path class="gr" d="M120 110 L198 110" marker-end="url(#g)"/>
+  <text class="s" x="160" y="132" text-anchor="middle">text</text>
+  <path class="ret" d="M200 140 L122 140" marker-end="url(#g)"/>
+
+  <!-- 3. intent -->
+  <text class="s" x="200" y="172" text-anchor="middle">prompt + text</text>
+  <path class="gr" d="M120 180 L278 180" marker-end="url(#g)"/>
+  <text class="s" x="200" y="202" text-anchor="middle">JSON</text>
+  <path class="ret" d="M280 210 L122 210" marker-end="url(#g)"/>
+
+  <!-- 4. spoken reply -->
+  <text class="s" x="160" y="256" text-anchor="middle">reply</text>
+  <path class="gr" d="M120 264 L198 264" marker-end="url(#g)"/>
+  <text class="s" x="160" y="286" text-anchor="middle">MP3</text>
+  <path class="ret" d="M200 294 L122 294" marker-end="url(#g)"/>
+  <path class="gr" d="M120 306 L140 306 L140 318 L124 318" marker-end="url(#g)"/>
+  <text class="s" x="148" y="316">play()</text>
+
+  <!-- 5. BLE -->
+  <text class="x" x="240" y="352" text-anchor="middle">write "fan_on"</text>
+  <path class="ar" d="M120 360 L358 360" marker-end="url(#a)"/>
+  <text class="n" x="352" y="376" text-anchor="end">D4 high</text>
+  <text class="s" x="240" y="394" text-anchor="middle">notify "OK:fan_on"</text>
+  <path class="ret" d="M360 402 L122 402" marker-end="url(#g)"/>
+
+  <text class="n" x="12" y="236">speak()</text>
+  <text class="n" x="12" y="335">send_ble_command()</text>
+</svg>

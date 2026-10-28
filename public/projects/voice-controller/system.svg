@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 680" width="400" height="680" role="img" aria-labelledby="t d">
+  <title id="t">Voice light controller system diagram</title>
+  <desc id="d">A Mac records a clip and sends the WAV file over TCP port 9876 to a Raspberry Pi 5. The Pi sends the audio to ElevenLabs for text, sends the text to Gemini for a command, asks ElevenLabs to speak the reply, then writes the command over Bluetooth Low Energy to an Arduino advertising as LightController. The Arduino switches LEDs on D2, D3 and D4 and notifies the Pi with its result.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 12px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 400 12px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .zone { fill: #0e0e11; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.2; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+  </style>
+  <rect width="400" height="680" fill="#050505"/>
+
+  <!-- zones first, so arrows sit on top -->
+  <rect class="zone" x="4" y="26" width="392" height="72" rx="4"/>
+  <rect class="zone" x="4" y="150" width="226" height="318" rx="4"/>
+  <rect class="zone" x="238" y="150" width="158" height="318" rx="4"/>
+  <rect class="zone" x="4" y="522" width="392" height="150" rx="4"/>
+
+  <!-- Mac -->
+  <text class="s" x="12" y="18">MAC</text>
+  <rect class="box" x="12" y="34" width="376" height="56" rx="3"/>
+  <text class="k" x="22" y="56">mac_audio_sensor.py</text>
+  <text class="s" x="22" y="76">Enter starts and stops · 16 kHz mono WAV</text>
+
+  <path class="ar" d="M150 90 L150 176" marker-end="url(#a)"/>
+  <text class="x" x="162" y="120">TCP port 9876</text>
+  <text class="s" x="162" y="136">closing it ends the clip</text>
+
+  <!-- Pi -->
+  <text class="s" x="12" y="168">RASPBERRY PI 5</text>
+  <rect class="box" x="12" y="178" width="210" height="44" rx="3"/>
+  <text class="k" x="22" y="197">receive_audio_file</text>
+  <text class="s" x="22" y="214">bytes to a temp .wav</text>
+
+  <rect class="box" x="12" y="236" width="210" height="44" rx="3"/>
+  <text class="k" x="22" y="255">transcribe</text>
+  <text class="s" x="22" y="272">speech to text</text>
+
+  <rect class="box" x="12" y="294" width="210" height="44" rx="3"/>
+  <text class="k" x="22" y="313">parse_intent</text>
+  <text class="s" x="22" y="330">text to JSON command</text>
+
+  <rect class="box" x="12" y="352" width="210" height="44" rx="3"/>
+  <text class="k" x="22" y="371">speak</text>
+  <text class="s" x="22" y="388">reply out loud</text>
+
+  <rect class="hot" x="12" y="410" width="210" height="44" rx="3"/>
+  <text class="k" x="22" y="429">send_ble_command</text>
+  <text class="s" x="22" y="446">write with response</text>
+
+  <path class="ar" d="M117 222 L117 234"/>
+  <path class="ar" d="M117 280 L117 292"/>
+  <path class="ar" d="M117 338 L117 350"/>
+  <path class="ar" d="M117 396 L117 408"/>
+
+  <!-- cloud -->
+  <text class="s" x="388" y="168" text-anchor="end">CLOUD APIS</text>
+  <rect class="box" x="246" y="236" width="142" height="44" rx="3"/>
+  <text class="k" x="256" y="255">ElevenLabs</text>
+  <text class="s" x="256" y="272">scribe_v2</text>
+
+  <rect class="box" x="246" y="294" width="142" height="44" rx="3"/>
+  <text class="k" x="256" y="313">Gemini</text>
+  <text class="s" x="256" y="330">2.5-flash-lite</text>
+
+  <rect class="box" x="246" y="352" width="142" height="44" rx="3"/>
+  <text class="k" x="256" y="371">ElevenLabs</text>
+  <text class="s" x="256" y="388">turbo_v2_5</text>
+
+  <path class="gr" d="M224 258 L244 258" marker-start="url(#g)" marker-end="url(#g)"/>
+  <path class="gr" d="M224 316 L244 316" marker-start="url(#g)" marker-end="url(#g)"/>
+  <path class="gr" d="M224 374 L244 374" marker-start="url(#g)" marker-end="url(#g)"/>
+
+  <!-- BLE -->
+  <path class="ar" d="M80 454 L80 548" marker-end="url(#a)"/>
+  <path class="gr" d="M140 548 L140 456" marker-end="url(#g)"/>
+  <text class="x" x="160" y="490">write   "fan_on"</text>
+  <text class="s" x="160" y="510">notify  "OK:fan_on"</text>
+
+  <!-- Arduino -->
+  <text class="s" x="388" y="540" text-anchor="end">ARDUINO · LightController</text>
+  <rect class="hot" x="12" y="550" width="376" height="44" rx="3"/>
+  <text class="k" x="22" y="569">handleCommand</text>
+  <text class="s" x="22" y="586">switch, status, or ERR:unknown_command</text>
+
+  <path class="ar" d="M72 594 L72 606"/>
+  <path class="ar" d="M200 594 L200 606"/>
+  <path class="ar" d="M328 594 L328 606"/>
+
+  <rect class="box" x="12" y="608" width="120" height="52" rx="3"/>
+  <text class="k" x="22" y="630">D2</text>
+  <text class="s" x="22" y="648">bathroom</text>
+  <rect class="box" x="140" y="608" width="120" height="52" rx="3"/>
+  <text class="k" x="150" y="630">D3</text>
+  <text class="s" x="150" y="648">hallway</text>
+  <rect class="box" x="268" y="608" width="120" height="52" rx="3"/>
+  <text class="k" x="278" y="630">D4</text>
+  <text class="s" x="278" y="648">fan (an LED)</text>
+</svg>
