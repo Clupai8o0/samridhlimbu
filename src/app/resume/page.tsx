@@ -66,7 +66,7 @@ const SECTIONS = [
       {
         head: 'Co-founder · TapCraft Studio',
         meta: 'Feb–Oct 2026',
-        body: 'Built the headless Shopify + Next.js 16 storefront for 3D-printed NFC keychains. The 3D viewer switches colour variants in real time with Three.js material updates, no GLB swaps. Solved headless affiliate tracking with Web Pixel and cart context events. Led the B2C to B2B migration.',
+        body: 'Built the store for our 3D-printed NFC keychains: Next.js 16 on the Shopify Storefront API, with a Shopify cart and checkout and UpPromote affiliate links carried through to checkout. Started a B2B rebuild (April to July) that did not ship.',
       },
       {
         head: 'Residential Leader · DeakinRes',
@@ -175,8 +175,8 @@ const SECTIONS = [
       },
       {
         head: 'TapCraft Studio · headless commerce',
-        meta: 'Next.js 16 · React Three Fiber · Shopify GraphQL',
-        body: 'Rendered the 3D viewer on demand to cut GPU load. Made UpPromote affiliate tracking work on a headless store with Web Pixel and checkout linker parameters. Ran the B2C to B2B migration: catalogue restructure, redirect mapping, 3D customiser repositioned as a bulk-quote tool.',
+        meta: 'Next.js 16 · Shopify Storefront API · UpPromote',
+        body: 'Connected the catalogue, product pages and cart to Shopify and carried UpPromote affiliate codes through to checkout on a headless store.',
       },
       {
         head: 'NMMUN · school conference website',

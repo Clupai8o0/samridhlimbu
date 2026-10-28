@@ -452,7 +452,7 @@ export const EXPERIENCE: ExperienceItem[] = [
     when: 'Feb–Oct 2026',
     role: 'Co-founder',
     org: 'TapCraft Studio',
-    detail: 'Built the headless Shopify + Next.js 16 storefront with a real-time 3D viewer. Led the B2C to B2B migration.',
+    detail: 'Built the headless Shopify + Next.js 16 store and its affiliate tracking. Started a B2B rebuild that did not ship.',
     href: '/projects/tapcraft',
   },
   {
