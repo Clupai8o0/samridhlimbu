@@ -179,9 +179,9 @@ const SECTIONS = [
         body: 'Rendered the 3D viewer on demand to cut GPU load. Made UpPromote affiliate tracking work on a headless store with Web Pixel and checkout linker parameters. Ran the B2C to B2B migration: catalogue restructure, redirect mapping, 3D customiser repositioned as a bulk-quote tool.',
       },
       {
-        head: 'NMMUN · conference website + operations toolkit',
+        head: 'NMMUN · school conference website',
         meta: 'Next.js · TypeScript · Tailwind CSS · Vercel',
-        body: 'Built the conference website used live by 500+ participants at a Model United Nations event.',
+        body: 'Built a Model United Nations conference site the next student IT team ran by editing content alone: 4 of their 105 commits touched a component.',
       },
       {
         head: 'Krishnaveni · headless CMS (freelance)',

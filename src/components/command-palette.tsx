@@ -29,7 +29,7 @@ const ITEMS: Item[] = [
   { k: '/projects/dsec',              label: 'dsec · deakin software engineering club', hint: '', href: '/projects/dsec',            group: 'projects' },
   { k: '/projects/tapcraft',          label: 'tapcraft · headless shopify + 3d',     hint: '', href: '/projects/tapcraft',          group: 'projects' },
   { k: '/projects/king-glazing',      label: 'king glazing · next.js + seo',         hint: '', href: '/projects/king-glazing',      group: 'projects' },
-  { k: '/projects/nmmun',             label: 'nmmun · conference platform',           hint: '', href: '/projects/nmmun',             group: 'projects' },
+  { k: '/projects/nmmun',             label: 'nmmun · conference website',            hint: '', href: '/projects/nmmun',             group: 'projects' },
   { k: '/projects/krishnaveni',       label: 'krishnaveni · headless cms',            hint: '', href: '/projects/krishnaveni',       group: 'projects' },
 
   // Archive
