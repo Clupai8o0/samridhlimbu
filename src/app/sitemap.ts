@@ -5,13 +5,14 @@ import { POSTS } from '@/lib/writing'
 const BASE = 'https://samridhlimbu.com'
 
 // Fixed so the sitemap only changes when the content does. Bump it on a real update.
-const LAST_MODIFIED = new Date('2026-10-27')
+const LAST_MODIFIED = new Date('2026-10-28')
 
 // One entry per src/app/projects/<slug>/page.tsx.
 const PROJECT_SLUGS = [
   'hoddle', 'kairos', 'aria', 'r1gpt', 'dsec', 'ontrack', 'tempo', 'morgue', 'cstack',
   'king-glazing', 'allarkive', 'acknowledgement-force', 'krishnaveni', 'nmmun', 'tapcraft',
-  'lock-in', 'govchat', 'farmers-intuition', 'notes-app', 'load-balancer',
+  'lock-in', 'govchat', 'farmers-intuition', 'notes-app', 'load-balancer', 'bed-monitor', 'fleet-platform',
+  'voice-controller', 'robot-api', 'dispatch', 'art-gallery', 'seatly',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
