@@ -186,7 +186,7 @@ const SECTIONS = [
       {
         head: 'Krishnaveni · headless CMS (freelance)',
         meta: 'Sanity Studio · TypeScript · Vercel',
-        body: 'Built a Sanity headless CMS for Krishnaveni School so non-technical staff update pages, announcements and media without a developer.',
+        body: 'Built the Krishnaveni School site on Sanity in English, Hindi and Telugu (2025), then rebuilt it in English with a Sanity Studio where staff post news and facilities (2026).',
       },
       {
         head: 'notes-app · CI/CD showcase',
