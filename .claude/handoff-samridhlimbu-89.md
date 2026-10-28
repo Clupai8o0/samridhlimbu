@@ -9,6 +9,14 @@
 - https://samridhlimbu.com/writing/cstack-one-layer-six-agents
 - Also live: /projects/load-balancer, notes-app, govchat, farmers-intuition, lock-in, bed-monitor, fleet-platform. All returned 200.
 
+## Paper figures replaced (28 Oct 2026, commit `ec471da`, live)
+- SIT314 fleet-ceiling: now a themed line chart from `.claude/tmp/fleet-platform-shots/data/aug/e2_pinned.csv` and `e3_autoscaled.csv`.
+- RLiG cost.webp: removed; the themed Table 1 chart already showed the same data (the Ns=200 and 5000 bars had no source numbers here).
+- Where-is-the-algorithm: two-players and answer-key images are now table blocks (text from the paper PDF).
+- Four image files deleted from public/. Codex reviewed: no findings. Checked live at 390 and 1440 px.
+- **Still left:** RLiG `curves.webp` and `rho.webp` stay as images. Their data is only in `task-11.ipynb` on the Mac (not on GitHub, and lab machines can't reach the Mac). To finish: push the notebook (or its outputs) to the vivobook, then add series/band/small-multiple support to ArticleChart.
+- Kept on purpose: size128-collapse (terminal screenshot), merkle/TLS diagrams, and the project pages' charts (already dark, site-styled images made from real data).
+
 ## Done
 | Step | Result |
 |---|---|
