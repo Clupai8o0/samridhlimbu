@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 320" width="820" height="320" role="img" aria-labelledby="t d">
+  <title id="t">How P2C-EWMA picks a backend</title>
+  <desc id="d">For each request the balancer samples two backends at random and compares their EWMA latency. The one at 21 ms gets the request; the one at 122 ms does not; the third backend was not sampled this time. After each response the EWMA moves 20 percent of the way to the latest latency.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .h { font: 700 15px Manrope, "Helvetica Neue", Arial, sans-serif; fill: #e5e5e5; }
+    .k { font: 600 14px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .m { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #5b5b63; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.4; }
+    .off { fill: #050505; stroke: #1c1c20; stroke-width: 1; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+  </style>
+  <rect width="820" height="320" fill="#050505"/>
+  <text class="h" x="20" y="30">Pick two at random, keep the faster</text>
+
+  <rect class="box" x="20" y="156" width="140" height="34" rx="17"/>
+  <text class="k" x="90" y="178" text-anchor="middle">request</text>
+
+  <text class="s" x="252" y="178" text-anchor="middle">2 random picks</text>
+
+  <path class="ar" d="M160 166 C236 166, 250 87, 326 87" marker-end="url(#a)"/>
+  <path class="gr" d="M160 180 C236 180, 250 259, 326 259" marker-end="url(#g)"/>
+
+  <rect class="hot" x="330" y="50" width="130" height="74" rx="4"/>
+  <text class="k" x="395" y="74" text-anchor="middle">:8430</text>
+  <text class="x" x="395" y="96" text-anchor="middle">EWMA 21 ms</text>
+  <text class="x" x="395" y="115" text-anchor="middle">gets it</text>
+
+  <rect class="off" x="330" y="136" width="130" height="74" rx="4"/>
+  <text class="m" x="395" y="160" text-anchor="middle">:8431</text>
+  <text class="m" x="395" y="182" text-anchor="middle">not</text>
+  <text class="m" x="395" y="201" text-anchor="middle">sampled</text>
+
+  <rect class="box" x="330" y="222" width="130" height="74" rx="4"/>
+  <text class="k" x="395" y="246" text-anchor="middle">:8432</text>
+  <text class="s" x="395" y="268" text-anchor="middle">EWMA 122 ms</text>
+  <text class="s" x="395" y="287" text-anchor="middle">skipped</text>
+
+  <text class="k" x="520" y="120">after every response</text>
+  <text class="s" x="520" y="144">ewma = 0.2 × latest + 0.8 × ewma</text>
+  <text class="s" x="520" y="184">Both picks can land on the same</text>
+  <text class="s" x="520" y="204">backend. For the slow one that is</text>
+  <text class="s" x="520" y="224">1 pair in 9, so it keeps about 11 %.</text>
+</svg>

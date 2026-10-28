@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Shot } from '@/components/case-study/shot'
+import { ArticleChart } from '@/components/article-chart'
+import { CodePre } from '@/components/code-pre'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'An aged care bed monitor for SIT329 at Deakin, T2 2026. A SAMD21 board reads a thermistor, a force sensor mat and a tap button through register-level C, runs four FreeRTOS tasks, and sends one frame a second to a Python dashboard that logs to SQLite.'
@@ -71,6 +74,30 @@ $AC,SEQ=484,UP=512000,BED=1,T=1934,TB=HYPO,MAT=4095,F=357,OCC=0,ALM=02,TAPS=4,ST
 $AC,SEQ=485,UP=513000,BED=1,T=1934,TB=HYPO,MAT=4095,F=405,OCC=0,ALM=06,TAPS=8,ST=27*6C`
 
 const STATS_LOG = `13|2026-09-07T04:47:01.890Z|1|stats|up 3083.0 s, TC3 ran 6166 times (2.00 a second), EIC took 3 edges and dropped 2 as bounce, busy waits adc 0 state 0 link 0, heap free 6704`
+
+const SESSION_SECONDS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80']
+
+const FORCE_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Mat force',
+  subtitle: 'Occupancy turns on 3 s after the load passes 400 g, off 3 s after it drops',
+  xLabel: 'seconds',
+  unit: 'g',
+  categories: SESSION_SECONDS,
+  series: [{ name: 'force', values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 319, 804, 985, 1029, 1038, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 121, 17, 0, 0, 0, 10, 206, 33, 520, 894, 1008, 1034, 1040, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 1041, 212, 208, 47, 5, 0, 0, 0, 0, 124, 124, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }],
+}
+
+const TAPS_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Taps counted',
+  subtitle: 'None added while held; HELP latches at 14 (68 s), reset at 74 s',
+  caption: "Real readings from the board, 8 Sep 2026: 81 frames from the dashboard's SQLite store, one a second. Grams use the placeholder calibration, so 1041 g is its ceiling, not a weight.",
+  xLabel: 'seconds',
+  categories: SESSION_SECONDS,
+  series: [{ name: 'taps', values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 10, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14] }],
+}
 
 const DECISIONS = [
   ['the LED on a hardware timer', 'a blink task', 'The blink has to keep a steady 1 second beat whatever else is running, so it is not a task at all. TC3 counts to 31249 at 62.5 kHz and its interrupt toggles the pin every 500 ms. No load on the scheduler can stretch it. After 51 minutes up, the board reported TC3 firing 6166 times, 2.00 a second.'],
@@ -150,12 +177,13 @@ export default function BedMonitorPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Both analogue sensors share one ADC, so a mutex guards it and only the temperature task ever moves the multiplexer. The button interrupt stamps each press and drops the time into a queue for the mat task. Once a second the link task builds a text frame with a checksum. Each byte goes out on D6, comes back on D7 through a jumper wire, and is then passed on over USB. The dashboard checks the checksum, stores the frame and can send commands back.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 40px' }}>
+        <div style={{ margin: '0 auto 40px' }}>
           <Shot
             src="/projects/bed-monitor/system.svg"
             alt="Diagram: thermistor on A0 and FSR mat on D4 feed the ADC, the tap button on D2 feeds the EIC; TC3 drives the LED. The ADC and EIC feed four FreeRTOS tasks guarded by three mutexes. vLinkTask sends one frame a second through SERCOM0 and USB serial to bed_link.py on the laptop, which writes to SQLite and drives the Tk dashboard. Commands go back the other way."
             width={400}
             height={840}
+            wide={{ src: '/projects/bed-monitor/system-wide.svg', width: 880, height: 544 }}
             caption="Diagram of the system, with the pins and task names from the code."
           />
         </div>
@@ -165,12 +193,13 @@ export default function BedMonitorPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Four tasks, each woken on a fixed period with <code style={{ fontFamily: MONO, fontSize: '0.9em' }}>vTaskDelayUntil</code> so a late run does not push the next one back. The LED is not a task. A hardware timer interrupt toggles it, so nothing the scheduler does can slow the blink.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+        <div style={{ margin: '0 auto 24px' }}>
           <Shot
             src="/projects/bed-monitor/tasks.svg"
             alt="Timing diagram over one second: TC3_Handler fires at 500 and 1000 ms, vMatTask at priority 5 is released 100 times, vCommandTask at priority 4 twenty times, vLinkTask at priority 3 once, the timer service task at priority 2 is not used, and vTempTask at priority 1 runs every 5 minutes."
             width={400}
             height={548}
+            wide={{ src: '/projects/bed-monitor/tasks-wide.svg', width: 860, height: 438 }}
             caption="When each task is released in one second, with the priorities and periods from Task6_1D.ino."
           />
         </div>
@@ -178,7 +207,7 @@ export default function BedMonitorPage() {
           The board prints its own setup at boot. Here is part of that banner from 24 Aug 2026. The register values and the baud rate are read back off the hardware, not copied from the source.
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
-          <pre style={LOG}>{BANNER_LOG}</pre>
+          <CodePre style={LOG} code={BANNER_LOG} />
           <div style={LOG_CAPTION}>Serial output from the board, 24 Aug 2026. Lines copied as captured, trimmed to the link, pins and scheduler.</div>
         </div>
 
@@ -187,32 +216,28 @@ export default function BedMonitorPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The same mat has to report occupancy and catch a call for help. Occupancy only changes after a reading has stayed past its threshold for 3 seconds: on above 400 g, off below 250 g. A tap has to rise and fall back within 400 ms, or it is not a tap.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 32px' }}>
+        <div style={{ margin: '0 auto 32px' }}>
           <Shot
             src="/projects/bed-monitor/tap-vs-step.svg"
             alt="Schematic of three signals: a short pulse that falls back inside 400 ms is counted as a tap; a step that stays up past 400 ms is thrown away; five pulses inside 2 seconds latch the HELP alarm."
             width={400}
             height={658}
+            wide={{ src: '/projects/bed-monitor/tap-vs-step-wide.svg', width: 880, height: 480 }}
             caption="Schematic of the rule, not measured data."
           />
         </div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Here is the rule on the real board. The dashboard stored every frame from this session in SQLite. The mat was held down twice, then tapped quickly.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/bed-monitor/session-chart.webp"
-            alt="Two stacked charts over 80 seconds. Top: mat force rises to 1041 g twice and falls back, with occupancy turning on 3 seconds after the load passes 400 g and off 3 seconds after it drops. Bottom: the tap total stays at 3 through the first hold, then climbs to 14, where the HELP alarm latches, and a reset follows."
-            width={967}
-            height={1170}
-            caption="Real readings from the board, 8 Sep 2026: 81 frames from the dashboard's SQLite store, one a second. Grams use the placeholder calibration, so 1041 g is its ceiling, not a weight."
-          />
+        <div data-reveal style={{ marginBottom: 24 }}>
+          <ArticleChart block={FORCE_CHART} />
+          <ArticleChart block={TAPS_CHART} />
         </div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
           The same alarm in the raw serial stream from 7 Sep. TAPS climbs and ALM goes from 02 (hypothermia) to 06 (hypothermia and HELP).
         </p>
         <div data-reveal style={{ marginBottom: 24 }}>
-          <pre style={LOG}>{TAPS_LOG}</pre>
+          <CodePre style={LOG} code={TAPS_LOG} />
           <div style={LOG_CAPTION}>Four consecutive frames from the board, 7 Sep 2026, as captured.</div>
         </div>
         <div data-reveal style={{ marginBottom: 40 }}>
@@ -231,7 +256,7 @@ export default function BedMonitorPage() {
           The SQLite file holds 1,216 frames from the real board, logged on three days: 24 Aug, 7 Sep and 8 Sep 2026. None has the stub bit set, so none was injected. The sequence number jumps six times, each time at a reconnect or a reboot, and never skips within a connection. Within a connection the temperature only changes at uptime 301 s and 3001 s, which is the 5-minute task running on time. The board also reported its own counters after 51 minutes up.
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
-          <pre style={LOG}>{STATS_LOG}</pre>
+          <CodePre style={LOG} code={STATS_LOG} />
           <div style={LOG_CAPTION}>A row from the events table (id, time, bed, kind, detail), 7 Sep 2026: the board&apos;s STATS reply as the dashboard stored it.</div>
         </div>
 

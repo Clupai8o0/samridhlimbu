@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 438" width="860" height="438" role="img" aria-labelledby="t d">
+  <title id="t">FreeRTOS task timing over one second</title>
+  <desc id="d">Release times over one second of the bed monitor firmware: the mat task 100 times, the command task 20 times, the link task once, the TC3 interrupt twice. The temperature task runs every five minutes and the timer service task at priority 2 is not used.</desc>
+  <style>.k{font:600 15px "JetBrains Mono", Menlo, Consolas, monospace;fill:#e5e5e5}.s{font:400 14px "JetBrains Mono", Menlo, Consolas, monospace;fill:#a1a1aa}.x{font:400 14px "JetBrains Mono", Menlo, Consolas, monospace;fill:#3b82f6}</style>
+  <rect width="860" height="438" fill="#050505"/>
+  <text class="k" x="16" y="32">TC3_Handler · NVIC</text>
+  <text class="s" x="16" y="52">every 500 ms, toggles the LED</text>
+  <rect x="290" y="27" width="554" height="22" rx="2" fill="#0e0e11"/>
+  <rect x="564.69" y="27" width="4.62" height="22" rx="0.6" fill="#e5e5e5"/>
+  <rect x="841.69" y="27" width="4.62" height="22" rx="0.6" fill="#e5e5e5"/>
+  <text class="k" x="16" y="88">vMatTask · prio 5</text>
+  <text class="s" x="16" y="108">every 10 ms, 100 a second</text>
+  <rect x="290" y="83" width="554" height="22" rx="2" fill="#0e0e11"/>
+  <rect x="294.54" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="300.08" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="305.62" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="311.16" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="316.70" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="322.24" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="327.78" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="333.32" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="338.86" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="344.40" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="349.94" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="355.48" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="361.02" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="366.56" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="372.10" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="377.64" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="383.18" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="388.72" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="394.26" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="399.80" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="405.34" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="410.88" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="416.42" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="421.96" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="427.50" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="433.04" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="438.58" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="444.12" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="449.66" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="455.20" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="460.74" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="466.28" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="471.82" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="477.36" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="482.90" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="488.44" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="493.98" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="499.52" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="505.06" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="510.60" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="516.14" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="521.68" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="527.22" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="532.76" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="538.30" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="543.84" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="549.38" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="554.92" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="560.46" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="566.00" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="571.54" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="577.08" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="582.62" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="588.16" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="593.70" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="599.24" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="604.78" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="610.32" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="615.86" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="621.40" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="626.94" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="632.48" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="638.02" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="643.56" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="649.10" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="654.64" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="660.18" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="665.72" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="671.26" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="676.80" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="682.34" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="687.88" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="693.42" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="698.96" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="704.50" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="710.04" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="715.58" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="721.12" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="726.66" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="732.20" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="737.74" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="743.28" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="748.82" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="754.36" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="759.90" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="765.44" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="770.98" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="776.52" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="782.06" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="787.60" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="793.14" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="798.68" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="804.22" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="809.76" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="815.30" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="820.84" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="826.38" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="831.92" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="837.46" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="843.00" y="83" width="2.00" height="22" rx="0.6" fill="#3b82f6"/>
+  <text class="k" x="16" y="144">vCommandTask · prio 4</text>
+  <text class="s" x="16" y="164">every 50 ms</text>
+  <rect x="290" y="139" width="554" height="22" rx="2" fill="#0e0e11"/>
+  <rect x="316.16" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="343.86" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="371.56" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="399.26" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="426.96" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="454.66" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="482.36" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="510.06" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="537.76" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="565.46" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="593.16" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="620.86" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="648.56" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="676.26" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="703.96" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="731.66" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="759.36" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="787.06" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="814.76" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <rect x="842.46" y="139" width="3.08" height="22" rx="0.6" fill="#3b82f6"/>
+  <text class="k" x="16" y="200">vLinkTask · prio 3</text>
+  <text class="s" x="16" y="220">every 1 s, one frame</text>
+  <rect x="290" y="195" width="554" height="22" rx="2" fill="#0e0e11"/>
+  <rect x="841.69" y="195" width="4.62" height="22" rx="0.6" fill="#3b82f6"/>
+  <text class="k" x="16" y="256">timer service · prio 2</text>
+  <text class="s" x="16" y="276">created by the kernel</text>
+  <rect x="290" y="251" width="554" height="22" rx="2" fill="#0e0e11"/>
+  <text class="s" x="300" y="267">not used here</text>
+  <text class="k" x="16" y="312">vTempTask · prio 1</text>
+  <text class="s" x="16" y="332">every 5 min</text>
+  <rect x="290" y="307" width="554" height="22" rx="2" fill="#0e0e11"/>
+  <text class="s" x="300" y="323">next run 300 s after the last</text>
+  <text class="s" x="290" y="362" text-anchor="start">0 ms</text>
+  <text class="s" x="567.0" y="362" text-anchor="middle">500</text>
+  <text class="s" x="844" y="362" text-anchor="end">1000 ms</text>
+  <text class="x" x="16" y="400">EIC_Handler runs on each button edge</text>
+  <text class="s" x="16" y="420">and queues a timestamp for vMatTask.</text>
+  <text class="s" x="444" y="400">Marks show when a task is released,</text>
+  <text class="s" x="444" y="420">not how long it runs.</text>
+</svg>

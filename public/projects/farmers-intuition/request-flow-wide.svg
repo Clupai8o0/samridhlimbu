@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 816 518" width="816" height="518" role="img" aria-labelledby="t d">
+  <title id="t">Farmers Intuition request flow</title>
+  <desc id="d">Asking a question: the browser records audio, a Vercel function sends it to ElevenLabs Scribe for text, the browser makes sure the API has readings, the FastAPI chat endpoint builds a prompt from the readings and advice, Gemini answers in at most three sentences, a second Vercel function turns the answer into speech with ElevenLabs, and the browser plays it. When an alert rule fires on the dashboard, the page calls chat with no message, the API asks Gemini for a short warning, and the voice page speaks it when you switch to it.</desc>
+  <defs>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 14px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .h { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; letter-spacing: 0.04em; }
+    .x { font: 400 12.5px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .n { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .dot { fill: #0e0e11; stroke: #3b82f6; stroke-width: 1.2; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.2; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+  </style>
+  <rect width="816" height="518" fill="#050505"/>
+  <text class="h" x="26" y="26">ASKING SAGE A QUESTION</text>
+  <circle cx="38" cy="52" r="12" class="dot"/>
+  <text class="n" x="38" y="56.5" text-anchor="middle">1</text>
+  <rect class="box" x="26" y="72" width="176" height="96" rx="3"/>
+  <text class="k" x="38" y="96">Tap the orb, speak</text>
+  <text class="x" x="38" y="116">browser</text>
+  <text class="s" x="38" y="138">MediaRecorder keeps</text>
+  <text class="s" x="38" y="156">webm audio</text>
+  <path class="gr" d="M50 52 H 218" marker-end="url(#g)"/>
+  <circle cx="234" cy="52" r="12" class="dot"/>
+  <text class="n" x="234" y="56.5" text-anchor="middle">2</text>
+  <rect class="box" x="222" y="72" width="176" height="96" rx="3"/>
+  <text class="k" x="234" y="96">/api/stt</text>
+  <text class="x" x="234" y="116">vercel function</text>
+  <text class="s" x="234" y="138">ElevenLabs Scribe</text>
+  <text class="s" x="234" y="156">returns text</text>
+  <path class="gr" d="M246 52 H 414" marker-end="url(#g)"/>
+  <circle cx="430" cy="52" r="12" class="dot"/>
+  <text class="n" x="430" y="56.5" text-anchor="middle">3</text>
+  <rect class="box" x="418" y="72" width="176" height="96" rx="3"/>
+  <text class="k" x="430" y="96">GET /environment</text>
+  <text class="x" x="430" y="116">browser</text>
+  <text class="s" x="430" y="138">seeds defaults if</text>
+  <text class="s" x="430" y="156">none yet</text>
+  <path class="gr" d="M442 52 H 610" marker-end="url(#g)"/>
+  <circle cx="626" cy="52" r="12" class="dot"/>
+  <text class="n" x="626" y="56.5" text-anchor="middle">4</text>
+  <rect class="hot" x="614" y="72" width="176" height="96" rx="3"/>
+  <text class="k" x="626" y="96">POST /chat</text>
+  <text class="x" x="626" y="116">fastapi</text>
+  <text class="s" x="626" y="138">prompt = readings</text>
+  <text class="s" x="626" y="156">+ advice</text>
+  <circle cx="626" cy="200" r="12" class="dot"/>
+  <text class="n" x="626" y="204.5" text-anchor="middle">5</text>
+  <rect class="hot" x="614" y="220" width="176" height="96" rx="3"/>
+  <text class="k" x="626" y="244">Sage answers</text>
+  <text class="x" x="626" y="264">gemini</text>
+  <text class="s" x="626" y="286">max 3 sentences,</text>
+  <text class="s" x="626" y="304">uses numbers</text>
+  <path class="gr" d="M614 200 H 446" marker-end="url(#g)"/>
+  <circle cx="430" cy="200" r="12" class="dot"/>
+  <text class="n" x="430" y="204.5" text-anchor="middle">6</text>
+  <rect class="box" x="418" y="220" width="176" height="96" rx="3"/>
+  <text class="k" x="430" y="244">/api/tts</text>
+  <text class="x" x="430" y="264">vercel function</text>
+  <text class="s" x="430" y="286">ElevenLabs returns</text>
+  <text class="s" x="430" y="304">mp3 audio</text>
+  <path class="gr" d="M418 200 H 250" marker-end="url(#g)"/>
+  <circle cx="234" cy="200" r="12" class="dot"/>
+  <text class="n" x="234" y="204.5" text-anchor="middle">7</text>
+  <rect class="box" x="222" y="220" width="176" height="96" rx="3"/>
+  <text class="k" x="234" y="244">Play the reply</text>
+  <text class="x" x="234" y="264">browser</text>
+  <text class="s" x="234" y="286">bars follow the</text>
+  <text class="s" x="234" y="304">audio level</text>
+  <path class="gr" d="M638 52 H 802 V 200 H 642" marker-end="url(#g)"/>
+  <text class="h" x="26" y="360">WHEN A RULE FIRES ON THE DASHBOARD</text>
+  <circle cx="38" cy="386" r="12" class="dot"/>
+  <text class="n" x="38" y="390.5" text-anchor="middle">a</text>
+  <rect class="hot" x="26" y="406" width="241" height="96" rx="3"/>
+  <text class="k" x="38" y="430">POST /environment</text>
+  <text class="x" x="38" y="450">fastapi</text>
+  <text class="s" x="38" y="472">a rule fires: should_alert</text>
+  <path class="gr" d="M50 386 H 283" marker-end="url(#g)"/>
+  <circle cx="299" cy="386" r="12" class="dot"/>
+  <text class="n" x="299" y="390.5" text-anchor="middle">b</text>
+  <rect class="hot" x="287" y="406" width="241" height="96" rx="3"/>
+  <text class="k" x="299" y="430">POST /chat, no message</text>
+  <text class="x" x="299" y="450">fastapi</text>
+  <text class="s" x="299" y="472">asks Gemini to</text>
+  <text class="s" x="299" y="490">&quot;warn me concisely&quot;</text>
+  <path class="gr" d="M311 386 H 544" marker-end="url(#g)"/>
+  <circle cx="560" cy="386" r="12" class="dot"/>
+  <text class="n" x="560" y="390.5" text-anchor="middle">c</text>
+  <rect class="box" x="548" y="406" width="241" height="96" rx="3"/>
+  <text class="k" x="560" y="430">Switch to the voice page</text>
+  <text class="x" x="560" y="450">browser</text>
+  <text class="s" x="560" y="472">plays the queued</text>
+  <text class="s" x="560" y="490">warning via TTS</text>
+</svg>

@@ -500,6 +500,8 @@ a.t2-link:hover { border-color: var(--accent); }
 
 /* Screenshot: wipes open top to bottom behind an accent scan line. */
 .shot-frame { position: relative; }
+/* A diagram drawn tall for phones stays phone-width until its wide version takes over at 640px. */
+@media (max-width: 639px) { .shot-tall { max-width: 440px; } }
 .motion-ok .shot[data-reveal-pending] .shot-frame { clip-path: inset(0 0 100% 0); }
 .motion-ok .shot[data-reveal-pending] .shot-caption { opacity: 0; }
 .motion-ok .shot[data-revealed] .shot-frame {

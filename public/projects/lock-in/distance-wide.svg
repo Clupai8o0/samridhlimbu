@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" role="img" aria-labelledby="t d">
+  <title id="t">How Lock-In reads the ultrasonic distance</title>
+  <desc id="d">The HC-SR04 faces the chair. Under 10 cm the Pi treats the sensor as blocked and beeps. From 10 to 100 cm the person counts as at the desk. From 100 to 150 cm they are off the desk but the Arduino still reports presence. Past 150 cm, or with no echo inside about 4 metres, presence depends on the PIR having fired in the last 30 seconds.</desc>
+  <style>
+    .t { font-family: Manrope, 'Helvetica Neue', Arial, sans-serif; font-size: 17px; font-weight: 700; fill: #e5e5e5; }
+    .m { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #a1a1aa; }
+    .w { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #e5e5e5; }
+    .k { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #3b82f6; }
+    .y { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #f59e0b; }
+  </style>
+  <rect width="900" height="300" fill="#050505"/>
+
+  <!-- sensor -->
+  <rect x="20" y="20" width="96" height="44" rx="6" fill="#0a0a0b" stroke="#3f3f46" stroke-width="1.5"/>
+  <circle cx="46" cy="42" r="12" fill="none" stroke="#a1a1aa" stroke-width="1.5"/>
+  <circle cx="90" cy="42" r="12" fill="none" stroke="#a1a1aa" stroke-width="1.5"/>
+  <text class="t" x="132" y="40">HC-SR04</text>
+  <text class="m" x="132" y="58">on the desk, facing the chair</text>
+
+  <!-- scale bar: 0..150 cm mapped to x 20..680 (4.4 px/cm) -->
+  <rect x="20" y="104" width="42" height="20" rx="3" fill="#f59e0b"/>
+  <rect x="64" y="104" width="394" height="20" rx="3" fill="#3b82f6"/>
+  <rect x="460" y="104" width="218" height="20" rx="3" fill="#8b8b94"/>
+  <rect x="680" y="104" width="200" height="20" rx="3" fill="#27272a"/>
+
+  <text class="m" x="63" y="94" text-anchor="middle">10</text>
+  <text class="m" x="459" y="94" text-anchor="middle">100</text>
+  <text class="m" x="679" y="94" text-anchor="middle">150</text>
+
+  <text class="y" x="20" y="156">&lt; 10 cm: blocked</text>
+  <text class="m" x="20" y="178">LED red, warning beep</text>
+
+  <text class="k" x="224" y="156">10–100 cm: at the desk</text>
+  <text class="m" x="224" y="178">5 s here: AWAY → IDLE</text>
+
+  <text class="w" x="472" y="156">100–150 cm: off the desk</text>
+  <text class="m" x="472" y="178">still counts as present</text>
+
+  <text class="w" x="700" y="156">&gt; 150 cm or no echo</text>
+  <text class="m" x="700" y="178">present if PIR</text>
+  <text class="m" x="700" y="196">fired in 30 s</text>
+
+  <text class="w" x="20" y="236">Off the desk (&gt; 100 cm) for 30 s</text>
+  <text class="w" x="20" y="254">in FOCUS → DEGRADING.</text>
+  <text class="w" x="20" y="280">Not present for 5 min → AWAY.</text>
+</svg>

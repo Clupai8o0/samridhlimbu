@@ -4,6 +4,9 @@ import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { Shot } from '@/components/case-study/shot'
+import { ArticleChart } from '@/components/article-chart'
+import { CodePre } from '@/components/code-pre'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'A backend for 2,000 simulated driverless taxis, built for SIT314 at Deakin in T2 2026. MQTT and Node-RED ingest, queue-fed dispatch workers, and a slice on AWS Fargate that scaled itself from 1 to 6 tasks on queue depth. Load-tested on a laptop and on AWS; the AWS part was torn down on 26 Aug 2026.'
@@ -33,6 +36,81 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 const GREEN = 'var(--term-green)'
 
 const PROSE = { fontFamily: SANS, fontSize: 15, color: 'var(--fg-dim)', lineHeight: 1.65, maxWidth: 640 }
+
+const STAGES = ['200/s', '800/s', '1,600/s', '3,000/s', '800/s']
+
+const RAMP_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Matches level off near 950 a second',
+  subtitle: 'Local run, 2,000 cars, 22 Aug 2026. Offered rate against matches per second.',
+  caption: 'Requests offered and matched per second, one worker and autoscaled, by ramp stage. p95 match latency stayed between 32 and 46 ms in both runs.',
+  xLabel: 'stage',
+  unit: '/s',
+  categories: STAGES,
+  series: [
+    { name: 'offered', values: [198.1, 792.7, 1584.2, 2969.9, 787.7] },
+    { name: 'one worker', values: [198.1, 725.4, 917.4, 957.5, 690.4] },
+    { name: 'autoscaled, 1 to 6', values: [196.9, 720.3, 928.2, 922.9, 708.9] },
+  ],
+}
+
+const AWS_T = ['0:00', '0:11', '0:22', '0:32', '0:43', '0:54', '1:05', '1:15', '1:26', '1:37', '1:47', '1:58', '2:09', '2:20', '2:30', '2:41', '2:52', '3:03', '3:13', '3:24', '3:35', '3:45', '3:56', '4:07', '4:17', '4:28', '4:39', '4:50', '5:00', '5:11', '5:22', '5:33', '5:43', '5:54', '6:05', '6:16', '6:26', '6:37', '6:48', '6:59', '7:09', '7:20', '7:31', '7:42', '7:52', '8:03', '8:14', '8:25', '8:35', '8:46', '8:57', '9:08', '9:18', '9:29', '9:40', '9:51', '10:01', '10:12', '10:23', '10:34', '10:44', '10:55', '11:06', '11:17', '11:27', '11:38', '11:49', '12:00', '12:11', '12:21', '12:32', '12:43', '12:54', '13:04', '13:15', '13:26', '13:36', '13:47', '13:58', '14:09', '14:19', '14:30', '14:41', '14:52', '15:02', '15:13', '15:24', '15:35', '15:46', '15:56', '16:07', '16:18', '16:29', '16:39', '16:50', '17:01', '17:12', '17:22', '17:33', '17:44', '17:54', '18:05', '18:16', '18:27', '18:37', '18:48', '18:59', '19:10', '19:21', '19:31', '19:42', '19:53', '20:03', '20:14', '20:25', '20:36', '20:46', '20:57', '21:08', '21:19', '21:29']
+
+const AWS_QUEUE_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Rides waiting on the queue',
+  subtitle: 'AWS, 26 Aug 2026, polled about every 10 s. Peak 19,187 about five minutes in.',
+  xLabel: 'since the poller started',
+  unit: 'rides',
+  categories: AWS_T,
+  series: [{ name: 'waiting', values: [3, 4, 0, 3, 4, 2, 3, 3, 3, 0, 647, 1717, 0, 1297, 5997, 1677, 8017, 8017, 8057, 7007, 12097, 10027, 13107, 11054, 13537, 17136, 17767, 16087, 19057, 17767, 19187, 18177, 12064, 8669, 8669, 12064, 15407, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }],
+}
+
+const AWS_TASKS_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Fargate tasks rose 1 to 6 and back to 1',
+  subtitle: 'Desired and running dispatch tasks, same run.',
+  caption: 'Rides waiting on the SQS queue and the dispatch task count, polled on AWS, 26 Aug 2026.',
+  xLabel: 'since the poller started',
+  unit: 'tasks',
+  categories: AWS_T,
+  series: [
+    { name: 'desired', values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
+    { name: 'running', values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
+  ],
+}
+
+const BATCH_DIST_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Batching cut pickup distance under load',
+  subtitle: 'Mean pickup distance by stage. Local runs, 2,000 cars, 22 Aug 2026.',
+  xLabel: 'stage',
+  unit: 'm',
+  categories: STAGES,
+  series: [
+    { name: 'nearest car first', values: [238, 1189, 968, 1044, 1074] },
+    { name: 'batched, 250 ms', values: [237, 861, 777, 796, 820] },
+  ],
+}
+
+const BATCH_LATENCY_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'The cost: p95 match latency',
+  subtitle: 'Same runs. Batched waits for its window, 283 ms at the first stage.',
+  caption: 'Nearest car first against batched with a 250 ms window. The nearest-car figures are the mean of two runs.',
+  xLabel: 'stage',
+  unit: 'ms',
+  categories: STAGES,
+  series: [
+    { name: 'nearest car first', values: [29, 34, 40, 94, 36] },
+    { name: 'batched, 250 ms', values: [283, 112, 111, 111, 113] },
+  ],
+}
 
 const LOG = {
   fontFamily: MONO,
@@ -170,12 +248,13 @@ export default function FleetPlatformPage() {
         </div>
 
         {/* Hero: the architecture */}
-        <div data-stagger-item style={{ maxWidth: 440, margin: '0 auto 24px' }}>
+        <div data-stagger-item style={{ margin: '0 auto 24px' }}>
           <Shot
             src="/projects/fleet-platform/architecture.svg"
             alt="Diagram in two columns. Telemetry: 2,000 taxis publish every 2 s to Mosquitto, Node-RED filters, dedupes and tags one of nine zones, and clean events reach the state service and the monitor. Rides: riders send requests to the rides queue, the autoscaler scales dispatch workers on the backlog, dispatch claims the nearest free car from the state service, and trips go through the trip service to Postgres 16 at up to 500 rows a second."
             width={440}
             height={900}
+            wide={{ src: '/projects/fleet-platform/architecture-wide.svg', width: 888, height: 520 }}
             caption="Diagram of the platform as it ran on my laptop, with the service names from the code."
             priority
           />
@@ -208,7 +287,7 @@ export default function FleetPlatformPage() {
           Each taxi publishes its position, battery and status over MQTT. A Node-RED flow drops readings outside the service area, readings with a repeated timestamp and readings where nothing moved. It then tags each one with one of nine zones. The simulator corrupts 6% of its output on purpose, so the filter has real work to do.
         </p>
         <div data-reveal style={{ marginBottom: 20 }}>
-          <pre style={LOG}>{INGEST_LOG}</pre>
+          <CodePre style={LOG} code={INGEST_LOG} />
           <div style={LOG_CAPTION}>Node-RED&apos;s counters and the state service&apos;s, from the 22 Aug 2026 run. Lines copied as captured, trimmed.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
@@ -232,17 +311,11 @@ export default function FleetPlatformPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           I ran the ramp twice, once with a single worker and once with an autoscaler free to run up to six.
         </p>
-        <div data-reveal style={{ maxWidth: 560, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/fleet-platform/ramp.webp"
-            alt="Chart: offered requests rise through 200, 800, 1,600 and 3,000 a second, then drop to 800. Matches per second for one worker and for the autoscaled run follow each other and flatten near 950, with 958 a second at the 3,000 stage. Below, p95 match latency stays between about 30 and 50 ms for both."
-            width={1120}
-            height={1335}
-            caption="Matches per second against requests offered, one worker and autoscaled, measured on my laptop on 22 Aug 2026. The bars are the offered rate."
-          />
+        <div data-reveal style={{ marginBottom: 24 }}>
+          <ArticleChart block={RAMP_CHART} />
         </div>
         <div data-reveal style={{ marginBottom: 20 }}>
-          <pre style={LOG}>{MATCH_LOG}</pre>
+          <CodePre style={LOG} code={MATCH_LOG} />
           <div style={LOG_CAPTION}>The load harness, one-worker run, 22 Aug 2026. Latency columns in ms, distances in metres. Trimmed to the stage table.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
@@ -258,7 +331,7 @@ export default function FleetPlatformPage() {
           Each match also sends a trip to a trip service, which writes to Postgres 16 in batches: once a second, at most 500 rows. The matcher was producing about 960 a second. On 24 Aug I ran the ramp once more and watched the writer instead.
         </p>
         <div data-reveal style={{ marginBottom: 20 }}>
-          <pre style={LOG}>{WRITE_LOG}</pre>
+          <CodePre style={LOG} code={WRITE_LOG} />
           <div style={LOG_CAPTION}>Trip service counters and a row count, 24 Aug 2026. Trimmed to the start, the peak and the drain.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
@@ -270,12 +343,13 @@ export default function FleetPlatformPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           I moved the part the project is about. The ride queue became SQS, and the dispatch worker and state service became Fargate tasks on ARM64 at a quarter of a vCPU. The state service was seeded from a snapshot of the fleet. Ingest, the broker, the monitor and Postgres stayed on my laptop.
         </p>
-        <div data-reveal style={{ maxWidth: 440, margin: '0 auto 40px' }}>
+        <div data-reveal style={{ margin: '0 auto 40px' }}>
           <Shot
             src="/projects/fleet-platform/aws-slice.svg"
             alt="Diagram: the load harness on my laptop sends requests to SQS rides and reads answers from SQS matches, inside a VPC with public subnets and no NAT. Dispatch on Fargate, 1 to 6 ARM64 tasks with its own task role, receives from rides and sends to matches, and calls state on Fargate at state.sit314.local with a bearer token. Cloud Map gives private DNS and Secrets Manager holds the token. IoT Core holds 3 things with one certificate each."
             width={440}
             height={900}
+            wide={{ src: '/projects/fleet-platform/aws-slice-wide.svg', width: 900, height: 540 }}
             caption="Diagram of what ran on AWS in ap-southeast-2, 25–26 Aug 2026."
           />
         </div>
@@ -285,29 +359,27 @@ export default function FleetPlatformPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Two CloudWatch alarms watch the number of rides waiting. Above 200 for a minute, a step policy adds dispatch tasks, more of them the further over it is. Below 50 for two minutes, another removes two. The count stays between one and six.
         </p>
-        <div data-reveal style={{ maxWidth: 440, margin: '0 auto 24px' }}>
+        <div data-reveal style={{ margin: '0 auto 24px' }}>
           <Shot
             src="/projects/fleet-platform/scaling-loop.svg"
             alt="Diagram: the rides queue backlog, a one-minute average, feeds two alarms. backlog-high, average over 200 for 1 minute, triggers sit314-out, plus 1 to plus 3 tasks with a 60 s cooldown. backlog-low, average under 50 for 2 minutes, triggers sit314-in, minus 2 tasks with a 120 s cooldown. Both set the ECS desired count for sit314-dispatch, 1 to 6."
             width={440}
             height={700}
+            wide={{ src: '/projects/fleet-platform/scaling-loop-wide.svg', width: 900, height: 356 }}
             caption="Diagram of the scaling policy, with the thresholds from the deploy script."
           />
         </div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The run asked for 25 requests a second for 90 s, then 200 for 240 s, then 25 for 240 s. That is far below the 3,000 a second on the laptop, on purpose. It is there to show the policy working, not to measure speed, so I never put its numbers beside the local ones.
         </p>
-        <div data-reveal style={{ maxWidth: 560, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/fleet-platform/aws-scaling.webp"
-            alt="Chart: rides waiting on the queue climb from zero to a peak of 19,187 about five minutes in, then fall back to zero. Below, desired and running dispatch tasks step from 1 to 4 to 6, hold, then step down to 4, 2 and 1 by about 18 minutes."
-            width={1120}
-            height={1335}
-            caption="Rides waiting on the SQS queue and the dispatch task count, polled every 10 s on AWS, 26 Aug 2026."
-          />
+        <div data-reveal style={{ marginBottom: 24 }}>
+          <ArticleChart block={AWS_QUEUE_CHART} />
         </div>
         <div data-reveal style={{ marginBottom: 24 }}>
-          <pre style={LOG}>{AWS_SCALE_LOG}</pre>
+          <ArticleChart block={AWS_TASKS_CHART} />
+        </div>
+        <div data-reveal style={{ marginBottom: 24 }}>
+          <CodePre style={LOG} code={AWS_SCALE_LOG} />
           <div style={LOG_CAPTION}>Application Auto Scaling&apos;s own record, newest first. Trimmed to the two scale-outs.</div>
         </div>
         <div data-reveal style={{ marginBottom: 24 }}>
@@ -320,7 +392,7 @@ export default function FleetPlatformPage() {
           />
         </div>
         <div data-reveal style={{ marginBottom: 20 }}>
-          <pre style={LOG}>{AWS_LOAD_LOG}</pre>
+          <CodePre style={LOG} code={AWS_LOAD_LOG} />
           <div style={LOG_CAPTION}>The load harness on the SQS path, 26 Aug 2026. Distances in metres. It reports no latency, because the answers come back through a queue it polls.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
@@ -333,7 +405,7 @@ export default function FleetPlatformPage() {
           Each of three demo vehicles has its own X.509 certificate, under one IoT policy scoped by thing name. To test it, I pointed v0000&apos;s certificate at v0001&apos;s topic. IoT Core does not send back an error, it just drops the connection, so the proof is in AWS&apos;s own log. The state service has no task role, accepts traffic only from the dispatch security group, and wants a bearer token that reaches the container as a Secrets Manager ARN.
         </p>
         <div data-reveal style={{ marginBottom: 20 }}>
-          <pre style={LOG}>{SECURITY_LOG}</pre>
+          <CodePre style={LOG} code={SECURITY_LOG} />
           <div style={LOG_CAPTION}>AWS IoT&apos;s log and the state service probe, 25 Aug 2026 (UTC). The last line is cut short.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
@@ -345,14 +417,11 @@ export default function FleetPlatformPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The worker takes eight requests at once, then lets each one race for its own nearest car. As an extension I tried a batched hill climb adapted from a 2017 DiDi paper. It collects requests for 250 ms and assigns cars to the whole batch together.
         </p>
-        <div data-reveal style={{ maxWidth: 560, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/fleet-platform/batching.webp"
-            alt="Chart: mean pickup distance by stage. Nearest car first runs about 970 to 1,190 m under load, 1,044 m at 3,000 a second; batched with a 250 ms window runs about 780 to 860 m, 796 m at 3,000. Both are the same at 200 a second. Below, p95 match latency is about 30 to 100 ms for nearest car first and about 111 ms for batched, 283 ms at the first stage."
-            width={1120}
-            height={1335}
-            caption="Mean pickup distance and p95 match latency, nearest car first against batched with a 250 ms window. Local runs on 22 Aug 2026; the nearest-car figures are the mean of two runs."
-          />
+        <div data-reveal style={{ marginBottom: 24 }}>
+          <ArticleChart block={BATCH_DIST_CHART} />
+        </div>
+        <div data-reveal style={{ marginBottom: 24 }}>
+          <ArticleChart block={BATCH_LATENCY_CHART} />
         </div>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
           Across the loaded stages, mean pickup distance fell from 1,068 m to 814 m, about a quarter. The cost was latency: p95 went from 51 ms to 112 ms. The full comparison is in the post <Link href="/writing/sit314-batched-assignment" style={{ color: 'var(--accent)' }}>Batched assignment in a driverless-taxi fleet</Link>.

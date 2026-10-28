@@ -4,6 +4,9 @@ import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { Shot } from '@/components/case-study/shot'
+import { ArticleChart } from '@/components/article-chart'
+import { CodePre } from '@/components/code-pre'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'GovHack 2025 winner. Ask in plain English and GovChat finds matching Australian government datasets, with sources and a five-factor trust score on every answer. In October 2026 I measured its search on 40 test questions and built a local prototype that finds the right dataset first for 28 of them instead of 21.'
@@ -87,14 +90,27 @@ const STACK: [string, string][] = [
   ['Oct 2026 tests', 'all-MiniLM-L6-v2 run locally · rank_bm25 · Playwright screenshots · matplotlib'],
 ]
 
-function LogBlock({ label, text, reveal = true }: { label: string; text: string; reveal?: boolean })
+const RETRIEVAL_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'hbar',
+  title: 'Right dataset found, of 40 questions',
+  subtitle: 'Four search versions; the prototype runs file words.',
+  caption: 'Mean reciprocal rank: original 0.583, hybrid only 0.492, file words + hybrid 0.671, file words 0.740. Measured on my MacBook, October 2026. Search time stayed about the same: a median of 38.9 ms before, 39.3 ms after, over 120 searches each.',
+  unit: 'of 40',
+  categories: ['original', 'hybrid only', 'file words + hybrid', 'file words'],
+  series: [
+    { name: 'first', values: [21, 16, 24, 28] },
+    { name: 'in the 4 the app shows', values: [25, 22, 30, 31] },
+    { name: 'in the top 10', values: [30, 29, 35, 33] },
+  ],
+}
+
+function LogBlock({ label, text, reveal = true, lang }: { label: string; text: string; reveal?: boolean; lang?: string })
 {
   return (
     <figure data-reveal={reveal ? '' : undefined} style={{ margin: '0 0 12px' }}>
       <figcaption style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</figcaption>
-      <pre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }}>
-        {text}
-      </pre>
+      <CodePre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }} code={text} lang={lang} />
     </figure>
   )
 }
@@ -165,13 +181,14 @@ export default function GovchatPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The catalogue holds 2,016 datasets: 1,216 from the ABS, 500 from Data.gov.au and 300 from the Department of Education. Each one becomes a single line of text and a single vector; nothing is chunked. A question is embedded the same way, and the four nearest datasets come back with the answer, the trust factors and an audit id.
         </p>
-        <div style={{ maxWidth: 400, margin: '0 auto 40px' }}>
+        <div style={{ margin: '0 0 40px' }}>
           <Shot
             src="/projects/govchat/architecture.svg"
             alt="Diagram. Built once: ingest with gov_data_scraper.py and Normalizer.py, datasets.csv with 2016 datasets, one text per dataset with no chunking, OpenAI text-embedding-3-small, a Chroma collection. Per question: FastAPI GET /query embeds the question, takes the 4 nearest datasets, answers from titles and agency only, swaps figures for [data available], scores trust on 5 factors and saves an audit record; then the Next.js frontend. Blue notes mark the October 2026 changes: file-name words and true cosine similarity."
             width={400}
             height={960}
             caption="Drawn from the code in govchat-api. The blue lines are the two changes in the October 2026 prototype."
+            wide={{ src: '/projects/govchat/architecture-wide.svg', width: 784, height: 500 }}
           />
         </div>
 
@@ -209,7 +226,7 @@ export default function GovchatPage() {
         {/* Trust score */}
         <div className="section-label" style={{ fontFamily: MONO }}>Trust score</div>
         <div style={{ marginBottom: 12 }}>
-          <LogBlock label="retrieval.py (simplified)" text={TRUST_CODE} reveal={false} />
+          <LogBlock label="retrieval.py (simplified)" text={TRUST_CODE} reveal={false} lang="python" />
         </div>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 24px' }}>
           Grounding carries the most weight because invented figures are the worst failure. Retrieval reaches 1.0 only when the best match clears 0.90 similarity. The figure check is a pattern match, so it catches forms like &ldquo;4.2 million&rdquo; or &ldquo;5 percent&rdquo;, not every number. Two factors are placeholders for now: recency and verification sit at 1.0 until freshness tracking and checks on figures are built.
@@ -277,14 +294,8 @@ export default function GovchatPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           I wrote 40 questions, such as &ldquo;How many cars does each household own?&rdquo; and &ldquo;Fringe benefits tax statistics&rdquo;. They are made up for this test, not taken from real users. Each one is labelled by hand with a pattern over the catalogue&apos;s titles, ids or links, so any matching dataset counts as right. A test script calls each version&apos;s own search function and records where the first right dataset lands. Both versions use the same local embedding model, all-MiniLM-L6-v2, because the OpenAI one needs a key. So these numbers compare the two versions; they are not the numbers of the live site.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/govchat/retrieval.webp"
-            alt="Bar chart of four search versions on 40 questions. Right dataset first: original 21, hybrid only 16, file words plus hybrid 24, file words 28. In the 4 the app shows: 25, 22, 30, 31. In the top 10: 30, 29, 35, 33. Mean reciprocal rank: 0.583, 0.492, 0.671, 0.740."
-            width={960}
-            height={1420}
-            caption="Measured on my MacBook, October 2026. Blue is the version the prototype runs. Search time stayed about the same: a median of 38.9 ms before, 39.3 ms after, over 120 searches each."
-          />
+        <div data-reveal style={{ marginBottom: 24 }}>
+          <ArticleChart block={RETRIEVAL_CHART} />
         </div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           File words lifted the right-first count from 21 to 28 of 40 and broke none of the 21. In the top four it gained seven questions and lost one, &ldquo;Number of deaths by state&rdquo;. Keyword search on the original text put the right dataset first for 16 questions, down from 21. Added to the file words, it got a right dataset into the top 10 for two more questions but put one first for four fewer. The app only shows four, so I left it off.

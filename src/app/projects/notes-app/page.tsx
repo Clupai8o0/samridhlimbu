@@ -4,6 +4,9 @@ import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { Shot } from '@/components/case-study/shot'
+import { ArticleChart } from '@/components/article-chart'
+import { CodePre } from '@/components/code-pre'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'A small Next.js, Express and MongoDB notes app built to carry a 10-stage Jenkins pipeline: tests, versioned Docker images, SonarCloud and Snyk, a release tag, a manual approval, an SSH deploy to AWS EC2, smoke and Prometheus checks, and a rollback. Built in May 2025; re-run locally in October 2026.'
@@ -110,14 +113,23 @@ const STACK: [string, string][] = [
   ['Monitoring', 'express-prometheus-middleware · Prometheus · Grafana · Node Exporter · Alertmanager'],
 ]
 
-function LogBlock({ label, text }: { label: string; text: string })
+const STAGE_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'hbar',
+  title: 'Seconds per stage command',
+  subtitle: 'One run each, on a MacBook, 27 Oct 2026.',
+  caption: 'Backend tests: 1 of 132 tests fails, on purpose. Image builds used --no-cache. Building the client image takes longest.',
+  unit: 's',
+  categories: ['backend lint', 'backend tests', 'frontend lint', 'frontend tests', 'server image build', 'client image build'],
+  series: [{ name: 'wall time', values: [1.9, 22.1, 1.6, 2.7, 20.6, 89.2] }],
+}
+
+function LogBlock({ label, text, lang }: { label: string; text: string; lang?: string })
 {
   return (
     <figure style={{ margin: '0 0 12px' }}>
       <figcaption style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</figcaption>
-      <pre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }}>
-        {text}
-      </pre>
+      <CodePre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }} code={text} lang={lang} />
     </figure>
   )
 }
@@ -181,12 +193,13 @@ export default function NotesAppPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           These are the stage names from the Jenkinsfile, in order. The first seven run on their own. The deploy waits for someone to approve it, then logs in to the EC2 server over SSH, pulls the two images for this build and restarts the stack with docker-compose. A failure at any point runs the rollback, which deploys the last successful build&apos;s images.
         </p>
-        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 40px' }}>
+        <div data-reveal style={{ margin: '0 auto 40px' }}>
           <Shot
             src="/projects/notes-app/pipeline.svg"
             alt="Pipeline diagram: 01 Checkout Code, 02 Lint and Test Backend, 03 Lint and Test Frontend, 04 Build and Push Docker Images, 05 Code Quality Analysis, 06 Snyk Security Scan, 07 Release Tagging, then an input step 'Deploy to Production?', 08 Deploy to Production, 09 Smoke Test on EC2, 10 Monitoring and Alerts. Dotted lines labelled 'any stage fails' lead to 'post failure: roll back', which redeploys the last good build."
             width={480}
             height={1002}
+            wide={{ src: '/projects/notes-app/pipeline-wide.svg', width: 890, height: 532 }}
             caption="The ten stages and the rollback, drawn from the Jenkinsfile."
           />
         </div>
@@ -212,13 +225,7 @@ export default function NotesAppPage() {
           The Jenkins server and its build logs are gone, so in October 2026 I ran the stages that need no accounts from a fresh clone on my MacBook. The pushes, scans, tagging and deploy need Docker Hub, SonarCloud, Snyk, GitHub and SSH credentials, so they were not run. The logs below are from that local run.
         </p>
         <div data-reveal style={{ marginBottom: 24 }}>
-          <Shot
-            src="/projects/notes-app/stage-times.webp"
-            alt="Bar chart of seconds per stage command: backend lint 1.9, backend tests 22.1 (marked: 1 of 132 tests fails, on purpose), frontend lint 1.6, frontend tests 2.7, server image build 20.6, client image build 89.2"
-            width={1440}
-            height={840}
-            caption="Wall time of each stage command, one run each, on a MacBook on 27 Oct 2026. Image builds used --no-cache. Building the client image takes longest."
-          />
+          <ArticleChart block={STAGE_CHART} />
         </div>
         <p style={{ ...PROSE, margin: '0 0 16px' }}>
           The backend stage fails at the latest commit, as intended. The last pipeline commit changed the ping test to request <code>/server/pin</code>, so it gets a 404. The commit before it passes all 132 tests.
@@ -240,12 +247,13 @@ export default function NotesAppPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The server records how long every request takes, by route and status, and serves the numbers at <code>/server/metrics</code>. Prometheus collects them and Grafana graphs them. The repo&apos;s production compose file runs Prometheus, Grafana, Node Exporter and Alertmanager next to the app, but ships no dashboards, so I built one for this page.
         </p>
-        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 32px' }}>
+        <div data-reveal style={{ margin: '0 auto 32px' }}>
           <Shot
             src="/projects/notes-app/request-path.svg"
             alt="Request path diagram: the browser sends GET /api/notes with its token cookie to the Next.js 15 client on port 3000, which passes a Bearer token to the Express 5 server on port 5000, which queries MongoDB. The server exposes /server/metrics, Prometheus pulls the metrics and Grafana shows dashboards."
             width={480}
             height={466}
+            wide={{ src: '/projects/notes-app/request-path-wide.svg', width: 880, height: 358 }}
             caption="One request, and what watches it. Drawn from the code."
           />
         </div>

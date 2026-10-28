@@ -4,6 +4,9 @@ import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { Shot } from '@/components/case-study/shot'
+import { ArticleChart } from '@/components/article-chart'
+import { CodePre } from '@/components/code-pre'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'A concurrent HTTP load balancer in Go, written for SIT315 at Deakin in 2025: four balancing strategies plus sticky and canary routing, health checks, circuit breakers, retries, an AIMD concurrency limit and Prometheus metrics. Re-tested on my MacBook in October 2026, with real logs.'
@@ -118,14 +121,63 @@ const STACK: [string, string][] = [
   ['Test rig', 'three Go dummy backends with set delays · an open-loop Go load generator · Python for runs and charts'],
 ]
 
+const STRAT_SHARE_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'hbar',
+  title: 'Sent to the slow backend',
+  subtitle: 'Backends at 20, 20 and 120 ms; 200 req/s.',
+  unit: '%',
+  categories: ['round-robin', 'weighted RR 3:3:1', 'least-conn', 'P2C-EWMA'],
+  series: [{ name: 'share of requests', values: [33.3, 14.3, 10.3, 11.0] }],
+}
+
+const STRAT_MEAN_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'hbar',
+  title: 'Mean latency',
+  subtitle: 'Same runs.',
+  unit: 'ms',
+  categories: ['round-robin', 'weighted RR 3:3:1', 'least-conn', 'P2C-EWMA'],
+  series: [{ name: 'mean latency', values: [54.5, 35.5, 32.6, 32.0] }],
+  caption: 'Measured on my MacBook, 27 Oct 2026. Median of three 60 s runs per strategy (two for P2C), about 12,000 requests per run.',
+}
+
+const FAILOVER_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Killing one of three backends',
+  subtitle: ':8432 dies at 20 s and restarts at 50 s. Requests served per second, out of 200.',
+  xLabel: 'time',
+  unit: '/s',
+  categories: ['0 s', '1 s', '2 s', '3 s', '4 s', '5 s', '6 s', '7 s', '8 s', '9 s', '10 s', '11 s', '12 s', '13 s', '14 s', '15 s', '16 s', '17 s', '18 s', '19 s', '20 s', '21 s', '22 s', '23 s', '24 s', '25 s', '26 s', '27 s', '28 s', '29 s', '30 s', '31 s', '32 s', '33 s', '34 s', '35 s', '36 s', '37 s', '38 s', '39 s', '40 s', '41 s', '42 s', '43 s', '44 s', '45 s', '46 s', '47 s', '48 s', '49 s', '50 s', '51 s', '52 s', '53 s', '54 s', '55 s', '56 s', '57 s', '58 s', '59 s', '60 s', '61 s', '62 s', '63 s', '64 s', '65 s', '66 s', '67 s', '68 s', '69 s', '70 s', '71 s', '72 s', '73 s', '74 s', '75 s', '76 s', '77 s', '78 s', '79 s', '80 s', '81 s', '82 s', '83 s', '84 s', '85 s', '86 s', '87 s', '88 s', '89 s', '90 s', '91 s', '92 s', '93 s', '94 s', '95 s', '96 s', '97 s', '98 s', '99 s'],
+  series: [
+    { name: ':8432', values: [66, 67, 67, 66, 67, 67, 66, 67, 67, 66, 67, 67, 66, 67, 67, 66, 67, 67, 66, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 13, 20, 24, 31, 26, 30, 38, 34, 40, 32, 39, 41, 43, 47, 46, 50, 46, 56, 54, 52, 56, 59, 53, 59, 59, 65, 64, 63, 65, 66, 66, 67, 67, 66, 67, 67, 66, 67, 67, 66, 67, 67, 66, 67] },
+    { name: 'each other backend', values: [66.5, 66.5, 66.5, 67, 66.5, 66.5, 67, 66.5, 66.5, 67, 66.5, 66.5, 67, 66.5, 66.5, 67, 66.5, 66.5, 67, 67, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 99.5, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 99.5, 100, 100, 99, 100, 99.5, 100, 100, 100, 93.5, 90, 88, 84.5, 87, 85, 80.5, 83, 80, 84, 80.5, 79.5, 78.5, 76.5, 77, 75, 76.5, 72, 73, 74, 72, 70.5, 73.5, 70.5, 70.5, 67.5, 68, 68.5, 67.5, 67, 67, 66.5, 66.5, 67, 66.5, 66.5, 67, 66.5, 66.5, 67, 66.5, 66.5, 67, 66.5] },
+  ],
+  caption: 'Measured on my MacBook, 27 Oct 2026: 19,995 requests over 100 s, one failed, a 502 at 30 s. The health check marks :8432 down at about 30 s and up at about 56 s, then its share climbs back over about 30 s of warm-up. lb.log stamps whole seconds, so the health-check times are to the nearest second.',
+}
+
+const AIMD_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Overload: AIMD on and off',
+  subtitle: '200 req/s at backends that can serve ~120. Requests served per second.',
+  xLabel: 'time',
+  unit: '/s',
+  categories: ['0 s', '1 s', '2 s', '3 s', '4 s', '5 s', '6 s', '7 s', '8 s', '9 s', '10 s', '11 s', '12 s', '13 s', '14 s', '15 s', '16 s', '17 s', '18 s', '19 s', '20 s', '21 s', '22 s', '23 s', '24 s', '25 s', '26 s', '27 s', '28 s', '29 s', '30 s', '31 s', '32 s', '33 s', '34 s', '35 s', '36 s', '37 s', '38 s', '39 s', '40 s', '41 s', '42 s', '43 s', '44 s', '45 s', '46 s', '47 s', '48 s', '49 s', '50 s', '51 s', '52 s', '53 s', '54 s', '55 s', '56 s', '57 s', '58 s', '59 s'],
+  series: [
+    { name: 'AIMD on', values: [176, 110, 117, 114, 118, 113, 118, 113, 120, 114, 119, 114, 117, 115, 117, 116, 119, 115, 118, 116, 118, 117, 116, 116, 118, 115, 118, 116, 118, 114, 118, 115, 120, 116, 117, 112, 109, 98, 93, 80, 75, 72, 72, 73, 73, 73, 73, 74, 72, 73, 74, 75, 73, 74, 73, 73, 75, 73, 73, 74] },
+    { name: 'AIMD off', values: [176, 119, 117, 117, 119, 118, 120, 117, 119, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 106, 137, 117, 119, 119, 119, 119, 118, 118, 120, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 106] },
+  ],
+  caption: 'Measured on my MacBook, 27 Oct 2026: two 60 s runs of 11,999 requests each. With AIMD on, the soft limit, scraped from /metrics once a second, steps down from 64 to its floor of 4 by 40 s, and median latency falls from about 500 ms to 51 ms. With it off, median latency stays around 530 ms whenever anything is served.',
+}
+
 function LogBlock({ label, text }: { label: string; text: string })
 {
   return (
     <figure data-reveal style={{ margin: '0 0 12px' }}>
       <figcaption style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</figcaption>
-      <pre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }}>
-        {text}
-      </pre>
+      <CodePre style={{ margin: 0, padding: '12px 14px', background: 'var(--bg-2)', borderRadius: 2, fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: 'var(--fg-dim)', whiteSpace: 'pre', overflowX: 'auto' }} code={text} />
     </figure>
   )
 }
@@ -177,12 +229,13 @@ export default function LoadBalancerPage() {
 
         {/* Request path */}
         <div className="section-label" style={{ fontFamily: MONO }}>How a request moves</div>
-        <div style={{ maxWidth: 400, margin: '0 auto 40px' }}>
+        <div style={{ margin: '0 auto 40px' }}>
           <Shot
             src="/projects/load-balancer/request-path.svg"
             alt="Diagram: a GET request passes the AIMD soft limit, a 64-slot semaphore and a per-client token bucket, then the picker chooses a backend and the reverse proxy forwards it, retrying another backend on a connection error. Below, the health check, outlier check and AIMD controller loops, and the /metrics and access log outputs."
             width={400}
             height={1010}
+            wide={{ src: '/projects/load-balancer/request-path-wide.svg', width: 840, height: 546 }}
             caption="Diagram drawn from main.go and serverpool.go. Each step can turn a request away before it reaches a backend."
           />
         </div>
@@ -198,14 +251,11 @@ export default function LoadBalancerPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Two backends answer in about 20 ms and the third in about 120 ms. Each strategy got 200 requests a second for 60 s on a fresh process, three times. Round-robin sends the slow backend a third of the traffic, and weighted round-robin at 3:3:1 a seventh. Least-connections and P2C both send it about a tenth and cut the mean from 54 ms to 32 or 33. Those two tie: the gap between them is smaller than the gap between runs of the same strategy. The p95 and p99 hardly move, because the slow backend still takes more than 5 % of requests and they are the slowest ones.
         </p>
-        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/load-balancer/strategies.webp"
-            alt="Two bar charts. Share of requests sent to the slow backend: round-robin 33 %, weighted RR 14 %, least-conn 10 %, P2C-EWMA 11 %. Mean latency: 54, 36, 33 and 32 ms."
-            width={960}
-            height={1000}
-            caption="Measured on my MacBook, 27 Oct 2026. Median of three 60 s runs per strategy (two for P2C), about 12,000 requests per run."
-          />
+        <div data-reveal>
+          <ArticleChart block={STRAT_SHARE_CHART} />
+        </div>
+        <div data-reveal>
+          <ArticleChart block={STRAT_MEAN_CHART} />
         </div>
         <div data-reveal style={{ overflowX: 'auto', marginBottom: 24 }}>
           <table style={{ borderCollapse: 'collapse', fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--fg-dim)', minWidth: 420 }}>
@@ -230,12 +280,13 @@ export default function LoadBalancerPage() {
         <p style={{ ...PROSE, fontSize: 'var(--text-sm)', color: 'var(--muted)', margin: '0 0 24px' }}>
           One P2C run is left out. Its balancer process got a stop signal 15 s in, from outside the test scripts, and the load generator&apos;s remaining 8,901 requests failed. The P2C row is the median of the two full runs.
         </p>
-        <div data-reveal style={{ maxWidth: 400, margin: '0 auto 40px' }}>
+        <div data-reveal style={{ margin: '0 auto 40px' }}>
           <Shot
             src="/projects/load-balancer/p2c-ewma.svg"
             alt="Diagram: a request samples two of three backends at random, sends the request to the one with the lower EWMA (21 ms over 122 ms), and the EWMA update rule, 0.2 times the latest plus 0.8 times the old value."
             width={400}
             height={400}
+            wide={{ src: '/projects/load-balancer/p2c-ewma-wide.svg', width: 820, height: 320 }}
             caption="Diagram. The two EWMA values are the ones /metrics reported at the end of the second P2C run."
           />
         </div>
@@ -245,14 +296,8 @@ export default function LoadBalancerPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Three equal backends at about 20 ms, 200 requests a second for 100 s. At 20 s the test script killed the :8432 process, and at 50 s it started it again.
         </p>
-        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/load-balancer/failover.webp"
-            alt="Line chart of requests served per second. Before 20 s each backend serves about 67. When :8432 dies at 20 s its line drops to zero and the other two each rise to 100. One 502 at 30 s. The health check marks it down at about 30 s and up at about 56 s, then its share climbs back over about 30 s of warm-up."
-            width={960}
-            height={920}
-            caption="Measured on my MacBook, 27 Oct 2026: 19,995 requests over 100 s, one failed. Shaded: the :8432 process is not running. lb.log stamps whole seconds, so the health-check times are to the nearest second."
-          />
+        <div data-reveal>
+          <ArticleChart block={FAILOVER_CHART} />
         </div>
         <LogBlock label="lb.log, the same run (UTC)" text={FAILOVER_LOG} />
         <p style={{ ...PROSE, fontSize: 'var(--text-sm)', color: 'var(--muted)', margin: '0 0 24px' }}>
@@ -268,14 +313,8 @@ export default function LoadBalancerPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Here each backend works on two requests at a time and takes about 50 ms, so the three together can serve about 120 a second. The load generator sent 200 a second for 60 s, once with the AIMD controller running and once in a copy with it switched off, where the soft limit stays at 64.
         </p>
-        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 24px' }}>
-          <Shot
-            src="/projects/load-balancer/aimd.webp"
-            alt="Three panels over 60 s. Top: the soft limit steps down from 64 to 4 by 40 s. Middle: requests served per second; with AIMD on, about 116 until 36 s, then 73; with it off, about 118, but zero from 10 to 28 s and from 40 to 58 s. Bottom: median latency; with AIMD on it falls from about 500 ms to 51 ms; with it off it stays around 530 ms whenever anything is served."
-            width={960}
-            height={1520}
-            caption="Measured on my MacBook, 27 Oct 2026: two 60 s runs of 11,999 requests each. The limit comes from /metrics, scraped once a second."
-          />
+        <div data-reveal>
+          <ArticleChart block={AIMD_CHART} />
         </div>
         <LogBlock label="lb.log and /metrics, AIMD off" text={OVERLOAD_LOG} />
         <p style={{ ...PROSE, margin: '12px 0 40px' }}>

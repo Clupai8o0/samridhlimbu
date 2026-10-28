@@ -184,15 +184,45 @@ export function highlightJson(code: string): HToken[] {
   return tokens
 }
 
-export function highlightText(code: string): HToken[] {
+// Logs, terminal output and plain config (text, yaml, makefile, or no language):
+// comments, prompts, quoted strings, URLs and paths, timestamps, status words,
+// numbers and hex, and the key before a ':' or '='.
+const LOG_RE = new RegExp(
+  [
+    '((?:^|(?<=\\s))#(?:\\s[^\\n]*|$))',
+    '(^[$❯] )',
+    '("(?:\\\\.|[^"\\\\\\n])*")',
+    '(https?:\\/\\/[^\\s"]+|(?<![\\w/.])\\/[\\w.-]+(?:\\/[\\w.-]+)*)',
+    '(\\b\\d{4}-\\d{2}-\\d{2}(?:[T ]\\d{2}:\\d{2}(?::\\d{2}(?:\\.\\d+)?)?Z?)?|\\b\\d{1,2}:\\d{2}:\\d{2}(?:\\.\\d+)?)',
+    '(\\b(?:ERROR|ERR|FAIL|FAILED|FAILURE|WARN|WARNING|INFO|DEBUG|OK|PASS|PASSED|GET|POST|PUT|DELETE|PATCH|true|false|null|None|True|False)\\b)',
+    '(\\b0x[0-9a-fA-F]+\\b|\\b\\d+(?:[.,]\\d+)*)',
+    '([A-Za-z_][\\w.-]*(?=\\s*(?:=|:(?!\\/\\/))))',
+  ].join('|'),
+  'gm'
+)
+
+export function highlightLog(code: string): HToken[] {
   const tokens: HToken[] = []
-  for (const [idx, line] of code.split('\n').entries()) {
-    if (idx > 0) tokens.push({ text: '\n' })
-    const hash = line.indexOf('#')
-    if (hash === -1) { tokens.push({ text: line }); continue }
-    if (hash > 0) tokens.push({ text: line.slice(0, hash) })
-    tokens.push({ text: line.slice(hash), cls: 'cmt' })
+  let last = 0
+  let m: RegExpExecArray | null
+  LOG_RE.lastIndex = 0
+  while ((m = LOG_RE.exec(code)) !== null) {
+    if (m[0] === '') {
+      LOG_RE.lastIndex++
+      continue
+    }
+    if (m.index > last) tokens.push({ text: code.slice(last, m.index) })
+    if (m[1] !== undefined) tokens.push({ text: m[1], cls: 'cmt' })
+    else if (m[2] !== undefined) tokens.push({ text: m[2], cls: 'prompt' })
+    else if (m[3] !== undefined) tokens.push({ text: m[3], cls: 'str' })
+    else if (m[4] !== undefined) tokens.push({ text: m[4], cls: 'str' })
+    else if (m[5] !== undefined) tokens.push({ text: m[5], cls: 'cmt' })
+    else if (m[6] !== undefined) tokens.push({ text: m[6], cls: 'kw' })
+    else if (m[7] !== undefined) tokens.push({ text: m[7], cls: 'num' })
+    else if (m[8] !== undefined) tokens.push({ text: m[8], cls: 'attr' })
+    last = LOG_RE.lastIndex
   }
+  if (last < code.length) tokens.push({ text: code.slice(last) })
   return tokens
 }
 
@@ -202,8 +232,7 @@ export function highlight(code: string, lang?: string): HToken[] {
   if (lang === 'js' || lang === 'jsx' || lang === 'ts' || lang === 'tsx' || lang === 'javascript' || lang === 'typescript') return highlightJs(code)
   if (lang === 'css') return highlightCss(code)
   if (lang === 'json') return highlightJson(code)
-  if (lang === 'text' || lang === 'plaintext') return highlightText(code)
-  return [{ text: code }]
+  return highlightLog(code)
 }
 
 export const HL_COLORS: Record<NonNullable<HToken['cls']>, string> = {

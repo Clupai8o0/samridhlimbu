@@ -90,3 +90,32 @@ mount and sets up the motion.
 - Don't use GSAP. The current pipeline is dep-free (plain CSS transitions
   driven by `IntersectionObserver`). `gsap` is still in `package.json` from an
   earlier experiment — safe to remove if nothing reintroduces it.
+
+## Charts and code blocks
+
+- Data charts are never static images. Draw them with `<ArticleChart>`
+  (`src/components/article-chart.tsx`): `line`, `bar`, or `hbar` (sideways
+  bars, for long category names). Data comes from the real run, never read off
+  an old image. Keep them compact: fewest panels, one unit per chart.
+- Code, logs and terminal output use `<CodePre code={...} lang="..." />`
+  (`src/components/code-pre.tsx`), so every block is coloured. Default `log`
+  colouring suits captured output; pass `json`, `bash`, `python` etc. for code.
+
+## Illustrations and image generation (owner, 28 Oct 2026)
+
+The site must not read as AI-made or "vibe coded". So:
+
+- **Simple illustrations: go ahead** with our image models (the
+  `openai-imagegen` MCP, `openai_generate_image`). Simple means flat spot
+  illustrations, small icons or glyphs, plain line drawings, empty-state art.
+  Match the site: dark background, flat colours from the site palette, no
+  glow or gradients, no text inside the image.
+- **Anything fancy: ask the owner first**, with one sample and the prompt.
+  Fancy means photoreal or 3D renders, hero or cover art, detailed scenes,
+  people or faces, logos, mockups of a project, or anything that looks
+  obviously AI-made.
+- Never use a generated image as a screenshot or as evidence of what a project
+  does. Screenshots come from the real app; charts from `<ArticleChart>`;
+  diagrams stay hand-built SVG.
+- Save as `.webp` under `public/<area>/<slug>/` with real alt text, and say in
+  the reply or handoff which images were generated.

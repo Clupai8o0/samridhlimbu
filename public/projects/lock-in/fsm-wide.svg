@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 500" width="880" height="500" role="img" aria-labelledby="t d">
+  <title id="t">Lock-In five-state machine</title>
+  <desc id="d">AWAY becomes IDLE after 5 seconds at the desk. A single press starts a session in FOCUS. FOCUS becomes DEGRADING when vision says not focused with confidence of at least 0.6, or after 30 seconds off the desk. DEGRADING returns to FOCUS after 60 seconds back and focused, or becomes BREAK after 120 seconds. A double press goes from FOCUS or DEGRADING to BREAK and a single press resumes FOCUS. After 25 focused minutes the pomodoro timer starts a BREAK. A long press ends the session from any session state; 5 minutes with no one present goes to AWAY; 10 minutes with no one present in BREAK goes to IDLE.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a1a1aa"/>
+    </marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  <style>
+    .s { font-family: Manrope, 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #e5e5e5; letter-spacing: 0.04em; }
+    .m { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #a1a1aa; }
+    .w { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #e5e5e5; }
+    .k { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 14px; fill: #3b82f6; }
+    .box { fill: #0a0a0b; stroke: #3f3f46; stroke-width: 1.5; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.5; }
+    .ln { stroke: #a1a1aa; stroke-width: 1.5; fill: none; }
+    .lb { stroke: #3b82f6; stroke-width: 1.5; fill: none; }
+  </style>
+  <rect width="880" height="500" fill="#050505"/>
+
+  <!-- key -->
+  <line class="ln" x1="20" y1="22" x2="44" y2="22"/>
+  <text class="m" x="52" y="27">sensor or timer</text>
+  <line class="lb" x1="210" y1="22" x2="234" y2="22"/>
+  <text class="k" x="242" y="27">button</text>
+
+  <!-- states -->
+  <rect class="box" x="20" y="48" width="140" height="56" rx="6"/>
+  <text class="s" x="36" y="73">AWAY</text>
+  <text class="m" x="36" y="94">LEDs off</text>
+
+  <rect class="box" x="20" y="194" width="140" height="56" rx="6"/>
+  <text class="s" x="36" y="219">IDLE</text>
+  <text class="m" x="36" y="240">yellow LED</text>
+
+  <rect class="hot" x="320" y="194" width="200" height="56" rx="6"/>
+  <text class="s" x="336" y="219">FOCUS</text>
+  <text class="m" x="336" y="240">green LED, timer runs</text>
+
+  <rect class="box" x="700" y="194" width="160" height="56" rx="6"/>
+  <text class="s" x="716" y="219">DEGRADING</text>
+  <text class="m" x="716" y="240">red LED, logged</text>
+
+  <rect class="box" x="320" y="384" width="200" height="56" rx="6"/>
+  <text class="s" x="336" y="409">BREAK</text>
+  <text class="m" x="336" y="430">yellow LED blinks</text>
+
+  <!-- AWAY -> IDLE -->
+  <line class="ln" x1="50" y1="104" x2="50" y2="190" marker-end="url(#a)"/>
+  <text class="w" x="64" y="142">at desk, ≤ 100 cm,</text>
+  <text class="w" x="64" y="160">for 5 s</text>
+
+  <!-- IDLE -> FOCUS -->
+  <line class="lb" x1="160" y1="222" x2="316" y2="222" marker-end="url(#b)"/>
+  <text class="k" x="174" y="212">single press</text>
+  <text class="m" x="174" y="242">starts a session</text>
+
+  <!-- FOCUS -> DEGRADING -->
+  <line class="ln" x1="520" y1="208" x2="696" y2="208" marker-end="url(#a)"/>
+  <text class="w" x="534" y="148">vision: unfocused,</text>
+  <text class="w" x="534" y="166">confidence ≥ 0.6,</text>
+  <text class="w" x="534" y="184">or off desk 30 s</text>
+
+  <!-- DEGRADING -> FOCUS -->
+  <line class="ln" x1="700" y1="236" x2="524" y2="236" marker-end="url(#a)"/>
+  <text class="w" x="534" y="266">back and focused</text>
+  <text class="w" x="534" y="284">for 60 s</text>
+
+  <!-- DEGRADING -> BREAK -->
+  <path class="ln" d="M780 250 V412 H524" marker-end="url(#a)"/>
+  <text class="w" x="766" y="382" text-anchor="end">still degrading</text>
+  <text class="w" x="766" y="400" text-anchor="end">after 120 s</text>
+
+  <!-- FOCUS -> BREAK: double press -->
+  <line class="lb" x1="390" y1="250" x2="390" y2="380" marker-end="url(#b)"/>
+  <text class="k" x="378" y="300" text-anchor="end">double</text>
+  <text class="k" x="378" y="318" text-anchor="end">press</text>
+  <text class="k" x="378" y="336" text-anchor="end">↓</text>
+
+  <!-- BREAK -> FOCUS: single press -->
+  <line class="lb" x1="450" y1="384" x2="450" y2="254" marker-end="url(#b)"/>
+  <text class="k" x="462" y="300">↑</text>
+  <text class="k" x="462" y="318">single</text>
+  <text class="k" x="462" y="336">press</text>
+
+  <!-- also -->
+  <text class="m" x="20" y="306">ALSO</text>
+  <text class="k" x="20" y="332">long press, 2.5 s</text>
+  <text class="w" x="20" y="350">  → IDLE, ends the session</text>
+  <text class="w" x="20" y="378">no one there for 5 min</text>
+  <text class="w" x="20" y="396">  → AWAY, ends any session</text>
+  <text class="w" x="20" y="424">BREAK, no one for 10 min → IDLE</text>
+  <text class="w" x="20" y="452">25 min focused → BREAK (pomodoro)</text>
+  <text class="w" x="20" y="480">double press in DEGRADING → BREAK</text>
+</svg>

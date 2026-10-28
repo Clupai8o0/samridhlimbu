@@ -14,11 +14,12 @@ export type ContentBlock =
 
 // A themed bar or line chart, drawn by <ArticleChart>. One value per category in
 // every series, all on one y axis. Bars always start at zero; a line can set yMin.
+// 'hbar' draws the bars sideways, one row per category, for long category names.
 // A line series may carry lo/hi (one per category) to draw a shaded band, such as
 // one standard deviation either side of a mean.
 export type ChartBlock = {
   type: 'chart'
-  kind: 'bar' | 'line'
+  kind: 'bar' | 'hbar' | 'line'
   title: string
   subtitle?: string
   caption?: string

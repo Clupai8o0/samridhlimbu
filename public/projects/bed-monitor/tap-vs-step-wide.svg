@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 480" width="880" height="480" role="img" aria-labelledby="t d">
+  <title id="t">How the tap detector tells a tap from a person</title>
+  <desc id="d">Schematic. A tap rises above the threshold and falls back inside 400 ms, so it counts. A person getting into bed rises and stays up past 400 ms, so it is thrown away. Five counted taps inside two seconds raise the HELP alarm.</desc>
+  <style>.k{font:600 15px "JetBrains Mono", Menlo, Consolas, monospace;fill:#e5e5e5}.s{font:400 14px "JetBrains Mono", Menlo, Consolas, monospace;fill:#a1a1aa}.x{font:400 14px "JetBrains Mono", Menlo, Consolas, monospace;fill:#3b82f6}.w{font:400 14px "JetBrains Mono", Menlo, Consolas, monospace;fill:#f59e0b}.sig{stroke:#3b82f6;stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}.thr{stroke:#8b8b94;stroke-width:1;stroke-dasharray:3 4}.br{stroke:#a1a1aa;stroke-width:1.2;fill:none}</style>
+  <rect width="880" height="480" fill="#050505"/>
+  <text class="k" x="16" y="40">A tap is a pulse</text>
+  <text class="s" x="16" y="62">up past the threshold, then back down</text>
+  <text class="x" x="16" y="122">falls back in time: counted</text>
+  <rect x="344" y="16" width="520" height="120" rx="3" fill="#0e0e11"/>
+  <line class="thr" x1="352" y1="60" x2="856" y2="60"/>
+  <text class="s" x="856" y="53" text-anchor="end">threshold</text>
+  <polyline class="sig" points="352,94 534,94 545.2,30 573.2,30 584.4,94 856,94"/>
+  <path class="br" d="M534 106 V112 H674 V106"/>
+  <text class="s" x="604" y="129" text-anchor="middle">400 ms</text>
+  <text class="k" x="16" y="192">A person is a step</text>
+  <text class="s" x="16" y="214">up past the threshold, and stays up</text>
+  <text class="s" x="16" y="274">still up at 400 ms: thrown away</text>
+  <rect x="344" y="168" width="520" height="120" rx="3" fill="#0e0e11"/>
+  <line class="thr" x1="352" y1="212" x2="856" y2="212"/>
+  <text class="s" x="856" y="205" text-anchor="end">threshold</text>
+  <polyline class="sig" points="352,246 534,246 545.2,182 856,182"/>
+  <path class="br" d="M534 258 V264 H674 V258"/>
+  <text class="s" x="604" y="281" text-anchor="middle">400 ms</text>
+  <text class="k" x="16" y="344">Five taps inside 2 s</text>
+  <text class="s" x="16" y="366">what the task sheet asks for</text>
+  <text class="w" x="16" y="426">HELP latched until a nurse resets it</text>
+  <rect x="344" y="320" width="520" height="120" rx="3" fill="#0e0e11"/>
+  <line class="thr" x1="352" y1="364" x2="856" y2="364"/>
+  <text class="s" x="856" y="357" text-anchor="end">threshold</text>
+  <polyline class="sig" points="352,398 408,398 416.4,334 433.2,334 441.6,398 480.8,398 489.2,334 506,334 514.4,398 553.6,398 562,334 578.8,334 587.2,398 626.4,398 634.8,334 651.6,334 660,398 699.2,398 707.6,334 724.4,334 732.8,398 856,398"/>
+  <path class="br" d="M408 410 V416 H732.8 V410"/>
+  <text class="s" x="570.4" y="433" text-anchor="middle">2 s</text>
+  <text class="s" x="16" y="466">Schematic, not measured data.</text>
+</svg>

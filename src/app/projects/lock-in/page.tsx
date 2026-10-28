@@ -4,6 +4,9 @@ import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { Shot } from '@/components/case-study/shot'
+import { ArticleChart } from '@/components/article-chart'
+import { CodePre } from '@/components/code-pre'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'Lock-In is a desk-side focus tracker for Deakin SIT210. An Arduino Uno reads the desk, a Raspberry Pi runs a five-state machine with a Gemini vision check every 75 seconds, and a Flask dashboard shows the state live over MQTT and Server-Sent Events.'
@@ -102,6 +105,21 @@ const SUITES: [string, string, string][] = [
   ['test_mqtt_integration.py', '4', 'round trips through a real broker; skipped when none is running'],
 ]
 
+const LATENCY_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'line',
+  title: 'Click to screen',
+  subtitle: '40 clicks per build, sorted fastest to slowest',
+  caption: 'File polling: median 2.75 s, from 1.42 to 3.48 s. MQTT and SSE: median 0.31 s, from 0.04 to 0.49 s. Measured in a browser on a Mac on 27 Oct 2026 over localhost. Before: commit caa9d82. After: c8d9299.',
+  xLabel: 'click, fastest to slowest',
+  unit: 's',
+  categories: Array.from({ length: 40 }, (_, i) => String(i + 1)),
+  series: [
+    { name: 'file polling', values: [1.42, 1.7, 1.71, 1.8, 1.83, 1.84, 1.84, 1.92, 1.94, 2.03, 2.04, 2.11, 2.11, 2.22, 2.32, 2.39, 2.43, 2.57, 2.59, 2.73, 2.76, 2.8, 2.82, 2.82, 2.83, 3.05, 3.06, 3.12, 3.12, 3.13, 3.14, 3.24, 3.31, 3.35, 3.35, 3.35, 3.35, 3.38, 3.4, 3.48] },
+    { name: 'MQTT and SSE', values: [0.04, 0.05, 0.05, 0.06, 0.07, 0.09, 0.11, 0.12, 0.12, 0.13, 0.13, 0.15, 0.2, 0.22, 0.23, 0.23, 0.25, 0.26, 0.3, 0.31, 0.32, 0.32, 0.32, 0.33, 0.33, 0.34, 0.35, 0.35, 0.36, 0.36, 0.37, 0.39, 0.39, 0.41, 0.41, 0.42, 0.43, 0.43, 0.45, 0.49] },
+  ],
+}
+
 const DECISIONS = [
   ['the state machine decides', 'trusting the model', 'My first version asked Gemini every 30 seconds and believed the answer. It flipped between FOCUS and DEGRADING all the time, because one bad frame, a hand over the face or a glance down at paper, was enough. Now a judgment below 0.6 confidence is ignored, leaving the desk only counts after 30 seconds, and getting back to FOCUS takes 60 seconds of steady focus. Gemini is one input among the sensors.'],
   ['a state machine with no I/O', 'one that reads the clock and the ports', 'fsm.py takes events in and hands back a list of actions. The clock is passed in, so the 13 FSM tests move time with a fake clock instead of waiting, and none of them needs a serial port or a network.'],
@@ -176,12 +194,13 @@ export default function LockInPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The Pi is the only part that talks to everything else, and the only place session state lives. The Uno sends a JSON frame every second over USB serial and gets LED and buzzer commands back. On the Pi, the orchestrator runs eight asyncio tasks around a single state machine and writes sessions to SQLite. It publishes a snapshot to a local MQTT broker twice a second, and the Flask dashboard passes each one to the browser.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 40px' }}>
+        <div style={{ margin: '0 auto 40px' }}>
           <Shot
             src="/projects/lock-in/system.svg"
             alt="Diagram: sensors feed the Arduino Uno, which drives 3 LEDs and a piezo and talks to the Raspberry Pi over USB serial at 115200 baud with JSON. On the Pi, orchestrator.py runs 8 asyncio tasks around one FSM and writes to SQLite; it publishes lockin/snapshot at 2 Hz, retained, to mosquitto; the Flask dashboard subscribes and streams to the browser over SSE at /api/stream. Button presses go back through POST /api/button and the cmd topic. A webcam still comes in over HTTP GET /capture, and the focus judgment from Gemini 2.5 Flash."
             width={400}
             height={860}
+            wide={{ src: '/projects/lock-in/system-wide.svg', width: 900, height: 460 }}
             caption="Diagram of the system, with the ports, topics and rates from the code."
           />
         </div>
@@ -191,21 +210,23 @@ export default function LockInPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Every sensor transition waits for a hold, so no single distance reading moves the state. A Gemini judgment acts at once, but only at 0.6 confidence or more. The ultrasonic sensor decides whether I&apos;m at the desk; the PIR only keeps me counted as present.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+        <div style={{ margin: '0 auto 24px' }}>
           <Shot
             src="/projects/lock-in/fsm.svg"
             alt="State diagram: AWAY to IDLE after 5 s at the desk within 100 cm; IDLE to FOCUS on a single press; FOCUS to DEGRADING when vision says unfocused with confidence of at least 0.6, or after 30 s off the desk; DEGRADING back to FOCUS after 60 s back and focused; DEGRADING to BREAK after 120 s; a double press goes to BREAK and a single press resumes FOCUS. A 2.5 s long press ends the session; 5 minutes with no one present goes to AWAY; 10 minutes with no one in BREAK goes to IDLE; 25 focused minutes starts a BREAK."
             width={400}
             height={1048}
+            wide={{ src: '/projects/lock-in/fsm-wide.svg', width: 880, height: 500 }}
             caption="The state machine, with the hold times and thresholds from fsm.py and config.py."
           />
         </div>
-        <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+        <div style={{ margin: '0 auto 24px' }}>
           <Shot
             src="/projects/lock-in/distance.svg"
             alt="Schematic of the HC-SR04 distance bands: under 10 cm means the sensor is blocked, with a red LED and a warning beep; 10 to 100 cm is at the desk; 100 to 150 cm is off the desk but still present; beyond 150 cm or no echo counts as present only if the PIR fired in the last 30 s. Off the desk for 30 s in FOCUS goes to DEGRADING; not present for 5 minutes goes to AWAY."
             width={400}
             height={650}
+            wide={{ src: '/projects/lock-in/distance-wide.svg', width: 900, height: 300 }}
             caption="Schematic of how the distance reading is read, not measured data."
           />
         </div>
@@ -213,7 +234,7 @@ export default function LockInPage() {
           Here is one session from the run behind the screenshots. The script sat down, pressed the button, put a hand over the sensor, walked away twice and pressed the button again. The timestamps show the holds: DEGRADING 30 seconds after leaving, FOCUS again 60 seconds after coming back, and BREAK after 120 seconds in DEGRADING.
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
-          <pre style={LOG}>{SESSION_LOG}</pre>
+          <CodePre style={LOG} code={SESSION_LOG} />
           <div style={LOG_CAPTION}>Orchestrator log, 27 Oct 2026, simulated Arduino. Lines copied as logged, trimmed to the state changes and a few warnings.</div>
         </div>
 
@@ -256,14 +277,8 @@ export default function LockInPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The first dashboard wrote a button press to a file that the Pi read once a second, and the browser fetched the state every 2 seconds. A click took seconds to show. In the last commits before the report, I moved both directions onto MQTT and pushed state to the browser over Server-Sent Events. To check the gain, I ran both builds against the same simulated Arduino and had a browser click Start and Break in turn, 40 clicks per build, timing until the state badge changed.
         </p>
-        <div style={{ marginBottom: 40 }}>
-          <Shot
-            src="/projects/lock-in/latency.webp"
-            alt="Dot plot of 40 clicks per build. File polling: from 1.42 to 3.48 seconds, median 2.75 s. MQTT and SSE: from 0.04 to 0.49 seconds, median 0.31 s."
-            width={1120}
-            height={775}
-            caption="Click to state badge on the real dashboard, measured on a Mac on 27 Oct 2026 over localhost. Before: commit caa9d82. After: c8d9299."
-          />
+        <div data-reveal style={{ marginBottom: 40 }}>
+          <ArticleChart block={LATENCY_CHART} />
         </div>
 
         {/* Failure */}
@@ -272,7 +287,7 @@ export default function LockInPage() {
           Each part can drop out without taking the rest down. With the broker stopped, the dashboard wrote commands to the old file and the Pi still acted on them, and with no camera the vision task skipped its turn every 75 seconds.
         </p>
         <div data-reveal style={{ marginBottom: 14 }}>
-          <pre style={LOG}>{FAILURE_LOG}</pre>
+          <CodePre style={LOG} code={FAILURE_LOG} />
           <div style={LOG_CAPTION}>Orchestrator log with no MQTT broker running, 27 Oct 2026. Lines copied as logged, trimmed.</div>
         </div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
@@ -282,7 +297,7 @@ export default function LockInPage() {
           When the Uno goes away, the serial reader retries every 5 seconds until it comes back.
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
-          <pre style={LOG}>{SERIAL_LOG}</pre>
+          <CodePre style={LOG} code={SERIAL_LOG} />
           <div style={LOG_CAPTION}>Orchestrator log after the simulated Arduino exited, 27 Oct 2026. Lines copied as logged.</div>
         </div>
 
@@ -291,12 +306,13 @@ export default function LockInPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The PIR and the button sit on the Uno&apos;s two interrupt pins, so a press or a movement is caught between frames. The Uno sends one frame a second and only moves the LEDs and buzzer when the Pi tells it to.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 auto 24px' }}>
+        <div style={{ margin: '0 auto 24px' }}>
           <Shot
             src="/projects/lock-in/wiring.svg"
             alt="Pin map: PIR HC-SR501 on D2 (INT0), push button on D3 (INT1, active-low with the internal pull-up), HC-SR04 trigger D4 and echo D5, DHT22 on D7 with a 10 kilo-ohm pull-up, LDR on A0 in a divider with 10 kilo-ohms. Outputs: red LED D6, yellow LED D8, green LED D10, each through 220 ohms, and a passive piezo on D9. USB serial to the Raspberry Pi at 115200 baud."
             width={400}
             height={840}
+            wide={{ src: '/projects/lock-in/wiring-wide.svg', width: 900, height: 352 }}
             caption="Pin map from lock_in_arduino.ino and the setup guide in the repo."
           />
         </div>
@@ -321,7 +337,7 @@ export default function LockInPage() {
           ))}
         </div>
         <div data-reveal style={{ marginBottom: 40 }}>
-          <pre style={LOG}>{TEST_LOG}</pre>
+          <CodePre style={LOG} code={TEST_LOG} />
           <div style={LOG_CAPTION}>python -m unittest -v on the four suites, run on Linux on 28 Oct 2026 with mosquitto in a container. Lines copied as printed, trimmed to a few tests and the result.</div>
         </div>
 

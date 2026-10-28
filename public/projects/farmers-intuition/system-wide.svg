@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 848 460" width="848" height="460" role="img" aria-labelledby="t d">
+  <title id="t">Farmers Intuition system diagram</title>
+  <desc id="d">Two paths. On the right, the dashboard's gauges stand in for vineyard sensors; each change is posted to the FastAPI service, where a gradient boosting model predicts weekly water, a rule layer adjusts it for land area, variety, growth stage, rain and soil moisture, and alert rules check the result. On the left, the voice page sends speech to ElevenLabs Scribe, posts the words to the API's chat endpoint, which builds a prompt from the latest state and asks Gemini (2.5 Flash unless GEMINI_MODEL says otherwise), and plays the reply through ElevenLabs text to speech.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b8b94"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 14px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 400 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .zone { fill: #0e0e11; }
+    .hot { fill: #0a0a0b; stroke: #3b82f6; stroke-width: 1.2; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+    .gr { stroke: #8b8b94; stroke-width: 1.4; fill: none; }
+  </style>
+  <rect width="848" height="460" fill="#050505"/>
+
+  <!-- zones -->
+  <rect class="zone" x="6" y="6" width="244" height="104" rx="4"/>
+  <rect class="zone" x="258" y="6" width="584" height="104" rx="4"/>
+  <rect class="zone" x="6" y="166" width="166" height="286" rx="4"/>
+  <rect class="zone" x="180" y="166" width="662" height="286" rx="4"/>
+
+  <!-- elevenlabs -->
+  <text class="s" x="242" y="26" text-anchor="end">OUTSIDE</text>
+  <rect class="box" x="14" y="16" width="150" height="84" rx="3"/>
+  <text class="k" x="24" y="40">ElevenLabs</text>
+  <text class="s" x="24" y="61">Scribe: speech in</text>
+  <text class="s" x="24" y="80">TTS: Sage's voice</text>
+  <path class="gr" d="M89 104 V 172" marker-start="url(#g)" marker-end="url(#g)"/>
+  <text class="s" x="101" y="139">/api/stt</text>
+  <text class="s" x="101" y="157">/api/tts</text>
+
+  <!-- gemini -->
+  <text class="s" x="834" y="26" text-anchor="end">OUTSIDE</text>
+  <rect class="box" x="298" y="16" width="164" height="84" rx="3"/>
+  <text class="k" x="308" y="40">Gemini</text>
+  <text class="s" x="308" y="61">2.5 Flash default</text>
+  <text class="s" x="308" y="80">writes the reply</text>
+
+  <!-- browser -->
+  <text class="s" x="164" y="442" text-anchor="end">BROWSER · REACT 19</text>
+  <rect class="box" x="14" y="176" width="150" height="100" rx="3"/>
+  <text class="k" x="24" y="200">Voice page</text>
+  <text class="s" x="24" y="221">tap the orb,</text>
+  <text class="s" x="24" y="240">ask a question,</text>
+  <text class="s" x="24" y="259">hear the answer</text>
+  <rect class="box" x="14" y="320" width="150" height="100" rx="3"/>
+  <text class="k" x="24" y="344">Dashboard</text>
+  <text class="s" x="24" y="365">6 gauges and</text>
+  <text class="s" x="24" y="384">3 menus stand</text>
+  <text class="s" x="24" y="403">in for sensors</text>
+
+  <path class="ar" d="M164 226 H 294" marker-end="url(#a)"/>
+  <text class="x" x="186" y="216">POST /chat</text>
+  <path class="ar" d="M164 370 H 294" marker-end="url(#a)"/>
+  <text class="x" x="186" y="342">POST</text>
+  <text class="x" x="186" y="360">/environment</text>
+
+  <!-- api -->
+  <text class="s" x="834" y="442" text-anchor="end">FASTAPI ON VERCEL</text>
+  <rect class="box" x="298" y="176" width="164" height="124" rx="3"/>
+  <text class="k" x="308" y="200">/chat</text>
+  <text class="s" x="308" y="221">builds Sage's</text>
+  <text class="s" x="308" y="240">prompt from the</text>
+  <text class="s" x="308" y="259">latest readings,</text>
+  <text class="s" x="308" y="278">advice and alerts</text>
+
+  <rect class="hot" x="298" y="320" width="164" height="100" rx="3"/>
+  <text class="k" x="308" y="344">Layer 1 · ML</text>
+  <text class="s" x="308" y="365">gradient boost</text>
+  <text class="s" x="308" y="384">predicts litres</text>
+  <text class="s" x="308" y="403">per week</text>
+  <path class="ar" d="M462 370 H 478" marker-end="url(#a)"/>
+  <rect class="hot" x="482" y="320" width="164" height="100" rx="3"/>
+  <text class="k" x="492" y="344">Layer 2 · rules</text>
+  <text class="s" x="492" y="365">area, variety,</text>
+  <text class="s" x="492" y="384">stage, rain,</text>
+  <text class="s" x="492" y="403">soil moisture</text>
+  <path class="ar" d="M646 370 H 662" marker-end="url(#a)"/>
+  <rect class="box" x="666" y="320" width="164" height="100" rx="3"/>
+  <text class="k" x="676" y="344">Alert rules</text>
+  <text class="s" x="676" y="365">dry, heat, mildew,</text>
+  <text class="s" x="676" y="384">wet, 20% shift;</text>
+  <text class="s" x="676" y="403">page asks /chat</text>
+
+  <!-- state feeds chat -->
+  <path class="gr" d="M564 320 V 238 H 466" marker-end="url(#g)"/>
+  <text class="s" x="576" y="266">latest state,</text>
+  <text class="s" x="576" y="285">kept in memory</text>
+
+  <!-- chat to gemini -->
+  <path class="ar" d="M380 176 V 104" marker-end="url(#a)"/>
+  <text class="x" x="392" y="139">prompt</text>
+  <text class="x" x="392" y="157">+ question</text>
+</svg>

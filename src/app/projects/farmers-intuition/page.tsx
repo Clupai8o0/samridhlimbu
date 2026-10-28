@@ -4,6 +4,9 @@ import { PageShell } from '@/components/page-shell'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { Shot } from '@/components/case-study/shot'
+import { ArticleChart } from '@/components/article-chart'
+import { CodePre } from '@/components/code-pre'
+import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
   'A watering advisor for vineyards, built overnight at Hack48 in March 2026. A gradient boosting model predicts weekly water, plain rules scale it to one block, and a voice assistant called Sage speaks the advice through Gemini and ElevenLabs. The March build is still live on Vercel.'
@@ -90,6 +93,31 @@ const STACK: [string, string[]][] = [
   ['Tooling', ['pytest', 'Claude Code']],
 ]
 
+const WALK_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'hbar',
+  title: 'Litres per week, one step at a time',
+  subtitle: 'Six calls to /recommend, one field added each time.',
+  caption: 'Local copy of the API, 27 Oct 2026, Yarra Valley, 24 °C, 45% humidity. Each multiplier is that step\'s ratio to the step before.',
+  unit: 'L',
+  categories: ['model baseline', 'land area 5 ha ×0.20', 'variety shiraz ×1.00', 'stage veraison ×1.15', 'rain 8 mm ×0.97', 'soil 62% wet ×0.87'],
+  series: [{ name: 'litres per week', values: [624780, 124956, 124956, 143699, 139101, 120322] }],
+}
+
+const MODEL_CHART: ChartBlock = {
+  type: 'chart',
+  kind: 'hbar',
+  title: 'Error by model (RMSE), lower is better',
+  subtitle: '2025 holdout and walk-forward mean (2022-25), litres per week.',
+  caption: 'Rerun of the repo\'s training script, 27 Oct 2026, scikit-learn 1.8.0, simulated data. It picked gradient boosting, the same as the March model (2025 R² 0.969). XGBoost was not installed, so it was skipped.',
+  unit: 'L',
+  categories: ['gradient boosting', 'linear regression', 'hist gradient boosting', 'random forest'],
+  series: [
+    { name: '2025 holdout', values: [16984, 13812, 18018, 18150] },
+    { name: 'walk-forward mean', values: [17238, 19461, 17854, 18384] },
+  ],
+}
+
 export default function FarmersIntuitionPage() {
   return (
     <PageShell>
@@ -148,13 +176,14 @@ export default function FarmersIntuitionPage() {
         </div>
 
         {/* Illustration */}
-        <div data-reveal style={{ maxWidth: 400, margin: '0 auto 40px' }}>
+        <div data-reveal style={{ margin: '0 0 40px' }}>
           <Shot
             src="/projects/farmers-intuition/idea.svg"
             alt="Line illustration: a sun, a rain cloud and a soil probe in a vine row each send a dotted line into one blue water drop, and a line from the drop runs to a phone sending out sound waves"
             width={400}
             height={520}
             caption="Illustration of the idea: sun, rain and soil go in, one watering number comes out, and the phone says it out loud."
+            wide={{ src: '/projects/farmers-intuition/idea-wide.svg', width: 800, height: 430 }}
           />
         </div>
 
@@ -166,22 +195,24 @@ export default function FarmersIntuitionPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The voice page goes the other way. Speech goes to ElevenLabs and comes back as text. The text goes to <code>/chat</code>, which builds a prompt for Gemini from the stored readings. Gemini&apos;s reply goes back to ElevenLabs and plays as audio.
         </p>
-        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 32px' }}>
+        <div data-reveal style={{ margin: '0 0 32px' }}>
           <Shot
             src="/projects/farmers-intuition/system.svg"
-            alt="System diagram: ElevenLabs at the top, linked to the voice page through /api/stt and /api/tts. The voice page posts to /chat and the dashboard posts to /environment on a FastAPI service on Vercel, where layer 1 (gradient boosting) feeds layer 2 (rules) and then the alert rules. The latest state feeds /chat, which sends a prompt to Gemini at the bottom."
+            alt="System diagram: ElevenLabs at the top, linked to the voice page through /api/stt and /api/tts. The voice page posts to /chat and the dashboard posts to /environment on a FastAPI service on Vercel, where layer 1 (gradient boosting) feeds layer 2 (rules) and then the alert rules. The latest state feeds /chat, which sends a prompt to Gemini."
             width={400}
             height={908}
             caption="System diagram, drawn from the code in the two main repos."
+            wide={{ src: '/projects/farmers-intuition/system-wide.svg', width: 848, height: 460 }}
           />
         </div>
-        <div data-reveal style={{ maxWidth: 480, margin: '0 auto 40px' }}>
+        <div data-reveal style={{ margin: '0 0 40px' }}>
           <Shot
             src="/projects/farmers-intuition/request-flow.svg"
             alt="Request flow. Asking Sage a question takes seven steps: tap the orb, /api/stt, GET /environment, POST /chat, Gemini answers, /api/tts, play the reply. When a rule fires on the dashboard: POST /environment returns should_alert, POST /chat with no message asks Gemini for a short warning, and the voice page plays it when you switch to it."
             width={400}
             height={940}
             caption="What happens when you ask Sage a question, and when an alert rule fires."
+            wide={{ src: '/projects/farmers-intuition/request-flow-wide.svg', width: 816, height: 518 }}
           />
         </div>
 
@@ -193,14 +224,8 @@ export default function FarmersIntuitionPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           Layer 2 scales it down with plain rules from a config file. Block size is compared with a 25 ha reference, and each variety and growth stage has a factor. Rain takes off up to 35% and wet soil up to 25%.
         </p>
-        <div data-reveal style={{ maxWidth: 560, margin: '0 auto 20px' }}>
-          <Shot
-            src="/projects/farmers-intuition/recommend-steps.webp"
-            alt="Bar chart, litres per week after each step: model baseline 625k, land area 5 ha 125k (times 0.20), variety shiraz 125k (times 1.00), stage veraison 144k (times 1.15), rain 8 mm 139k (times 0.97), soil 62% wet 120k (times 0.87)"
-            width={1120}
-            height={1240}
-            caption="Six calls to /recommend on a local copy of the API, 27 Oct 2026, adding one field each time (Yarra Valley, 24 °C, 45% humidity). Each multiplier is that step's ratio to the step before."
-          />
+        <div data-reveal style={{ marginBottom: 20 }}>
+          <ArticleChart block={WALK_CHART} />
         </div>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
           The &quot;confidence&quot; label is not a model score. It counts how many optional fields you filled in. In the calls above it went from low to medium at the third field and to high at the fourth.
@@ -211,14 +236,8 @@ export default function FarmersIntuitionPage() {
         <p style={{ ...PROSE, margin: '0 0 20px' }}>
           The training script tries four models and tests each one twice. First on 2025, which it holds back from training. Then one year at a time from 2022, training only on the years before. It ranks the models on three scores (RMSE, MAE and R²) in both tests and keeps the lowest total.
         </p>
-        <div data-reveal style={{ maxWidth: 560, margin: '0 auto 40px' }}>
-          <Shot
-            src="/projects/farmers-intuition/model-choice.webp"
-            alt="Bar chart of RMSE in litres per week, 2025 holdout and walk-forward mean: gradient boosting 17.0k and 17.2k, linear regression 13.8k and 19.5k, hist gradient boosting 18.0k and 17.9k, random forest 18.2k and 18.4k"
-            width={1120}
-            height={1240}
-            caption="Error from rerunning the repo's training script on 27 Oct 2026 with scikit-learn 1.8.0, on the simulated data. It picked the same model as the one committed in March (2025 R² 0.969). XGBoost was not installed, so it was skipped."
-          />
+        <div data-reveal style={{ marginBottom: 40 }}>
+          <ArticleChart block={MODEL_CHART} />
         </div>
 
         {/* Alerts */}
@@ -227,7 +246,7 @@ export default function FarmersIntuitionPage() {
           Five rules can raise an alert: soil under 30%, heat over 35 °C, mildew weather, soil over 85%, and a jump of more than 20% in the advice while the block settings stay the same. When one fires, the dashboard asks <code>/chat</code> for a short warning, shows the text and queues it. The voice page reads it out when you switch to it.
         </p>
         <div data-reveal style={{ marginBottom: 32 }}>
-          <pre style={LOG}>{ALERT_LOG}</pre>
+          <CodePre style={LOG} code={ALERT_LOG} lang="json" />
           <div style={CAPTION}>The API&apos;s reply to one POST /environment for a hot, dry day (38 °C, 18% soil), on a local copy, 27 Oct 2026. Cut down to these fields with jq.</div>
         </div>
         <div data-reveal style={{ marginBottom: 40 }}>
