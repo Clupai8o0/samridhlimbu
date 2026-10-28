@@ -381,6 +381,7 @@ export const PROJECTS: Project[] = [
 ]
 
 export const ARCHIVE: ArchiveItem[] = [
+  { year: '2026', name: 'Airtable clone · 100k-row grid', tech: 'Next.js · tRPC · Prisma · PostgreSQL · TanStack Virtual', link: 'private', slug: 'airtable' },
   { year: '2026', name: 'Farmers Intuition · Hack48', tech: 'FastAPI · Gemini · ElevenLabs', link: 'github', slug: 'farmers-intuition' },
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
   { year: '2026', name: 'Seatly · restaurant bookings', tech: 'Next.js 16 · FastAPI · PostgreSQL · Drizzle · Turborepo', link: 'private', slug: 'seatly' },

@@ -12,7 +12,7 @@ const PROJECT_SLUGS = [
   'hoddle', 'kairos', 'aria', 'r1gpt', 'dsec', 'ontrack', 'tempo', 'morgue', 'cstack',
   'king-glazing', 'allarkive', 'acknowledgement-force', 'krishnaveni', 'nmmun', 'tapcraft',
   'lock-in', 'govchat', 'farmers-intuition', 'notes-app', 'load-balancer', 'bed-monitor', 'fleet-platform',
-  'voice-controller', 'robot-api', 'dispatch', 'art-gallery', 'seatly',
+  'voice-controller', 'robot-api', 'dispatch', 'art-gallery', 'seatly', 'airtable',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
