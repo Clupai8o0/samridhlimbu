@@ -381,6 +381,11 @@ export const ARCHIVE: ArchiveItem[] = [
   { year: '2025', name: 'GovChat · GovHack 2025 winner', tech: 'FastAPI · ChromaDB · Next.js', link: 'github', slug: 'govchat' },
   { year: '2025', name: 'notes-app · CI/CD showcase', tech: 'Next.js · Express · MongoDB · Docker · Jenkins · AWS · Prometheus · Grafana', link: 'github', slug: 'notes-app' },
   { year: '2025', name: 'load-balancer', tech: 'Go · Prometheus', link: 'github', slug: 'load-balancer' },
+  { year: '2025', name: 'Mindful break recommender · SIT225', tech: 'Arduino · MQTT · Raspberry Pi · Python · Streamlit', link: 'github' },
+  { year: '2024', name: 'Loco · offline course player', tech: 'Next.js · TypeScript · shadcn/ui', link: 'private' },
+  { year: '2023', name: 'Thurman Events · events site', tech: 'Next.js · Tailwind · Framer Motion · Nodemailer', link: 'github' },
+  { year: '2023', name: 'RIV · random image viewer', tech: 'Electron · JavaScript · Tailwind', link: 'github' },
+  { year: '2022', name: 'Digi Convertor', tech: 'React · Vite · Recoil · Flask', link: 'github' },
 ]
 
 export const EXPERIENCE: ExperienceItem[] = [
