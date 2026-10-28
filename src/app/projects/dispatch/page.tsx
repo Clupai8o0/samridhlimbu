@@ -249,7 +249,7 @@ export default function DispatchPage() {
         {/* Unsubscribe */}
         <div className="section-label" style={{ fontFamily: MONO }}>Unsubscribing</div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          Newsletters put their unsubscribe options in a List-Unsubscribe header. Dispatch splits it into web links and email addresses. If there is a web link, it tries to unsubscribe with one request, as the one-click standard (RFC 8058) allows, though it does not check that the sender opted in to that. If the request fails, it hands you the link to open. If there is only an email address, it shows you the address and never sends the email itself. In mock mode it makes no network call and says what it would have done:
+          Newsletters put their unsubscribe options in a List-Unsubscribe header. Dispatch splits it into web links and email addresses. If there is a web link, it tries to unsubscribe with one request, as the one-click standard (RFC 8058) allows, though it does not check that the sender opted in to that. If the request fails, it hands you the link to open. If there is only an email address, it shows you the address and never sends the email itself. In mock mode it makes no network call and says what it would have done. For the email-only case the mock text reads &ldquo;would email&rdquo;, but the live code only shows the address:
         </p>
         <div data-reveal style={{ marginBottom: 40 }}>
           <CodePre code={UNSUB_LOG} style={LOG} />
