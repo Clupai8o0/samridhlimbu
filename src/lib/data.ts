@@ -318,16 +318,21 @@ export const PROJECTS: Project[] = [
   {
     slug: 'nmmun',
     name: 'NMMUN',
-    tag: 'Conference website · operations toolkit',
+    tag: 'School conference website · handed over',
     year: '2024',
-    status: 'Live · nmmun.vercel.app',
-    cover: '/projects/nmmun/homepage.webp',
-    pitch: 'Production-ready conference website and operations toolkit used live by 500+ participants during a Model United Nations event. Built for reliability and fast iteration under real event deadlines.',
-    pitchShort: 'Conference platform used live by 500+ participants at a MUN event.',
+    status: 'Live · nmmun.vercel.app (Nov 2024 build, archived)',
+    cover: '/projects/nmmun/home-countdown.webp',
+    pitch: 'Website for the Model United Nations conference at New Millennium School, Bahrain. Built in 2024 so the next year\'s student IT team could run it by editing content (councils, chairs, dates, itinerary, banner text) without touching the components. They ran the 15-16 November 2024 conference on it, and 4 of their 105 commits touched a component or hook. The site switches itself between before, during and after the event from two dates. Registration and documents link out to Google Forms and Drive.',
+    pitchShort: 'School MUN conference site the next student team ran without touching its components.',
     stack: {
-      Frontend: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Framer Motion', 'Embla Carousel'],
+      Frontend: ['Next.js 14', 'React 18', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Framer Motion', 'Embla Carousel'],
       Infra: ['Vercel'],
     },
+    metrics: [
+      { k: 'pages', v: '8' },
+      { k: 'councils', v: '14' },
+      { k: 'next-team commits', v: '105' },
+    ],
     featured: true,
   },
   {
