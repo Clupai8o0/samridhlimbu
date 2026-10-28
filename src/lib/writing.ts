@@ -8,12 +8,14 @@ export type ContentBlock =
   | { type: 'image'; src: string; alt: string; caption?: string; lightBg?: boolean; mobileSrc?: string }
   | { type: 'video'; href: string; label: string }
   | { type: 'list'; items: string[]; ordered?: boolean }
-  | { type: 'table'; headers: string[]; rows: string[][] }
+  | { type: 'table'; headers: string[]; rows: string[][]; caption?: string }
   | { type: 'equation'; html: string; caption?: string }
   | ChartBlock
 
 // A themed bar or line chart, drawn by <ArticleChart>. One value per category in
 // every series, all on one y axis. Bars always start at zero; a line can set yMin.
+// A line series may carry lo/hi (one per category) to draw a shaded band, such as
+// one standard deviation either side of a mean.
 export type ChartBlock = {
   type: 'chart'
   kind: 'bar' | 'line'
@@ -24,7 +26,7 @@ export type ChartBlock = {
   unit?: string
   yMin?: number
   categories: string[]
-  series: { name: string; values: number[] }[]
+  series: { name: string; values: number[]; lo?: number[]; hi?: number[] }[]
 }
 
 export type Post = {
@@ -2649,17 +2651,17 @@ except aiohttp.ClientError as e:
       {
         type: 'chart',
         kind: 'line',
-        title: 'One worker and an autoscaled set hit the same ceiling',
-        subtitle: 'Rides matched per second at each stage of the ramp, against requests offered',
+        title: 'Both runs stall near 950 matches a second, however much more is asked',
+        subtitle: 'Requests per second at each load stage, one worker against an autoscaled set',
+        caption: 'From the project report. The fifth stage drops back to 800 asked a second, and neither run gets back to matching all of it.',
         xLabel: 'stage',
-        unit: 'req/s',
-        categories: ['200/s', '800/s', '1,600/s', '3,000/s', '800/s'],
+        unit: '/s',
+        categories: ['1: 200', '2: 800', '3: 1,600', '4: 3,000', '5: 800'],
         series: [
-          { name: 'One worker', values: [198.1, 725.4, 917.4, 957.5, 690.4] },
-          { name: 'Autoscaled, 1 to 6', values: [196.9, 720.3, 928.2, 922.9, 708.9] },
-          { name: 'Offered', values: [198.1, 792.7, 1584.2, 2969.9, 787.7] },
+          { name: 'Asked', values: [200, 800, 1600, 3000, 800] },
+          { name: 'Matched, one worker', values: [198.1, 725.4, 917.4, 957.5, 690.4] },
+          { name: 'Matched, autoscaled', values: [196.9, 720.3, 928.2, 922.9, 708.9] },
         ],
-        caption: 'From the project report runs, 22 Aug 2026. Offered is the rate the harness actually sent in the one-worker run. The last stage drops back to 800 a second.',
       },
       { type: 'heading', level: 2, text: 'The decision I went looking for' },
       {
@@ -2910,13 +2912,19 @@ while (moved && passes < 4) {               // capped at four passes
       {
         type: 'paragraph',
         html:
-          'The first time I ran that sweep it broke. This is the harness output at a batch of 128, with four latency columns cut out to fit the page.',
+          'The first time I ran that sweep it broke. This is the harness output at a batch of 128, without its actual-rate, latency and distance columns.',
       },
       {
-        type: 'image',
-        src: '/writing/sit314-batched-assignment/size128-collapse.webp',
-        alt: 'Terminal output of the load harness at a batch size of 128. Stage one matched 3,422 of 4,000 requests, stage two matched 4 of 16,000, and stages three and four matched none.',
-        caption: 'The first size sweep at a batch of 128. From stage two it matched almost nothing, and from stage three nothing at all. The fifth stage, also zero, is left off.',
+        type: 'table',
+        headers: ['Stage', 'Asked', 'Sent', 'Matched', 'Unmatched', 'Matched/s'],
+        rows: [
+          ['1', '200/s', '4,000', '3,422', '578', '169.5'],
+          ['2', '800/s', '16,000', '4', '15,996', '0.2'],
+          ['3', '1,600/s', '32,000', '0', '32,000', '0'],
+          ['4', '3,000/s', '90,000', '0', '90,000', '0'],
+          ['5', '800/s', '16,000', '0', '16,000', '0'],
+        ],
+        caption: 'The first size sweep at a batch of 128. From stage two it matched almost nothing, and from stage three nothing at all.',
       },
       {
         type: 'paragraph',
@@ -3239,11 +3247,61 @@ return the graph with the best measured H`,
       },
       { type: 'heading', level: 3, text: 'Learning curves' },
       {
-        type: 'image',
-        src: '/writing/sit320-rlig/curves.webp',
-        alt: 'Two line charts of greedy episode return against training episode for ASIA and Child, for tabular, linear and DQN agents, with shaded bands for one standard deviation.',
+        type: 'chart',
+        kind: 'line',
+        title: 'ASIA: greedy return by training episode',
+        subtitle: 'Mean over ten seeds, shaded one standard deviation either side. Higher is better.',
+        xLabel: 'episode',
+        categories: ['0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60', '65', '70', '75', '80', '85', '90', '95', '100', '105', '110', '115', '120', '125', '130', '135', '140', '145', '150', '155', '160', '165', '170', '175', '180', '185', '190', '195', '200', '205', '210', '215', '220', '225', '230', '235', '240', '245', '249'],
+        series: [
+          {
+            name: 'Tabular',
+            values: [0.886, 0.896, 0.939, 0.964, 0.993, 0.981, 1.01, 1.005, 1.041, 1.043, 1.028, 1.027, 1.062, 1.057, 1.055, 1.043, 1.059, 1.073, 1.065, 1.068, 1.093, 1.095, 1.093, 1.093, 1.093, 1.095, 1.093, 1.093, 1.082, 1.094, 1.096, 1.094, 1.097, 1.097, 1.094, 1.095, 1.097, 1.095, 1.095, 1.097, 1.097, 1.095, 1.095, 1.097, 1.095, 1.097, 1.097, 1.085, 1.097, 1.097, 1.097],
+            lo: [0.857, 0.869, 0.829, 0.865, 0.893, 0.887, 0.908, 0.927, 0.97, 0.952, 0.943, 0.942, 0.986, 0.974, 0.971, 0.963, 0.977, 0.991, 0.983, 0.984, 1.049, 1.055, 1.049, 1.049, 1.049, 1.055, 1.049, 1.049, 1.035, 1.051, 1.05, 1.051, 1.056, 1.056, 1.051, 1.051, 1.056, 1.055, 1.055, 1.057, 1.056, 1.055, 1.055, 1.056, 1.055, 1.056, 1.056, 1.04, 1.057, 1.056, 1.056],
+            hi: [0.915, 0.923, 1.049, 1.063, 1.093, 1.075, 1.112, 1.084, 1.111, 1.134, 1.114, 1.111, 1.138, 1.14, 1.139, 1.123, 1.141, 1.156, 1.146, 1.152, 1.137, 1.136, 1.137, 1.137, 1.137, 1.136, 1.137, 1.137, 1.13, 1.138, 1.143, 1.138, 1.137, 1.137, 1.138, 1.138, 1.137, 1.136, 1.136, 1.137, 1.137, 1.136, 1.136, 1.137, 1.136, 1.137, 1.137, 1.129, 1.137, 1.137, 1.137],
+          },
+          {
+            name: 'Linear',
+            values: [0.841, 0.825, 0.841, 0.856, 0.845, 0.859, 0.888, 0.875, 0.856, 0.857, 0.881, 0.874, 0.865, 0.867, 0.864, 0.858, 0.874, 0.887, 0.886, 0.857, 0.874, 0.86, 0.865, 0.9, 0.879, 0.864, 0.926, 0.887, 0.894, 0.896, 0.935, 0.965, 0.937, 0.982, 0.947, 0.986, 1.002, 0.999, 0.988, 0.978, 0.95, 0.954, 0.876, 0.944, 0.888, 0.864, 0.867, 0.817, 0.863, 0.851, 0.832],
+            lo: [0.806, 0.804, 0.783, 0.788, 0.807, 0.803, 0.851, 0.825, 0.816, 0.827, 0.812, 0.845, 0.826, 0.825, 0.806, 0.812, 0.84, 0.849, 0.84, 0.804, 0.816, 0.814, 0.796, 0.839, 0.833, 0.809, 0.846, 0.808, 0.829, 0.815, 0.899, 0.857, 0.843, 0.926, 0.861, 0.907, 0.931, 0.915, 0.912, 0.925, 0.876, 0.905, 0.78, 0.893, 0.819, 0.81, 0.806, 0.738, 0.805, 0.782, 0.769],
+            hi: [0.875, 0.846, 0.9, 0.924, 0.883, 0.915, 0.926, 0.925, 0.896, 0.886, 0.951, 0.903, 0.904, 0.908, 0.923, 0.904, 0.908, 0.926, 0.933, 0.911, 0.933, 0.906, 0.934, 0.962, 0.925, 0.92, 1.006, 0.966, 0.958, 0.977, 0.972, 1.074, 1.03, 1.038, 1.033, 1.065, 1.074, 1.083, 1.063, 1.031, 1.024, 1.002, 0.971, 0.995, 0.958, 0.918, 0.928, 0.897, 0.921, 0.919, 0.896],
+          },
+          {
+            name: 'DQN',
+            values: [0.596, 0.949, 0.995, 1.034, 1.03, 1.027, 1.055, 0.992, 1.018, 1.008, 1.022, 1, 0.988, 0.969, 0.986, 0.951, 0.936, 0.963, 0.952, 0.954, 0.975, 0.982, 0.974, 0.913, 0.914, 1.018, 0.951, 1.008, 0.994, 0.97, 1.034, 0.947, 0.972, 0.972, 1.007, 0.956, 1.009, 1.031, 0.983, 0.996, 1.032, 1.032, 1.05, 0.983, 1.004, 0.988, 1.092, 1.077, 1.131, 1.025, 1.062],
+            lo: [0.229, 0.864, 0.899, 0.942, 0.932, 0.927, 0.954, 0.923, 0.93, 0.922, 0.94, 0.93, 0.88, 0.865, 0.888, 0.854, 0.851, 0.88, 0.884, 0.896, 0.856, 0.891, 0.837, 0.821, 0.854, 0.888, 0.798, 0.891, 0.9, 0.88, 0.949, 0.855, 0.854, 0.864, 0.913, 0.878, 0.865, 0.917, 0.862, 0.893, 0.916, 0.942, 0.967, 0.887, 0.92, 0.902, 1.044, 1.013, 1.05, 0.962, 0.963],
+            hi: [0.964, 1.033, 1.092, 1.127, 1.127, 1.127, 1.156, 1.062, 1.106, 1.095, 1.104, 1.07, 1.096, 1.073, 1.085, 1.047, 1.021, 1.045, 1.02, 1.011, 1.094, 1.073, 1.11, 1.006, 0.974, 1.148, 1.104, 1.124, 1.088, 1.06, 1.119, 1.039, 1.091, 1.08, 1.101, 1.035, 1.153, 1.145, 1.103, 1.098, 1.148, 1.122, 1.133, 1.079, 1.089, 1.073, 1.14, 1.14, 1.212, 1.088, 1.16],
+          },
+        ],
+      },
+      {
+        type: 'chart',
+        kind: 'line',
+        title: 'Child: greedy return by training episode',
+        subtitle: 'Mean over ten seeds, shaded one standard deviation either side. Higher is better.',
         caption: 'Greedy return against training episode, mean and one standard deviation over ten seeds. Each point comes from a separate greedy evaluation episode, so decaying exploration cannot pass for learning.',
-        lightBg: true,
+        xLabel: 'episode',
+        categories: ['0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60', '65', '70', '75', '80', '85', '90', '95', '100', '105', '110', '115', '120', '125', '130', '135', '140', '145', '150', '155', '160', '165', '170', '175', '180', '185', '190', '195', '199'],
+        series: [
+          {
+            name: 'Tabular',
+            values: [6.744, 6.817, 6.503, 6.72, 6.76, 6.881, 7.036, 6.991, 6.686, 6.606, 6.918, 6.889, 6.979, 6.931, 7.132, 7.404, 7.448, 7.511, 7.431, 7.36, 7.283, 7.268, 7.448, 7.586, 7.451, 7.365, 7.373, 7.424, 7.414, 7.351, 7.313, 7.445, 7.382, 7.526, 7.615, 7.605, 7.534, 7.589, 7.485, 7.492, 7.575],
+            lo: [6.526, 6.616, 5.947, 6.473, 6.458, 6.515, 6.502, 6.437, 6.02, 6.102, 6.374, 6.317, 6.34, 6.272, 6.517, 6.82, 6.927, 7.019, 6.791, 6.642, 6.573, 6.565, 6.763, 7.086, 6.798, 6.708, 6.729, 6.838, 6.844, 6.71, 6.532, 6.629, 6.451, 6.984, 7.112, 7.104, 6.908, 7.122, 6.822, 6.776, 7.059],
+            hi: [6.963, 7.017, 7.06, 6.966, 7.061, 7.247, 7.569, 7.545, 7.351, 7.11, 7.462, 7.461, 7.618, 7.589, 7.746, 7.989, 7.968, 8.003, 8.07, 8.077, 7.993, 7.971, 8.133, 8.085, 8.103, 8.023, 8.017, 8.011, 7.985, 7.991, 8.093, 8.261, 8.313, 8.068, 8.117, 8.106, 8.16, 8.056, 8.147, 8.209, 8.09],
+          },
+          {
+            name: 'Linear',
+            values: [6.753, 5.719, 5.3, 5.572, 5.113, 5.578, 5.227, 5.455, 5.473, 5.234, 5.132, 4.711, 5.043, 4.122, 3.974, 4.326, 4.106, 3.749, 3.955, 4.234, 4.105, 2.836, 4.184, 3.428, 4.163, 3.233, 2.7, 2.484, 4.091, 3.931, 5.83, 6.822, 7.368, 7.157, 7.191, 7.056, 6.372, 6.031, 5.64, 5.643, 5.68],
+            lo: [6.48, 5.342, 5.049, 5.262, 4.565, 4.697, 4.594, 5.038, 5.138, 4.536, 4.104, 3.748, 4.404, 3.608, 3.182, 3.72, 3.475, 2.869, 2.761, 3.049, 2.705, 0.674, 1.861, 0.735, 1.178, 0.133, -1.37, -2.111, -0.809, 0.401, 4.043, 5.96, 6.885, 6.374, 6.566, 6.64, 5.448, 5.23, 4.693, 4.26, 4.955],
+            hi: [7.025, 6.097, 5.551, 5.882, 5.66, 6.459, 5.86, 5.872, 5.808, 5.932, 6.16, 5.674, 5.681, 4.635, 4.765, 4.931, 4.738, 4.629, 5.148, 5.419, 5.505, 4.998, 6.506, 6.122, 7.148, 6.333, 6.77, 7.079, 8.991, 7.461, 7.616, 7.684, 7.851, 7.94, 7.815, 7.472, 7.296, 6.832, 6.587, 7.025, 6.405],
+          },
+          {
+            name: 'DQN',
+            values: [1.014, 5.643, 6.299, 5.592, 5.835, 6.252, 5.858, 5.488, 5.447, 5.694, 5.955, 6.054, 5.712, 6.161, 6.108, 5.795, 5.723, 5.777, 5.995, 5.838, 6.076, 5.971, 5.952, 5.711, 5.676, 5.687, 5.809, 5.366, 5.297, 5.342, 4.789, 5.302, 5.772, 5.489, 5.44, 4.881, 5.027, 4.79, 4.602, 4.87, 4.586],
+            lo: [0.04, 5.106, 5.891, 4.525, 5.157, 5.403, 5.024, 4.616, 4.709, 4.749, 5.409, 5.608, 5.194, 5.31, 5.535, 5.063, 4.992, 4.968, 5.312, 4.936, 5.191, 5.346, 5.38, 5.017, 4.917, 5.355, 5.224, 4.67, 4.688, 4.348, 3.388, 4.684, 5.083, 4.971, 4.507, 3.59, 3.894, 3.916, 3.436, 3.695, 3.139],
+            hi: [1.988, 6.18, 6.707, 6.66, 6.514, 7.102, 6.693, 6.36, 6.185, 6.64, 6.502, 6.5, 6.23, 7.012, 6.681, 6.527, 6.455, 6.587, 6.678, 6.74, 6.961, 6.596, 6.524, 6.405, 6.434, 6.019, 6.394, 6.062, 5.906, 6.337, 6.19, 5.92, 6.461, 6.007, 6.374, 6.173, 6.16, 5.664, 5.769, 6.045, 6.033],
+          },
+        ],
       },
       {
         type: 'paragraph',
@@ -3257,11 +3315,83 @@ return the graph with the best measured H`,
           'I swept ρ from 0 to 4 on three networks with two agents, ten seeds each, to find out.',
       },
       {
-        type: 'image',
-        src: '/writing/sit320-rlig/rho.webp',
-        alt: 'Six panels sweeping rho from 0 to 4 on ASIA, Child and the synthetic network. The top row shows SHD rising with rho for most curves. The bottom row shows held-out log-likelihood.',
-        caption: 'Sweeping ρ, where β = ρ · β*. Top row SHD (lower is better), bottom row held-out log-likelihood per row (higher is better), one standard deviation over ten seeds.',
-        lightBg: true,
+        type: 'chart',
+        kind: 'line',
+        title: 'ASIA: SHD against ρ',
+        subtitle: 'Structural Hamming distance to the true graph, mean over ten seeds, shaded one standard deviation either side. Lower is better. The ρ values are drawn at even steps, though they are not evenly spaced.',
+        xLabel: 'ρ',
+        categories: ['0', '0.25', '0.5', '1', '2', '4'],
+        series: [
+          {
+            name: 'Linear',
+            values: [1, 2.9, 3.4, 3.4, 6.2, 6.4],
+            lo: [1, 1.4, 2, 1.2, 3.5, 3.9],
+            hi: [1, 4.4, 4.8, 5.6, 8.9, 8.9],
+          },
+          {
+            name: 'DQN',
+            values: [1, 2, 6.4, 6.7, 7.9, 10.7],
+            lo: [1, 0.8, 3.8, 4.9, 5.2, 7.9],
+            hi: [1, 3.2, 9, 8.5, 10.6, 13.5],
+          },
+        ],
+      },
+      {
+        type: 'chart',
+        kind: 'line',
+        title: 'Child: SHD against ρ',
+        subtitle: 'Structural Hamming distance to the true graph, mean over ten seeds, shaded one standard deviation either side. Lower is better. The ρ values are drawn at even steps, though they are not evenly spaced.',
+        xLabel: 'ρ',
+        categories: ['0', '0.25', '0.5', '1', '2', '4'],
+        series: [
+          {
+            name: 'Linear',
+            values: [13, 11.8, 12.3, 12.4, 11.3, 13.9],
+            lo: [13, 10.7, 11.1, 10.8, 9.2, 11.9],
+            hi: [13, 12.9, 13.5, 14, 13.4, 15.9],
+          },
+          {
+            name: 'DQN',
+            values: [20.3, 19.8, 19.9, 23.4, 24.5, 25.8],
+            lo: [16.6, 18, 15, 19.5, 19.8, 19.6],
+            hi: [24, 21.6, 24.8, 27.3, 29.2, 32],
+          },
+        ],
+      },
+      {
+        type: 'chart',
+        kind: 'line',
+        title: 'Synthetic: SHD against ρ',
+        subtitle: 'Structural Hamming distance to the true graph, mean over ten seeds, shaded one standard deviation either side. Lower is better. The ρ values are drawn at even steps, though they are not evenly spaced.',
+        xLabel: 'ρ',
+        categories: ['0', '0.25', '0.5', '1', '2', '4'],
+        series: [
+          {
+            name: 'Linear',
+            values: [1, 1.8, 2.5, 2.7, 2, 2.9],
+            lo: [1, 0.2, 0.2, 0.4, 0.5, 0.5],
+            hi: [1, 3.4, 4.8, 5, 3.5, 5.3],
+          },
+          {
+            name: 'DQN',
+            values: [1, 1, 2.8, 2.8, 3.5, 6.4],
+            lo: [1, 1, 1, 1.5, 1.9, 3],
+            hi: [1, 1, 4.6, 4.1, 5.1, 9.8],
+          },
+        ],
+      },
+      {
+        type: 'table',
+        headers: ['Rho', 'ASIA linear', 'ASIA DQN', 'Child linear', 'Child DQN', 'Synthetic linear', 'Synthetic DQN'],
+        rows: [
+          ['0', '−2.2540 ± 0.0002', '−2.2540 ± 0.0002', '−12.4587 ± 0.0002', '−12.9718 ± 0.1110', '−8.1079 ± 0.0014', '−8.1086 ± 0.0015'],
+          ['0.25', '−2.2587 ± 0.0106', '−2.2547 ± 0.0017', '−12.4417 ± 0.0153', '−12.9265 ± 0.1083', '−8.1330 ± 0.0514', '−8.1087 ± 0.0013'],
+          ['0.5', '−2.2658 ± 0.0142', '−2.2716 ± 0.0148', '−12.4376 ± 0.0172', '−12.8983 ± 0.0710', '−8.0795 ± 0.0830', '−8.1688 ± 0.0721'],
+          ['1', '−2.2654 ± 0.0168', '−2.2692 ± 0.0107', '−12.4436 ± 0.0158', '−13.0230 ± 0.1037', '−8.1092 ± 0.0775', '−8.1340 ± 0.0557'],
+          ['2', '−2.2805 ± 0.0174', '−2.2702 ± 0.0199', '−12.4325 ± 0.0188', '−13.0443 ± 0.1933', '−8.1008 ± 0.0918', '−8.1302 ± 0.1116'],
+          ['4', '−2.2813 ± 0.0174', '−2.2780 ± 0.0127', '−12.4561 ± 0.0189', '−13.1470 ± 0.2257', '−8.0441 ± 0.0854', '−8.2358 ± 0.1065'],
+        ],
+        caption: 'Held-out log-likelihood per row at each ρ (higher is better), mean ± one standard deviation over ten seeds. ρ scales the generative weight: β = ρ · β*.',
       },
       {
         type: 'paragraph',
@@ -3489,20 +3619,17 @@ return the graph with the best measured H`,
         type: 'table',
         headers: ['', 'Dynamic programming', 'Q-learning'],
         rows: [
-          ['What it needs', 'the whole model', 'one game at a time'],
+          ['What it needs', 'The whole model', 'One game at a time'],
           ['States it works over', '5478', '2423'],
           ['States it ends up storing', '5478', '2420'],
-          ['Plays from', 'a policy (2423)', 'the Q table (2420)'],
+          ['Plays from', 'A policy (2423)', 'The Q table (2420)'],
           ['Work', '9 sweeps', '200,000 episodes'],
           ['Win vs random O', '0.994792', '0.989583'],
           ['Loss vs random O', '0.000000', '0.000000'],
           ['Loss vs perfect O', '0.000000', '0.000000'],
-          ['Opening cell', 'corner', 'centre'],
+          ['Opening cell', 'Corner', 'Centre'],
         ],
-      },
-      {
-        type: 'paragraph',
-        html: 'That is Table 1 from the paper. "Plays from" is what each player reads at move time.',
+        caption: 'The two players side by side, with numbers from the notebook\'s own output. "Plays from" is what each player reads at move time.',
       },
       {
         type: 'paragraph',
@@ -3664,17 +3791,14 @@ return the graph with the best measured H`,
         type: 'table',
         headers: ['Case', 'Executor', 'State the deployment holds fixed', 'Input to one run'],
         rows: [
-          ['sorting with a comparator passed in', 'the sort routine', 'the comparator', 'the list to sort'],
-          ['universal machine', 'its transition procedure', 'the program on the tape', 'the data on the tape'],
-          ['table driven parser', 'the parser driver', 'the parse table', 'the token string'],
-          ['dynamic programming player', 'a policy lookup', 'the policy, read once off the value table', 'the board'],
-          ['Q-learning player', 'the greedy selector and its tie rule', 'the Q table', 'the board'],
-          ['trained digit classifier', 'the forward pass', 'the weight file', 'the image'],
+          ['Sorting with a comparator passed in', 'The sort routine', 'The comparator', 'The list to sort'],
+          ['Universal machine', 'Its transition procedure', 'The program on the tape', 'The data on the tape'],
+          ['Table driven parser', 'The parser driver', 'The parse table', 'The token string'],
+          ['Dynamic programming player', 'A policy lookup', 'The policy, read once off the value table', 'The board'],
+          ['Q-learning player', 'The greedy selector and its tie rule', 'The Q table', 'The board'],
+          ['Trained digit classifier', 'The forward pass', 'The weight file', 'The image'],
         ],
-      },
-      {
-        type: 'paragraph',
-        html: 'That is Table 2 from the paper, the lab\'s answer key. At the executor level the algorithm is the second column on its own. At the deployed level it is the second and third columns together. The fourth column is input at both levels.',
+        caption: 'The lab\'s answer key. At the executor level the algorithm is the second column on its own. At the deployed level it is the second and third columns together. The fourth column is input at both levels.',
       },
       {
         type: 'paragraph',

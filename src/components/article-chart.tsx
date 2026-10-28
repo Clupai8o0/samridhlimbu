@@ -52,7 +52,15 @@ function fmtValue(n: number, unit?: string) {
   if (!unit) {
     return s
   }
-  return unit === '%' || unit === '×' ? `${s}${unit}` : `${s} ${unit}`
+  return unit === '%' || unit === '×' || unit.startsWith('/') ? `${s}${unit}` : `${s} ${unit}`
+}
+
+// The shaded band at one category, as " (lo to hi)", or '' when the series has none.
+function fmtRange(s: ChartBlock['series'][number], i: number, unit?: string) {
+  if (!s.lo || !s.hi) {
+    return ''
+  }
+  return ` (${fmtValue(s.lo[i], unit)} to ${fmtValue(s.hi[i], unit)})`
 }
 
 // A bar with a 4px rounded data end and a square end at the baseline.
@@ -94,7 +102,9 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
 
   const { kind, categories, series, unit } = block
   const n = categories.length
-  const valid = n > 0 && series.length > 0 && series.every(s => s.values.length === n && s.values.every(Number.isFinite))
+  const fits = (a?: number[]) => a === undefined || (a.length === n && a.every(Number.isFinite))
+  const valid = n > 0 && series.length > 0 && series.every(s =>
+    s.values.length === n && s.values.every(Number.isFinite) && fits(s.lo) && fits(s.hi) && (s.lo === undefined) === (s.hi === undefined))
   if (!valid) {
     return (
       <p style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)' }}>
@@ -103,7 +113,8 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
     )
   }
   const width = measured ?? 640
-  const all = series.flatMap(s => s.values)
+  // Bands only draw on lines, so only lines widen the axis to fit them.
+  const all = series.flatMap(s => (kind === 'line' && s.lo && s.hi ? [...s.values, ...s.lo, ...s.hi] : s.values))
   // Bars always include zero. A line may start its axis higher with yMin.
   const lineMin = kind === 'line' && block.yMin !== undefined
   const lo = lineMin ? Math.min(block.yMin!, ...all) : Math.min(0, ...all)
@@ -229,6 +240,16 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
           }))}
 
           {kind === 'line' && series.map((s, j) => {
+            if (!s.lo || !s.hi) {
+              return null
+            }
+            const lo = s.lo
+            const up = s.hi.map((v, i) => `${i ? 'L' : 'M'}${xAt(i)},${yAt(v)}`).join('')
+            const down = lo.map((_, k) => n - 1 - k).map(i => `L${xAt(i)},${yAt(lo[i])}`).join('')
+            return <path key={`band-${s.name}`} d={`${up}${down}Z`} fill={SERIES[j % SERIES.length]} opacity={0.16} />
+          })}
+
+          {kind === 'line' && series.map((s, j) => {
             const color = SERIES[j % SERIES.length]
             const d = s.values.map((v, i) => `${i ? 'L' : 'M'}${xAt(i)},${yAt(v)}`).join('')
             return (
@@ -264,7 +285,7 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
         </svg>}
 
         <span role="status" className="sr-only">
-          {active === null ? '' : `${categories[active]}: ${series.map(s => `${s.name} ${fmtValue(s.values[active], unit)}`).join(', ')}`}
+          {active === null ? '' : `${categories[active]}: ${series.map(s => `${s.name} ${fmtValue(s.values[active], unit)}${fmtRange(s, active, unit)}`).join(', ')}`}
         </span>
 
         {active !== null && (
@@ -293,6 +314,7 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
                 <strong style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: 'var(--fg)', fontVariantNumeric: 'tabular-nums' }}>
                   {fmtValue(s.values[active], unit)}
                 </strong>
+                {s.lo && s.hi && <span style={{ fontFamily: SANS, fontSize: 12, color: 'var(--muted-2)', fontVariantNumeric: 'tabular-nums' }}>{fmtRange(s, active, unit).trim()}</span>}
                 {series.length > 1 && <span style={{ fontFamily: SANS, fontSize: 12, color: 'var(--muted)' }}>{s.name}</span>}
               </div>
             ))}
@@ -318,7 +340,12 @@ export function ArticleChart({ block }: { block: ChartBlock }) {
                 <tr key={i} style={{ background: i % 2 === 0 ? 'var(--bg-3)' : undefined }}>
                   <th scope="row" style={{ padding: '6px 10px', textAlign: 'left', fontWeight: 400 }}>{c}</th>
                   {series.map(s => (
-                    <td key={s.name} style={{ padding: '6px 10px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtValue(s.values[i], unit)}</td>
+                    <td key={s.name} style={{ padding: '6px 10px', textAlign: 'right', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+                      {fmtValue(s.values[i], unit)}
+                      {s.lo && s.hi && (
+                        <span style={{ color: 'var(--muted-2)' }}>{fmtRange(s, i, unit)}</span>
+                      )}
+                    </td>
                   ))}
                 </tr>
               ))}

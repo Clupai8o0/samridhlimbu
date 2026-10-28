@@ -477,7 +477,7 @@ function renderBlock(block: ContentBlock, key: number) {
     const stack = block.headers.length > 2
     return (
       <div key={key} style={{ margin: '18px 0 26px', overflowX: 'auto' }}>
-        <table role="table" className={stack ? 'prose-table-stack' : undefined} style={{
+        <table role="table" aria-describedby={block.caption ? `table-caption-${key}` : undefined} className={stack ? 'prose-table-stack' : undefined} style={{
           width: '100%',
           borderCollapse: 'collapse',
           fontFamily: SANS,
@@ -513,6 +513,12 @@ function renderBlock(block: ContentBlock, key: number) {
             ))}
           </tbody>
         </table>
+        {block.caption && (
+          <p id={`table-caption-${key}`} style={{
+            fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)',
+            margin: '10px 0 0', letterSpacing: '0.02em', lineHeight: 1.5,
+          }}>{block.caption}</p>
+        )}
       </div>
     )
   }
