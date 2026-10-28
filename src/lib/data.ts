@@ -378,6 +378,7 @@ export const PROJECTS: Project[] = [
 export const ARCHIVE: ArchiveItem[] = [
   { year: '2026', name: 'Farmers Intuition · Hack48', tech: 'FastAPI · Gemini · ElevenLabs', link: 'github', slug: 'farmers-intuition' },
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
+  { year: '2026', name: 'Seatly · restaurant bookings', tech: 'Next.js 16 · FastAPI · PostgreSQL · Drizzle · Turborepo', link: 'private', slug: 'seatly' },
   { year: '2026', name: 'Dispatch · inbox and calendar agent', tech: 'TypeScript · Vercel AI SDK · Gmail API · React · Vite', link: 'private', slug: 'dispatch' },
   { year: '2026', name: 'Recall · local-first screen memory', tech: 'Swift · OCR · Ollama · Whisper.cpp', link: 'github' },
   { year: '2026', name: 'Art Gallery · SIT331', tech: 'Express · MongoDB · Next.js · NextAuth · Jest', link: 'uni', slug: 'art-gallery' },
