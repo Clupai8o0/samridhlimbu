@@ -62,6 +62,7 @@ const CODE_CAPTION = { fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var
 const METRICS = [
   { k: 'pages', v: '8' },
   { k: 'councils', v: '14' },
+  { k: 'participants, by the school\'s count', v: '500+' },
   { k: 'commits by the next team', v: '105' },
   { k: 'touching components or hooks', v: '4' },
 ]
@@ -139,7 +140,7 @@ export default function NmmunPage() {
             <span className="pill" style={{ fontFamily: MONO }}>school conference · 2024 · archived</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 16px' }}>
-            The website for the New Millennium Model United Nations, a two-day conference at New Millennium School, Bahrain. I built it in 2024 so the next year&apos;s student IT team could run it by editing content, without touching the components. They ran the November 2024 conference on it, and 4 of their 105 commits touched a component or hook.
+            The website for the New Millennium Model United Nations, a two-day conference at New Millennium School, Bahrain. I built it in 2024 so the next year&apos;s student IT team could run it by editing content, without touching the components. They ran the November 2024 conference on it, more than 500 participants by the school&apos;s count, and 4 of their 105 commits touched a component or hook.
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <a href="https://nmmun.vercel.app" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> nmmun.vercel.app</a>

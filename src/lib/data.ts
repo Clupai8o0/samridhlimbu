@@ -322,7 +322,7 @@ export const PROJECTS: Project[] = [
     year: '2024',
     status: 'Archived · the Nov 2024 build is still live',
     cover: '/projects/nmmun/home-countdown.webp',
-    pitch: 'Website for the Model United Nations conference at New Millennium School, Bahrain. Built in 2024 so the next year\'s student IT team could run it by editing content (councils, chairs, dates, itinerary, banner text) without touching the components. They ran the 15-16 November 2024 conference on it, and 4 of their 105 commits touched a component or hook. The site switches itself between before, during and after the event from two dates. Registration and documents link out to Google Forms and Drive.',
+    pitch: 'Website for the Model United Nations conference at New Millennium School, Bahrain. Built in 2024 so the next year\'s student IT team could run it by editing content (councils, chairs, dates, itinerary, banner text) without touching the components. They ran the 15-16 November 2024 conference on it, with more than 500 participants by the school\'s count, and 4 of their 105 commits touched a component or hook. The site switches itself between before, during and after the event from two dates. Registration and documents link out to Google Forms and Drive.',
     pitchShort: 'School MUN conference site the next student team ran almost entirely by editing content.',
     stack: {
       Frontend: ['Next.js 14', 'React 18', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Framer Motion', 'Embla Carousel'],
@@ -385,7 +385,6 @@ export const ARCHIVE: ArchiveItem[] = [
   { year: '2026', name: 'Farmers Intuition · Hack48', tech: 'FastAPI · Gemini · ElevenLabs', link: 'github', slug: 'farmers-intuition' },
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
   { year: '2026', name: 'Seatly · restaurant bookings', tech: 'Next.js 16 · FastAPI · PostgreSQL · Drizzle · Turborepo', link: 'private', slug: 'seatly' },
-  { year: '2026', name: 'Dispatch · inbox and calendar agent', tech: 'TypeScript · Vercel AI SDK · Gmail API · React · Vite', link: 'private', slug: 'dispatch' },
   { year: '2026', name: 'Recall · local-first screen memory', tech: 'Swift · OCR · Ollama · Whisper.cpp', link: 'github' },
   { year: '2026', name: 'Art Gallery · SIT331', tech: 'Express · MongoDB · Next.js · NextAuth · Jest', link: 'uni', slug: 'art-gallery' },
   { year: '2026', name: 'Robot controller API · SIT331', tech: 'C# · ASP.NET Core · PostgreSQL · Npgsql', link: 'uni', slug: 'robot-api' },

@@ -9,7 +9,7 @@ import { ArticleChart } from '@/components/article-chart'
 import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
-  'A website for Krishnaveni School in Hyderabad. The 2025 build served every page in English, Hindi and Telugu from Sanity. The 2026 rebuild kept English, moved page copy into code and left staff a small Sanity Studio, a ready-made editing app, for posts and facilities.'
+  'A website for Krishnaveni School in Hyderabad. The 2025 build served every page in English, Hindi and Telugu from Sanity. The 2026 rebuild kept only English, since no one at the school could maintain the other two, moved page copy into code and left staff a small Sanity Studio, a ready-made editing app, for posts and facilities.'
 // This shot shows no people, so it is safe as the share card.
 const OG_IMAGE = {
   url: '/projects/krishnaveni/early-te-news.webp',
@@ -156,7 +156,7 @@ export default function KrishnaveniPage() {
             <span className="pill" style={{ color: GREEN, fontFamily: MONO }}>● live · freelance</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 16px' }}>
-            A website for Krishnaveni School, an English-medium school in Peerzadiguda, Hyderabad. The first build, in June 2025, served every page in English, Hindi and Telugu from Sanity. The April 2026 rebuild kept English, moved the page copy into code and left the school&apos;s staff a small Sanity Studio, a ready-made editing app, for posts and facilities.
+            A website for Krishnaveni School, an English-medium school in Peerzadiguda, Hyderabad. The first build, in June 2025, served every page in English, Hindi and Telugu from Sanity. No one at the school was there to keep the Hindi and Telugu copy up to date, so the April 2026 rebuild kept only English. It moved the page copy into code and left the school&apos;s staff a small Sanity Studio, a ready-made editing app, for posts and facilities.
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <a href="https://krishnavenischool.co.in" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> krishnavenischool.co.in</a>
@@ -299,7 +299,7 @@ export default function KrishnaveniPage() {
         {/* What I'd do differently */}
         <div className="section-label" style={{ fontFamily: MONO }}>What I&apos;d do differently</div>
         <p style={{ ...PROSE, color: 'var(--muted)', margin: '0 0 40px' }}>
-          Settle the language question before building for it. Three languages ran through the routing, the queries and the Studio of the first build, and the rebuild kept only English. I would also make the sample-content switch cover every query. In the 2025 code the page-title lookup still called Sanity with sample content switched on, so running the old build offline for these shots took a one-line patch in a local copy.
+          Settle the language question before building for it. Three languages ran through the routing, the queries and the Studio of the first build, and the rebuild kept only English because no one at the school could maintain the other two. I would also make the sample-content switch cover every query. In the 2025 code the page-title lookup still called Sanity with sample content switched on, so running the old build offline for these shots took a one-line patch in a local copy.
         </p>
 
         {/* Stack */}

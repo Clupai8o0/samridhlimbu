@@ -181,7 +181,7 @@ const SECTIONS = [
       {
         head: 'NMMUN · school conference website',
         meta: 'Next.js · TypeScript · Tailwind CSS · Vercel',
-        body: 'Built a Model United Nations conference site the next student IT team ran almost entirely by editing content: 4 of their 105 commits touched a component or hook.',
+        body: 'Built a Model United Nations conference site, used by 500+ participants (the school\'s count), that the next student IT team ran almost entirely by editing content: 4 of their 105 commits touched a component or hook.',
       },
       {
         head: 'Krishnaveni · headless CMS (freelance)',
