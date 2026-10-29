@@ -18,11 +18,13 @@ export const metadata: Metadata = {
     url: '/resume',
     title: 'Resume · Samridh Limbu',
     description: DESCRIPTION,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Samridh Limbu · Software Engineer' }],
   },
   twitter: {
     card: 'summary',
     title: 'Resume · Samridh Limbu',
     description: DESCRIPTION,
+    images: ['/og.png'],
   },
 }
 

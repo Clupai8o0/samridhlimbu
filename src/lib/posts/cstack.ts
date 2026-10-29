@@ -10,6 +10,7 @@ export const CSTACK_POST: Post = {
   slug: 'cstack-one-layer-six-agents',
   title: 'cstack: one layer for six coding agents, and what I measured while tuning it',
   date: '2026-10-27',
+  updated: '2026-10-28',
   readMin: 14,
   tags: ['ai-agents', 'tooling', 'benchmarks', 'python'],
   excerpt:

@@ -5,11 +5,20 @@ import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { WritingClient } from './_components/writing-client'
 
+const DESCRIPTION = 'Essays and postmortems by Samridh Limbu — on the code he ships, the things it breaks, and the thinking underneath.'
+
 export const metadata: Metadata = {
   title: 'Writing',
-  description: 'Essays and postmortems by Samridh Limbu — on the code he ships, the things it breaks, and the thinking underneath.',
+  description: DESCRIPTION,
   alternates: { canonical: 'https://samridhlimbu.com/writing' },
-  openGraph: { url: 'https://samridhlimbu.com/writing', title: 'Writing · Samridh Limbu' },
+  // openGraph and twitter replace the layout's objects, so they carry every field.
+  openGraph: {
+    url: 'https://samridhlimbu.com/writing',
+    title: 'Writing · Samridh Limbu',
+    description: DESCRIPTION,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Samridh Limbu · Software Engineer' }],
+  },
+  twitter: { card: 'summary_large_image', title: 'Writing · Samridh Limbu', description: DESCRIPTION, images: ['/og.png'] },
 }
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'

@@ -2,24 +2,31 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
 import { pageJsonLd } from '@/lib/seo'
+import { caseStudySlugs } from '@/lib/routes'
 import { PageHeader } from '@/components/page-header'
 import { Prompt } from '@/components/prompt'
 import { PROJECTS, ARCHIVE } from '@/lib/data'
 import { ProjectCard } from './_components/project-card'
 
+const DESCRIPTION =
+  'Projects by Samridh Limbu, a software engineer in Melbourne: Hoddle, Kairos, ARIA, R1GPT, the DSEC club platform, Tempo, and client sites for King Double Glazing and Krishnaveni.'
+
 export const metadata: Metadata = {
   title: 'Projects',
-  description:
-    'Projects by Samridh Limbu, a software engineer in Melbourne: Hoddle, Kairos, ARIA, R1GPT, the DSEC club platform, Tempo, and client sites for King Double Glazing and Krishnaveni.',
+  description: DESCRIPTION,
   alternates: { canonical: 'https://samridhlimbu.com/projects' },
-  openGraph: { url: 'https://samridhlimbu.com/projects', title: 'Projects · Samridh Limbu' },
+  // openGraph and twitter replace the layout's objects, so they carry every field.
+  openGraph: {
+    url: 'https://samridhlimbu.com/projects',
+    title: 'Projects · Samridh Limbu',
+    description: DESCRIPTION,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Samridh Limbu · Software Engineer' }],
+  },
+  twitter: { card: 'summary_large_image', title: 'Projects · Samridh Limbu', description: DESCRIPTION, images: ['/og.png'] },
 }
 
-const DETAIL_PAGES = new Set([
-  'hoddle', 'kairos', 'aria', 'r1gpt', 'dsec', 'tempo', 'morgue', 'cstack', 'king-glazing', 'allarkive',
-  'acknowledgement-force', 'krishnaveni', 'nmmun', 'tapcraft', 'notes-app', 'load-balancer', 'lock-in', 'ontrack',
-  'bed-monitor', 'fleet-platform', 'voice-controller', 'robot-api', 'art-gallery', 'seatly', 'airtable',
-])
+// Built from src/app/projects/<slug>/page.tsx, so a new case study is linked without editing this.
+const DETAIL_PAGES = caseStudySlugs()
 
 const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'

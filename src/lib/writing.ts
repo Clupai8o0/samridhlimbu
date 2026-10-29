@@ -34,6 +34,8 @@ export type Post = {
   slug: string
   title: string
   date: string
+  /** Last real edit, if after `date`. Used for the sitemap and structured data. */
+  updated?: string
   readMin: number
   tags: string[]
   excerpt: string

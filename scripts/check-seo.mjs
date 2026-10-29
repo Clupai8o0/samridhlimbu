@@ -3,8 +3,9 @@
 // `npm run check:seo`. The rules are listed in AGENTS.md under "SEO".
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const APP = path.join(ROOT, 'src', 'app')
 const SRC = path.join(ROOT, 'src')
 const PUBLIC = path.join(ROOT, 'public')
@@ -69,6 +70,59 @@ function localImports(file, source) {
   return out
 }
 
+// The `{ ... }` object starting at the first `{` at or after `from`.
+function objectAt(source, from) {
+  const start = source.indexOf('{', from)
+  let depth = 0
+  for (let i = start; i < source.length; i++) {
+    if (source[i] === '{') {
+      depth++
+    } else if (source[i] === '}' && --depth === 0) {
+      return source.slice(start, i + 1)
+    }
+  }
+  return ''
+}
+
+// The keys of an object literal at its own level, ignoring nested objects and arrays.
+function topKeys(object) {
+  const keys = new Set()
+  let depth = 0
+  for (let i = 0; i < object.length; i++) {
+    const c = object[i]
+    if ('{[('.includes(c)) {
+      depth++
+    } else if ('}])'.includes(c)) {
+      depth--
+    } else if (depth === 1) {
+      const m = object.slice(i).match(/^([A-Za-z]\w*)\s*(:|,|\n|\})/)
+      if (m && /[{,\s]/.test(object[i - 1])) {
+        keys.add(m[1])
+        i += m[1].length - 1
+      }
+    }
+  }
+  return keys
+}
+
+// The page's metadata object: `export const metadata = {...}` or what generateMetadata returns.
+function metadataObject(source) {
+  const fixed = source.search(/export const metadata\b[^=]*=\s*\{/)
+  if (fixed >= 0) {
+    return objectAt(source, fixed)
+  }
+  const fn = source.search(/export async function generateMetadata\b/)
+  const ret = fn >= 0 ? source.slice(fn).search(/return \{\s*\n/) : -1
+  return ret >= 0 ? objectAt(source, fn + ret) : ''
+}
+
+// The value object of a top-level `key: {` in an object literal, or ''.
+function child(object, key) {
+  const indent = object.match(/^\{\n([ \t]+)/)?.[1] ?? '  '
+  const m = object.match(new RegExp(`\\n${indent}${key}:\\s*\\{`))
+  return m ? objectAt(object, m.index) : ''
+}
+
 const allSource = walk(SRC).map(f => [f, fs.readFileSync(f, 'utf8')])
 const pages = allSource.filter(([f]) => path.basename(f) === 'page.tsx' && f.startsWith(APP + path.sep) && !f.includes(`${path.sep}api${path.sep}`))
 
@@ -77,21 +131,33 @@ for (const [file, src] of pages) {
   const dynamic = route.includes('[')
 
   // 1. Metadata: title, description, canonical, Open Graph.
-  if (!/export const metadata\b|export async function generateMetadata\b/.test(src)) {
+  const meta = metadataObject(src)
+  if (!meta) {
     fail(file, 'no `export const metadata` or `generateMetadata`')
     continue
   }
-  if (route !== '/' && !/^\s*title:/m.test(src)) {
+  const keys = topKeys(meta)
+  if (route !== '/' && !keys.has('title')) {
     fail(file, 'metadata has no `title`')
   }
-  if (!/^\s*description:/m.test(src)) {
+  if (!keys.has('description')) {
     fail(file, 'metadata has no `description`')
   }
-  if (!/openGraph:\s*\{/.test(src)) {
+  const og = child(meta, 'openGraph')
+  const ogKeys = topKeys(og)
+  const missing = ['url', 'title', 'description', 'images'].filter(k => !ogKeys.has(k))
+  if (!og) {
     fail(file, 'metadata has no `openGraph` (it replaces the layout one, so give it url, title, description, images)')
+  } else if (missing.length > 0) {
+    fail(file, `openGraph is missing ${missing.join(', ')} (it replaces the layout one, so nothing is inherited)`)
   }
-  const canon = src.match(/canonical:\s*['`]([^'`]+)['`]/)
-  if (!canon && !/canonical:\s*url\b/.test(src)) {
+  const twitter = child(meta, 'twitter')
+  if (twitter && !topKeys(twitter).has('images')) {
+    fail(file, 'twitter has no `images` (it replaces the layout one, so nothing is inherited)')
+  }
+  const canonicalBlock = child(meta, 'alternates') || (meta.match(/alternates:\s*\{[^}]*\}/)?.[0] ?? '')
+  const canon = canonicalBlock.match(/canonical:\s*['`]([^'`]+)['`]/)
+  if (!canon && !/canonical:\s*url\b/.test(canonicalBlock)) {
     fail(file, 'metadata has no `alternates.canonical`')
   } else if (canon && !dynamic) {
     const value = canon[1].replace(BASE, '') || '/'
@@ -100,22 +166,23 @@ for (const [file, src] of pages) {
     }
   }
 
-  // 2. Open Graph images must exist in public/.
-  for (const [, img] of src.matchAll(/images:\s*\[\s*(?:\{\s*url:\s*)?'([^']+)'/g)) {
-    if (img.startsWith('/') && !fs.existsSync(path.join(PUBLIC, img))) {
-      fail(file, `Open Graph image ${img} is not in public/`)
+  // 2. Every image path written in the page (OG images, screenshots) must exist in public/.
+  for (const [, img] of src.matchAll(/['`"](\/[^'`"\s{}]+\.(?:webp|png|jpe?g|gif|svg|avif))['`"]/g)) {
+    if (!fs.existsSync(path.join(PUBLIC, img))) {
+      fail(file, `image ${img} is not in public/`)
     }
   }
 
   // 3. Structured data through <PageShell jsonLd={...}>.
-  if (!/<PageShell jsonLd=\{(?!null\})/.test(src)) {
+  if (!/<PageShell\s+jsonLd=\{(?!\s*null\s*\})/.test(src)) {
     fail(file, 'use <PageShell jsonLd={pageJsonLd(metadata)}> (from @/lib/seo) so the page has structured data')
   }
 
-  // 4. One <h1>, in the page or a component it imports.
-  const h1Files = [file, ...localImports(file, src)].filter(f => /<h1\b/.test(fs.readFileSync(f, 'utf8')))
-  if (h1Files.length === 0) {
-    fail(file, 'no <h1> on the page (search engines use it as the page heading)')
+  // 4. Exactly one <h1>, counted in the page and the .tsx components it imports.
+  const h1s = [file, ...localImports(file, src)].filter(f => f.endsWith('.tsx'))
+    .reduce((n, f) => n + (fs.readFileSync(f, 'utf8').match(/<h1\b/g) ?? []).length, 0)
+  if (h1s !== 1) {
+    fail(file, `${h1s} <h1> tags in the page and its components; a page needs exactly one (search engines read it as the heading)`)
   }
 
   // 5. Case studies must be linked from somewhere else, or crawlers can't find them.

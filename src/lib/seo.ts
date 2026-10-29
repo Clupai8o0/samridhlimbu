@@ -117,7 +117,8 @@ function firstImage(metadata: Metadata) {
 // Case studies become CreativeWork; other pages are plain WebPages.
 export function pageJsonLd(metadata: Metadata): JsonLd {
   const canonical = metadata.alternates?.canonical
-  const path = typeof canonical === 'string' ? canonical.replace(BASE_URL, '') || '/' : '/'
+  const raw = canonical instanceof URL ? canonical.pathname : typeof canonical === 'string' ? canonical : '/'
+  const path = raw.replace(BASE_URL, '') || '/'
   const url = absoluteUrl(path)
   const name = pageTitle(metadata)
   const description = text(metadata.description)
@@ -177,7 +178,7 @@ export function postJsonLd(post: Post): JsonLd {
         url,
         mainEntityOfPage: url,
         datePublished: post.date,
-        dateModified: post.date,
+        dateModified: post.updated ?? post.date,
         keywords: post.tags.join(', '),
         image: image?.type === 'image' ? absoluteUrl(image.src) : absoluteUrl('/og.png'),
         author,
