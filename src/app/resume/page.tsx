@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { DownloadPdfButton } from '@/components/download-pdf-button'
 
@@ -229,7 +230,7 @@ const SECTIONS = [
 
 export default function ResumePage() {
   return (
-    <PageShell>
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger style={{ maxWidth: 600, margin: '0 auto', padding: '40px 28px' }}>
 
         <PageHeader className="no-print" />

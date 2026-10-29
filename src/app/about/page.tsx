@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { MonoPortrait } from '@/components/mono-portrait'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 
 const DESCRIPTION =
@@ -45,7 +46,7 @@ const P: React.CSSProperties = { margin: 0, textWrap: 'pretty' }
 
 export default function AboutPage() {
   return (
-    <PageShell>
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger style={{ maxWidth: 680, margin: '0 auto', padding: '40px 24px 80px' }}>
 
         <PageHeader />

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { ContactForm } from '@/components/contact-form'
-import { Hero, EMAIL } from '@/components/home/hero'
+import { Hero } from '@/components/home/hero'
 import { FeaturedWork } from '@/components/home/featured-work'
 import { ContractWork } from '@/components/home/contract-work'
 import { ExperienceLog } from '@/components/home/experience-log'
@@ -28,36 +29,9 @@ export const metadata: Metadata = {
   },
 }
 
-// The contract client is deliberately absent here (NDA).
-const PERSON_SCHEMA = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Samridh Limbu',
-  url: 'https://samridhlimbu.com',
-  image: 'https://samridhlimbu.com/sam.jpeg',
-  jobTitle: 'Software Engineer',
-  description: 'Software engineer in Melbourne. Final-year computer science at Deakin University, CTO at Hoddle Melbourne and president of DSEC.',
-  email: EMAIL,
-  sameAs: [
-    'https://github.com/clupai8o0',
-    'https://linkedin.com/in/samridh-limbu',
-    'https://x.com/clupai8o0',
-    'https://instagram.com/clupaii',
-  ],
-  worksFor: { '@type': 'Organization', name: 'Hoddle Melbourne', url: 'https://hoddle.org' },
-  memberOf: { '@type': 'Organization', name: 'DSEC (Deakin Software Engineering Club)' },
-  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Deakin University' },
-  award: 'GovHack 2025 winner',
-  address: { '@type': 'PostalAddress', addressLocality: 'Melbourne', addressCountry: 'AU' },
-}
-
 export default function HomePage() {
   return (
-    <PageShell>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }}
-      />
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger className={styles.wrap}>
         <PageHeader />
         <Hero />

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { CodeBlock } from '@/components/code-block'
@@ -127,7 +128,7 @@ export default function HoddlePage() {
   const hoddle = PROJECTS.find(p => p.slug === 'hoddle')
 
   return (
-    <PageShell>
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 20px' }}>
 
         <PageHeader />

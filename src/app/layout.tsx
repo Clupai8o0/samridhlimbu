@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Inter, Manrope, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { CmdProvider } from '@/components/cmd-provider'
+import { JsonLd } from '@/components/json-ld'
+import { BASE_URL, siteJsonLd } from '@/lib/seo'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,8 +22,6 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
   display: 'swap',
 })
-
-const BASE_URL = 'https://samridhlimbu.com'
 
 const DESCRIPTION =
   'Software engineer in Melbourne. Final-year CS at Deakin, contract engineer for a US health-tech startup, CTO at Hoddle Melbourne, president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
@@ -75,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       style={{ background: '#050505' }}
     >
       <body style={{ margin: 0, background: '#050505' }}>
+        <JsonLd data={siteJsonLd()} />
         <CmdProvider>
           {children}
         </CmdProvider>

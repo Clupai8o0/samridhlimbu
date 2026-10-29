@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { Shot } from '@/components/case-study/shot'
@@ -184,7 +185,7 @@ function LogBlock({ label, text }: { label: string; text: string })
 
 export default function LoadBalancerPage() {
   return (
-    <PageShell>
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 20px' }}>
 
         <PageHeader />

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { PageAnimations } from '@/components/page-animations'
 import { openCommandPalette } from '@/components/cmd-provider'
+import { JsonLd } from '@/components/json-ld'
 
 const SECTIONS = [
   { href: '/about', label: 'about' },
@@ -26,7 +27,9 @@ const FOOTER_LINKS = [
 
 const LAST_UPDATED = '2026-10-25'
 
-export function PageShell({ children }: { children: React.ReactNode }) {
+// jsonLd is required so no page ships without structured data (see SEO in AGENTS.md).
+// Pass pageJsonLd(metadata) from @/lib/seo; only error and 404 pages pass null.
+export function PageShell({ children, jsonLd }: { children: React.ReactNode; jsonLd: Record<string, unknown> | null }) {
   const pathname = usePathname()
   // The drawer belongs to the path it was opened on, so navigating closes it.
   const [menuPath, setMenuPath] = useState<string | null>(null)
@@ -230,6 +233,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
+      {jsonLd && <JsonLd data={jsonLd} />}
       <main key={pathname} id="main" tabIndex={-1} className="t2-main" style={{ flex: 1 }}>
         <PageAnimations />
         {children}

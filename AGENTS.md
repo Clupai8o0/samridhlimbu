@@ -101,6 +101,29 @@ mount and sets up the motion.
   (`src/components/code-pre.tsx`), so every block is coloured. Default `log`
   colouring suits captured output; pass `json`, `bash`, `python` etc. for code.
 
+## SEO, required (owner, 29 Oct 2026)
+
+Every page must be easy for search engines to read. `npm run build` runs
+`scripts/check-seo.mjs` first (`prebuild`), so Vercel will not deploy a page
+that breaks these rules. Run `npm run check:seo` before you call a page done.
+
+On every new or changed page:
+
+- **Metadata:** `title`, `description`, `alternates.canonical` (the page's own
+  path) and a full `openGraph` (url, title, description, images). The OG image
+  must exist in `public/`. Case studies use the hero webp at its real size.
+- **Structured data:** `<PageShell jsonLd={pageJsonLd(metadata)}>` from
+  `@/lib/seo`. TypeScript requires the prop. Posts pass `postJsonLd(post)`;
+  only error and 404 pages pass `null`. The site-wide Person and WebSite data
+  is in `siteJsonLd()` (root layout); update it there, not on a page.
+- **One `<h1>`** per page.
+- **Alt text** on every `<img>` and `<Image>`.
+- **Linked:** a new case study needs its `PROJECTS` entry or an `ARCHIVE` row
+  with its `slug` in `src/lib/data.ts`, or crawlers can't find it.
+
+Automatic, don't edit by hand: `src/app/sitemap.ts` lists every `page.tsx` and
+every post on its own. Bump its `LAST_MODIFIED` when content really changes.
+
 ## Illustrations and image generation (owner, 28 Oct 2026)
 
 The site must not read as AI-made or "vibe coded". So:

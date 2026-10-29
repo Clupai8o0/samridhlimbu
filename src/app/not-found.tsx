@@ -5,7 +5,7 @@ const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 
 export default function NotFound() {
   return (
-    <PageShell>
+    <PageShell jsonLd={null}>
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 32px' }}>
         <p style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted-2)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>
           bash: command not found

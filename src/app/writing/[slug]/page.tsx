@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PageShell } from '@/components/page-shell'
+import { postJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { POSTS } from '@/lib/writing'
 import type { ContentBlock } from '@/lib/writing'
@@ -64,7 +65,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     .map(h => ({ id: slugify(h.text), text: h.text }))
 
   return (
-    <PageShell>
+    <PageShell jsonLd={postJsonLd(post)}>
       {tocItems.length > 0 && <TableOfContents items={tocItems} />}
 
       <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 28px' }}>

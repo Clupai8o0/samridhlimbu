@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { Prompt } from '@/components/prompt'
 import { PROJECTS, ARCHIVE } from '@/lib/data'
@@ -27,7 +28,7 @@ export default function ProjectsPage() {
   const featured = PROJECTS.filter(p => p.featured)
 
   return (
-    <PageShell>
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '40px 28px' }}>
 
         <PageHeader />

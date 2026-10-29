@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { Icon } from '@/components/icons'
 import { ArticleChart } from '@/components/article-chart'
@@ -159,7 +160,7 @@ function Diagram({ src, alt, caption, width, height }: Figure)
 
 export default function CstackPage() {
   return (
-    <PageShell>
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '36px 20px' }}>
 
         <PageHeader />

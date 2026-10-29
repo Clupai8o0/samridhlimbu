@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { POSTS } from '@/lib/writing'
 import { PageShell } from '@/components/page-shell'
+import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 import { WritingClient } from './_components/writing-client'
 
@@ -16,7 +17,7 @@ const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 
 export default function WritingPage() {
   return (
-    <PageShell>
+    <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger style={{ maxWidth: 720, margin: '0 auto', padding: '40px 28px' }}>
 
         <PageHeader />
