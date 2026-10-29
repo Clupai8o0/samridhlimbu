@@ -5,7 +5,7 @@ import { POSTS } from '@/lib/writing'
 const BASE = 'https://samridhlimbu.com'
 
 // Fixed so the sitemap only changes when the content does. Bump it on a real update.
-const LAST_MODIFIED = new Date('2026-10-28')
+const LAST_MODIFIED = new Date('2026-10-29')
 
 // One entry per src/app/projects/<slug>/page.tsx.
 const PROJECT_SLUGS = [
