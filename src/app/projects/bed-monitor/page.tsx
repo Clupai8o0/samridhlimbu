@@ -173,6 +173,17 @@ export default function BedMonitorPage() {
           </p>
         </div>
 
+        {/* Illustration */}
+        <div data-reveal style={{ margin: '0 0 40px' }}>
+          <Shot
+            src="/projects/bed-monitor/idea-illustration.webp"
+            alt="Line illustration: an empty single bed with a blue strip along the mattress and a small probe, linked by dashed wires to a small circuit board with a blue light on a bedside table"
+            width={1534}
+            height={551}
+            caption="Illustration of the idea: a force mat and a temperature probe on the bed, wired to the board on the bedside table."
+          />
+        </div>
+
         {/* How it fits together */}
         <div className="section-label" style={{ fontFamily: MONO }}>How it fits together</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>

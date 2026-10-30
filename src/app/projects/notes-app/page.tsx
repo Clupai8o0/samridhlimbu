@@ -189,6 +189,17 @@ export default function NotesAppPage() {
           </p>
         </div>
 
+        {/* Illustration */}
+        <div data-reveal style={{ margin: '0 0 40px' }}>
+          <Shot
+            src="/projects/notes-app/idea-illustration.webp"
+            alt="Line illustration: a blue note card at the left of a gently curved line that runs through five round icons: a code branch, a gear, a check mark, a shipping container and a gauge"
+            width={1536}
+            height={500}
+            caption="Illustration of the idea: one change moves through the stages, from the commit through the checks and a Docker image to monitoring after the deploy."
+          />
+        </div>
+
         {/* Pipeline */}
         <div className="section-label" style={{ fontFamily: MONO }}>The pipeline</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>

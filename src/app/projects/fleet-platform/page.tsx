@@ -282,6 +282,17 @@ export default function FleetPlatformPage() {
           </p>
         </div>
 
+        {/* Illustration */}
+        <div data-reveal style={{ margin: '0 0 40px' }}>
+          <Shot
+            src="/projects/fleet-platform/idea-illustration.webp"
+            alt="Line illustration: four map pins on the left, each with a dotted line into one blue stack of three message cards, and from that stack dotted lines to three gears, each with an arrow to a small car"
+            width={1220}
+            height={652}
+            caption="Illustration of the shape: ride requests wait in one queue, and dispatch workers take them off and match each one to a free taxi."
+          />
+        </div>
+
         {/* Ingest */}
         <div className="section-label" style={{ fontFamily: MONO }}>Cleaning the telemetry</div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>

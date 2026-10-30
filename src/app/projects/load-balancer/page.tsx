@@ -228,6 +228,17 @@ export default function LoadBalancerPage() {
           </p>
         </div>
 
+        {/* Illustration */}
+        <div data-reveal style={{ margin: '0 0 40px' }}>
+          <Shot
+            src="/projects/load-balancer/idea-illustration.webp"
+            alt="Line illustration: a blue hub takes a row of incoming dots and sends curved arrows to two server boxes; a third server box between them is drawn dashed, with no arrow going to it"
+            width={1272}
+            height={910}
+            caption="Illustration of the idea: the balancer stops sending to a backend it has ejected and spreads the traffic over the healthy ones."
+          />
+        </div>
+
         {/* Request path */}
         <div className="section-label" style={{ fontFamily: MONO }}>How a request moves</div>
         <div style={{ margin: '0 auto 40px' }}>

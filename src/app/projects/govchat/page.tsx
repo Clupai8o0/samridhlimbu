@@ -177,6 +177,17 @@ export default function GovchatPage() {
           </p>
         </div>
 
+        {/* Illustration */}
+        <div data-reveal style={{ margin: '0 0 40px' }}>
+          <Shot
+            src="/projects/govchat/idea-illustration.webp"
+            alt="Line illustration: a speech bubble with a magnifying glass, joined by a dotted line to one blue sheet pulled from a stack of documents"
+            width={1313}
+            height={708}
+            caption="Illustration of the idea: a question is searched against the dataset catalogue, and a matching dataset is picked out as a source."
+          />
+        </div>
+
         {/* How it works */}
         <div className="section-label" style={{ fontFamily: MONO }}>How it works</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>

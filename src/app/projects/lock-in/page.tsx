@@ -190,6 +190,17 @@ export default function LockInPage() {
           </p>
         </div>
 
+        {/* Illustration */}
+        <div data-reveal style={{ margin: '0 0 40px' }}>
+          <Shot
+            src="/projects/lock-in/idea-illustration.webp"
+            alt="Line illustration: a desk with a lamp, a closed laptop, a small circuit board with a dome motion sensor and a blue status light, and a small camera whose wave arcs point at an empty chair"
+            width={1536}
+            height={908}
+            caption="Illustration of the idea: the sensors and the camera sit on the desk, away from the laptop, and an empty chair reads as away."
+          />
+        </div>
+
         {/* How it fits together */}
         <div className="section-label" style={{ fontFamily: MONO }}>How it fits together</div>
         <p style={{ ...PROSE, margin: '0 0 20px' }}>

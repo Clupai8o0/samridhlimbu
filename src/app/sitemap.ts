@@ -7,7 +7,7 @@ import { staticRoutes } from '@/lib/routes'
 export const dynamic = 'force-static'
 
 // Fixed so the sitemap only changes when the content does. Bump it on a real update.
-const LAST_MODIFIED = new Date('2026-10-29')
+const LAST_MODIFIED = new Date('2026-10-30')
 
 // Every page.tsx is listed on its own (see staticRoutes), so a new page needs no edit here.
 function settings(route: string): Pick<MetadataRoute.Sitemap[number], 'changeFrequency' | 'priority'> {
