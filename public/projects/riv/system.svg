@@ -23,10 +23,10 @@
   <text class="s" x="20" y="20">RENDERER</text>
   <rect class="box" x="24" y="48" width="196" height="64" rx="3"/>
   <text class="k" x="34" y="72">src/index.html</text>
-  <text class="s" x="34" y="90">paths list · image viewer</text>
+  <text class="s" x="34" y="90">paths list, image viewer</text>
   <rect class="box" x="24" y="128" width="196" height="64" rx="3"/>
   <text class="k" x="34" y="152">src/js/*</text>
-  <text class="s" x="34" y="170">timer · next / prev · add path</text>
+  <text class="s" x="34" y="170">timer, next / prev, add path</text>
   <rect class="box" x="24" y="220" width="196" height="48" rx="3"/>
   <text class="k" x="34" y="248">window.ctx (preload)</text>
 
@@ -36,10 +36,10 @@
   <text class="s" x="258" y="20">MAIN</text>
   <rect class="box" x="262" y="80" width="196" height="72" rx="3"/>
   <text class="k" x="272" y="108">main.js</text>
-  <text class="s" x="272" y="126">get-paths · add-path</text>
+  <text class="s" x="272" y="126">get-paths, add-path</text>
   <text class="s" x="272" y="142">get/next/prev-image</text>
   <rect class="box" x="262" y="180" width="196" height="48" rx="3"/>
-  <text class="k" x="272" y="208">preload.js · contextBridge</text>
+  <text class="k" x="272" y="208">preload.js + contextBridge</text>
 
   <path class="ar" d="M458 116 L488 100" marker-end="url(#a)"/>
   <path class="ar" d="M458 140 L488 220" marker-end="url(#a)"/>

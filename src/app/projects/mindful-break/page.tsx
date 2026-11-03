@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     url: '/projects/mindful-break',
     title: 'Mindful break recommender · SIT225 · Samridh Limbu',
     description: DESCRIPTION,
-    images: [{ url: '/projects/mindful-break/system.svg', width: 720, height: 420, alt: 'Diagram: Arduino sensors publish over MQTT to Pi workers, then Streamlit and a Windows notifier' }],
+    images: [{ url: '/projects/mindful-break/og.webp', width: 1440, height: 840, alt: 'Diagram: Arduino sensors publish over MQTT to Pi workers, then Streamlit and a Windows notifier' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Mindful break recommender · SIT225 · Samridh Limbu',
     description: DESCRIPTION,
-    images: ['/projects/mindful-break/system.svg'],
+    images: ['/projects/mindful-break/og.webp'],
   },
 }
 
