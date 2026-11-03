@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     url: '/projects/riv',
     title: 'RIV · random image viewer · Samridh Limbu',
     description: DESCRIPTION,
-    images: [{ url: '/projects/riv/system.svg', width: 720, height: 360, alt: 'Diagram: Electron renderer, preload IPC bridge, main process, path library and recursive image scanner' }],
+    images: [{ url: '/projects/riv/og.webp', width: 1440, height: 720, alt: 'Diagram: Electron renderer, preload IPC bridge, main process, path library and recursive image scanner' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'RIV · random image viewer · Samridh Limbu',
     description: DESCRIPTION,
-    images: ['/projects/riv/system.svg'],
+    images: ['/projects/riv/og.webp'],
   },
 }
 

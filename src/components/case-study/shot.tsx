@@ -20,12 +20,15 @@ export interface ShotProps {
 // scroll (data-reveal="wipe"; the CSS lives in globals.css).
 export function Shot({ src, alt, width, height, caption, variant = 'desktop', priority = false, wide }: ShotProps) {
   const mobile = variant === 'mobile'
+  // SVGs skip the image optimizer (it rejects them without dangerouslyAllowSVG).
+  const svg = /\.svg($|\?)/i.test(src)
   const image = (
     <Image
       src={src}
       alt={alt}
       width={width}
       height={height}
+      unoptimized={svg}
       // With a wide version the browser may pick either file, so don't preload
       // one; load it eagerly and early instead.
       preload={priority && !wide}

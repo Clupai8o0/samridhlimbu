@@ -20,37 +20,36 @@
   <rect class="zone" x="260" y="28" width="220" height="360" rx="4"/>
   <rect class="zone" x="528" y="28" width="180" height="360" rx="4"/>
 
-  <text class="s" x="20" y="20">EDGE · Arduino Nano 33 IoT</text>
+  <text class="s" x="20" y="20">EDGE - Arduino Nano 33 IoT</text>
   <rect class="box" x="24" y="44" width="176" height="48" rx="3"/>
   <text class="k" x="34" y="64">MAX30102 PPG</text>
-  <text class="s" x="34" y="80">~50 Hz sample · ~20 Hz publish</text>
+  <text class="s" x="34" y="80">~50 Hz sample, ~20 Hz publish</text>
   <rect class="box" x="24" y="104" width="176" height="48" rx="3"/>
-  <text class="k" x="34" y="124">IMU · MPU6050 / LSM6DS3</text>
+  <text class="k" x="34" y="124">IMU - MPU6050 / LSM6DS3</text>
   <text class="s" x="34" y="140">10 Hz orientation / motion</text>
   <rect class="box" x="24" y="164" width="176" height="48" rx="3"/>
   <text class="k" x="34" y="184">DHT11 + LDR</text>
-  <text class="s" x="34" y="200">temp · humidity · light 0.5 Hz</text>
+  <text class="s" x="34" y="200">temp, humidity, light 0.5 Hz</text>
   <rect class="box" x="24" y="240" width="176" height="56" rx="3"/>
   <text class="k" x="34" y="262">arduino-sketch.cpp</text>
-  <text class="s" x="34" y="280">Wi-FiNINA · MQTT client</text>
+  <text class="s" x="34" y="280">WiFiNINA + MQTT client</text>
 
   <path class="ar" d="M212 268 L260 180" marker-end="url(#a)"/>
   <text class="x" x="214" y="210">MQTT</text>
-  <text class="s" x="214" y="226">mbreak/&/sensors/*</text>
+  <text class="s" x="214" y="226">mbreak/.../sensors/*</text>
 
-  <text class="s" x="268" y="20">PI · Python workers</text>
+  <text class="s" x="268" y="20">PI - Python workers</text>
   <rect class="box" x="272" y="44" width="196" height="40" rx="3"/>
-  <text class="k" x="282" y="68">ingest.py ’ NDJSON</text>
+  <text class="k" x="282" y="68">ingest.py to NDJSON</text>
   <rect class="box" x="272" y="96" width="196" height="40" rx="3"/>
   <text class="k" x="282" y="120">hrv_worker.py</text>
-  <text class="s" x="282" y="0"></text>
   <rect class="box" x="272" y="148" width="196" height="40" rx="3"/>
   <text class="k" x="282" y="172">posture_worker.py</text>
   <rect class="box" x="272" y="200" width="196" height="40" rx="3"/>
   <text class="k" x="282" y="224">env_worker.py</text>
   <rect class="box" x="272" y="268" width="196" height="56" rx="3"/>
   <text class="k" x="282" y="290">recommender.py</text>
-  <text class="s" x="282" y="308">stretch · breathing · cooldown</text>
+  <text class="s" x="282" y="308">stretch, breathing, cooldown</text>
 
   <path class="ar" d="M480 296 L528 140" marker-end="url(#a)"/>
   <path class="ar" d="M480 296 L528 280" marker-end="url(#a)"/>
