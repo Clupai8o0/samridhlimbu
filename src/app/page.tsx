@@ -12,7 +12,7 @@ import { SectionHeading } from '@/components/home/section-heading'
 import styles from '@/components/home/home.module.css'
 
 const DESCRIPTION =
-  'Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer, sole developer of hoddle.org and president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
+  'Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer and president of DSEC; built hoddle.org as its sole developer. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
 
 export const metadata: Metadata = {
   description: DESCRIPTION,

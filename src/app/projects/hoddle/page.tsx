@@ -144,7 +144,7 @@ export default function HoddlePage() {
         <div data-stagger-item style={{ padding: '24px 0', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', columnGap: 12, rowGap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 'var(--text-2xl)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Hoddle Melbourne</h1>
-            <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · sole developer</span>
+            <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · Mar–Sep 2026</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 18px' }}>
             A mentorship platform that matches first-year international students in Melbourne with verified senior mentors. I built it as the sole developer, from the schema to the background jobs. hoddle.org runs the April 2026 build. The rebuild shown here, which I did on my own in October 2026 after the program ended, is finished and not deployed.

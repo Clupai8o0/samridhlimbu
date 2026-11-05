@@ -38,7 +38,7 @@ export function siteJsonLd(): JsonLd {
         image: absoluteUrl('/sam.jpeg'),
         email: 'samridh@samridhlimbu.com',
         jobTitle: 'Software Engineer',
-        description: 'Software engineer in Melbourne. Final-year computer science at Deakin University, sole developer of hoddle.org and president of DSEC.',
+        description: 'Software engineer in Melbourne. Final-year computer science at Deakin University and president of DSEC; built hoddle.org as its sole developer.',
         address: { '@type': 'PostalAddress', addressLocality: 'Melbourne', addressRegion: 'VIC', addressCountry: 'AU' },
         memberOf: { '@type': 'Organization', name: 'DSEC (Deakin Software Engineering Club)' },
         alumniOf: { '@type': 'CollegeOrUniversity', name: 'Deakin University', url: 'https://www.deakin.edu.au' },

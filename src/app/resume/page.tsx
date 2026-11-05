@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/page-header'
 import { DownloadPdfButton } from '@/components/download-pdf-button'
 
 const DESCRIPTION =
-  'Resume of Samridh Limbu, a software engineer in Melbourne: final-year CS at Deakin, contract engineer for a US health-tech startup, sole developer of hoddle.org and GovHack 2025 winner.'
+  'Resume of Samridh Limbu, a software engineer in Melbourne: final-year CS at Deakin, contract engineer for a US health-tech startup and GovHack 2025 winner, who built hoddle.org as its sole developer.'
 
 export const metadata: Metadata = {
   title: 'Resume',

@@ -6,7 +6,7 @@ import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 
 const DESCRIPTION =
-  'About Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer, sole developer of hoddle.org and president of DSEC. From Nepal.'
+  'About Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer and president of DSEC; built hoddle.org as its sole developer. From Nepal.'
 
 export const metadata: Metadata = {
   title: 'About',
