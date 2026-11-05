@@ -404,7 +404,7 @@ export function ResumeDocument() {
             <Text style={s.projectStack}>Node.js · MQTT · PostgreSQL · AWS Fargate · SQS</Text>
             <Text style={s.entryBody}>
               Dispatch for a simulated 2,000-car fleet, about 950 matches a second on one laptop. Scaled
-              one to six Fargate tasks on SQS depth. HD paper: batched assignment cut mean pickup
+              one to six Fargate tasks on SQS depth. Paper: batched assignment cut mean pickup
               distance 24% under load, at twice the p95 latency.
             </Text>
           </View>

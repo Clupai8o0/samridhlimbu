@@ -3565,7 +3565,7 @@ return the graph with the best measured H`,
       },
       {
         type: 'paragraph',
-        html: 'I wrote this as the High Distinction position paper for <strong>SIT320 Advanced Algorithms</strong> at Deakin in T2 2026. I shaped it as a computing education research paper, then decided to publish it here myself rather than send it to a conference. This post is the paper, shortened. The full PDF is linked at the end.',
+        html: 'I wrote this position paper for the High Distinction task in <strong>SIT320 Advanced Algorithms</strong> at Deakin in T2 2026. I shaped it as a computing education research paper, then decided to publish it here myself rather than send it to a conference. This post is the paper, shortened. The full PDF is linked at the end.',
       },
       {
         type: 'paragraph',

@@ -97,17 +97,17 @@ const SECTIONS = [
     label: 'Coursework papers',
     rows: [
       {
-        head: 'Batched dispatch for a driverless-taxi fleet · SIT314 HD paper',
+        head: 'Batched dispatch for a driverless-taxi fleet · SIT314 paper',
         meta: 'Aug 2026',
         body: "Adapted DiDi's batched order assignment (KDD 2017) to my own Node.js dispatch service and tested it on a 2,000-car simulation. Under load, mean pickup distance fell 24% (1,068 m to 814 m) while p95 match latency rose from 51 to 112 ms. Written up on samridhlimbu.com/writing.",
       },
       {
-        head: 'RLiG · reinforcement learning for Bayesian network structure · SIT320 HD paper',
+        head: 'RLiG · reinforcement learning for Bayesian network structure · SIT320 paper',
         meta: 'Oct 2026',
         body: 'Implemented the RLiG decision process and trained tabular, linear and DQN agents to learn Bayesian network structure, against my own hill climbing, GES and PC baselines. With the generative reward off, the linear agent learned the best structure on three of six networks over ten seeds, and the paper reports that the generative reward mostly did not pay for its cost. 55 unit tests.',
       },
       {
-        head: 'Where Is the Algorithm? · two tic-tac-toe players · SIT320 HD position paper',
+        head: 'Where Is the Algorithm? · two tic-tac-toe players · SIT320 position paper',
         meta: 'Sep 2026',
         body: 'Built a dynamic programming player and a Q-learning player and scored both exactly over the whole 5,478-position game graph. Argued that "the algorithm" depends on the level of description and gave a three-part test for which run-time state belongs to it. The learner picked an optimal move in 108 of the 109 states it met in play but in only 90.6% of all 2,423 decision states. Designed a two-hour lab built on the two players (not yet run with a class). Self-published on samridhlimbu.com/writing.',
       },
