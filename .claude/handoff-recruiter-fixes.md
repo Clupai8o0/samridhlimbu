@@ -17,8 +17,10 @@ Worktree: `~/Documents/projects/samridhlimbu-worktrees/mc-can-you-bring-up-a-bun
 - Fix 7: home drops `cat ~/readme.md`, the rotating verb (fixed "Open to work · Melbourne") and `v0.1` (gone site-wide); X/Instagram left the hero (still in footer and command palette).
 - Resume heading "Research papers" is now "Coursework papers". Codex and Grok: no findings.
 
+- Resume: SIT314/SIT320 rows no longer say "HD paper" (SIT320 unit mark 77 D, per jobbird handoff). Posts keep "High Distinction task" (the task tier, accurate).
+
 ## Not done
-- WAM still "~87": the exact figure isn't recorded anywhere. Sam to supply it.
+- WAM still "~87": the exact figure isn't recorded anywhere (the T2 2026 statement PDF is gone from Downloads). With SIT320 at 77 and SIT306 at 70, check it's still ~87. Sam to supply it.
 
 ## Risks and guardrails
 - `samridhlimbu-worktrees` is now personal in `model-policy.json` (5 Nov 2026), so every reviewer can run in worktrees.
