@@ -20,7 +20,7 @@ Worktree: `~/Documents/projects/samridhlimbu-worktrees/mc-can-you-bring-up-a-bun
 - Resume: SIT314/SIT320 rows no longer say "HD paper" (SIT320 unit mark 77 D, per jobbird handoff). Posts keep "High Distinction task" (the task tier, accurate).
 
 ## Not done
-- WAM still "~87": the exact figure isn't recorded anywhere (the T2 2026 statement PDF is gone from Downloads). With SIT320 at 77 and SIT306 at 70, check it's still ~87. Sam to supply it.
+- WAM stays "~87" (owner's call, 5 Nov 2026; the T2 2026 statement PDF couldn't be found).
 
 ## Risks and guardrails
 - `samridhlimbu-worktrees` is now personal in `model-policy.json` (5 Nov 2026), so every reviewer can run in worktrees.
