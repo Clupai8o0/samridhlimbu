@@ -13,9 +13,12 @@ Worktree: `~/Documents/projects/samridhlimbu-worktrees/mc-can-you-bring-up-a-bun
 2. Jan 2027: DSEC handover. Change "Jun 2025–present" everywhere (list in project memory `sam-role-dates`).
 3. Top up DeepSeek credit if you want it back as a review pass.
 
-## Not done (not chosen)
-- Fix 7: terminal touches on the first screen and the Instagram/X links in the hero.
-- Resume "Research papers" heading, WAM shown as "~87".
+## Also done (10482eb)
+- Fix 7: home drops `cat ~/readme.md`, the rotating verb (fixed "Open to work · Melbourne") and `v0.1` (gone site-wide); X/Instagram left the hero (still in footer and command palette).
+- Resume heading "Research papers" is now "Coursework papers". Codex and Grok: no findings.
+
+## Not done
+- WAM still "~87": the exact figure isn't recorded anywhere. Sam to supply it.
 
 ## Risks and guardrails
 - `samridhlimbu-worktrees` is now personal in `model-policy.json` (5 Nov 2026), so every reviewer can run in worktrees.
