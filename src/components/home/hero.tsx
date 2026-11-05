@@ -21,11 +21,6 @@ const PROOF: { k: string; v: string; href: string; count?: boolean; countFrom?: 
   { k: '100% tuition scholarship', v: 'Deakin · WAM ~87', href: '/resume' },
 ]
 
-const SOCIALS = [
-  { href: 'https://x.com/clupai8o0', icon: 'x', label: 'X (@clupai8o0)' },
-  { href: 'https://instagram.com/clupaii', icon: 'instagram', label: 'Instagram (@clupaii)' },
-]
-
 // Splits a word into letter spans for the name's entrance. `start` keeps
 // the stagger index running across words.
 function Letters({ word, start }: { word: string; start: number }) {
@@ -48,11 +43,6 @@ export function Hero() {
   return (
     <>
       <HeroBackdrop />
-
-      <div data-stagger-item className={styles.breadcrumb}>
-        <span aria-hidden="true" style={{ color: 'var(--accent)' }}>❯</span>{' '}
-        cat ~/readme.md<span className="t2-cursor thin" aria-hidden="true" />
-      </div>
 
       <div data-stagger-item className={styles.identity}>
         <div className={styles.photo}>
@@ -101,19 +91,6 @@ export function Hero() {
             <Icon name="linkedin" size={14} />
             LinkedIn
           </a>
-          {SOCIALS.map(s => (
-            <a
-              key={s.icon}
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer me"
-              className={`${styles.action} ${styles.actionIcon}`}
-              aria-label={s.label}
-              title={s.label}
-            >
-              <Icon name={s.icon} size={14} />
-            </a>
-          ))}
         </div>
       </div>
 

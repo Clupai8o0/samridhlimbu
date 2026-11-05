@@ -94,7 +94,7 @@ const SECTIONS = [
     ],
   },
   {
-    label: 'Research papers',
+    label: 'Coursework papers',
     rows: [
       {
         head: 'Batched dispatch for a driverless-taxi fleet · SIT314 HD paper',

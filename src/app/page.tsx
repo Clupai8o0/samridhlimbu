@@ -33,7 +33,7 @@ export default function HomePage() {
   return (
     <PageShell jsonLd={pageJsonLd(metadata)}>
       <div data-stagger className={styles.wrap}>
-        <PageHeader />
+        <PageHeader status="Open to work · Melbourne" />
         <Hero />
 
         <FeaturedWork />

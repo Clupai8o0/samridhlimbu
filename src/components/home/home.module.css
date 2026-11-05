@@ -46,19 +46,13 @@
   to   { opacity: 1; }
 }
 
-.breadcrumb {
-  font-family: var(--font-mono), 'JetBrains Mono', monospace;
-  font-size: var(--text-xs);
-  color: var(--muted-2);
-  margin-bottom: 28px;
-}
-
 .identity {
   display: grid;
   grid-template-columns: 96px minmax(0, 1fr);
   column-gap: 24px;
   row-gap: 12px;
   align-items: center;
+  margin-top: 28px;
 }
 
 .photo {
@@ -188,8 +182,6 @@
 .action svg { transition: transform 200ms var(--ease-out); }
 
 /* Icon-only social buttons (X, Instagram). */
-.actionIcon { width: 40px; padding: 0; justify-content: center; }
-
 .actionPrimary {
   position: relative;
   overflow: hidden;
@@ -612,8 +604,7 @@
 
 @media (max-width: 640px) {
   .wrap { padding: 28px 20px 64px; }
-  .breadcrumb { margin-bottom: 22px; }
-  .identity { grid-template-columns: 72px minmax(0, 1fr); column-gap: 16px; }
+  .identity { grid-template-columns: 72px minmax(0, 1fr); column-gap: 16px; margin-top: 18px; }
   .photo { width: 72px; height: 72px; grid-row: auto; }
   .name { font-size: 36px; align-self: center; }
   .tagline { grid-column: 1 / -1; }
