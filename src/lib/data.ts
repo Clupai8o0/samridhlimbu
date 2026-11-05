@@ -39,9 +39,9 @@ export const PROJECTS: Project[] = [
     name: 'Hoddle Melbourne',
     tag: 'International student mentorship platform',
     year: '2026',
-    status: 'Live · April build · rebuild ready',
+    status: 'Live · April build · rebuild unshipped',
     cover: '/projects/hoddle/home.webp',
-    pitch: 'CTO and sole developer of a mentorship platform for first-year international students in Melbourne, built for a Study Melbourne 4Impact startup that placed 2nd. Students are matched with verified mentors on where they come from, what they study and what they need help with, then read the library, ask in the forums (anonymously if they like), join live Q&As and message mentors. Access rules, rate limits and private meeting links are enforced in Postgres. hoddle.org runs the April 2026 build; the October 2026 rebuild redoes every page and adds 27 database migrations, and is not deployed yet.',
+    pitch: 'Sole developer, March to September 2026, of a mentorship platform for first-year international students in Melbourne, built for a Study Melbourne 4Impact startup that placed 2nd. Students are matched with verified mentors on where they come from, what they study and what they need help with, then read the library, ask in the forums (anonymously if they like), join live Q&As and message mentors. Access rules sit in Postgres row-level security. hoddle.org runs the April 2026 build. After the program ended I rebuilt every page and added 27 database migrations on my own in October 2026; that rebuild is finished and not deployed.',
     pitchShort: 'Mentorship platform for international students, built solo. Mentor matching, forums, live Q&As. 4Impact 2nd.',
     stack: {
       Frontend: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'React Hook Form', 'Zod'],
@@ -49,9 +49,9 @@ export const PROJECTS: Project[] = [
       Infra: ['Vercel', 'Vercel Cron'],
     },
     metrics: [
-      { k: 'lines of typescript', v: '37K+' },
-      { k: 'postgres tables', v: '25' },
-      { k: 'sql test checks', v: '124' },
+      { k: 'lines of typescript', v: '25K+' },
+      { k: 'postgres tables', v: '24' },
+      { k: 'Leadership 4Impact final', v: '2nd' },
     ],
     featured: true,
     homeOrder: 1,
@@ -75,8 +75,7 @@ export const PROJECTS: Project[] = [
       { k: 'API route files', v: '45' },
     ],
     cover: '/projects/kairos/today.webp',
-    featured: true,
-    homeOrder: 2,
+    featured: false,
   },
   {
     slug: 'aria',
@@ -97,8 +96,7 @@ export const PROJECTS: Project[] = [
       { k: 'unit tests', v: '32' },
     ],
     cover: '/projects/aria/sandbox.webp',
-    featured: true,
-    homeOrder: 3,
+    featured: false,
     github: 'https://github.com/Clupai8o0/aria',
   },
   {
@@ -120,7 +118,7 @@ export const PROJECTS: Project[] = [
       { k: 'stress checks passing', v: '27/27' },
     ],
     cover: '/projects/r1gpt/overview.webp',
-    featured: true,
+    featured: false,
     github: 'https://github.com/Aarav261/R1gpt',
   },
   {
@@ -165,6 +163,7 @@ export const PROJECTS: Project[] = [
     ],
     cover: '/projects/ontrack/cover.webp',
     featured: true,
+    homeOrder: 3,
     github: 'https://github.com/thoth-tech/doubtfire-web/pulls?q=is%3Apr+author%3AClupai8o0',
   },
   {
@@ -187,15 +186,16 @@ export const PROJECTS: Project[] = [
     ],
     cover: '/projects/tempo/dashboard.webp',
     featured: true,
+    homeOrder: 2,
     github: 'https://github.com/Clupai8o0/tempo',
   },
   {
     slug: 'morgue',
     name: 'morgue',
-    tag: 'Vault of UI animations for coding agents · founder',
+    tag: 'Vault of UI animations for coding agents',
     year: '2026',
     status: 'In development · waitlist open · morgue.clupai.com',
-    pitch: 'Founder, Aug 2026 to now. A SaaS in development with its waitlist open: it records repeatable video previews of UI animations, tags them with a fixed vocabulary, keeps the code and exports bundles that coding agents (Claude Code, Cursor, Codex) can build from. The design follows measured browser limits: of 40 WebGL contexts created, 16 survive, so the grid plays video and only one item runs live. Multi-user accounts are deployed ahead of launch.',
+    pitch: 'Building since August 2026. A SaaS in development with its waitlist open: it records repeatable video previews of UI animations, tags them with a fixed vocabulary, keeps the code and exports bundles that coding agents (Claude Code, Cursor, Codex) can build from. The design follows measured browser limits: of 40 WebGL contexts created, 16 survive, so the grid plays video and only one item runs live. Multi-user accounts are deployed ahead of launch.',
     pitchShort: 'Records repeatable video previews of UI animations, keeps the code and exports bundles coding agents can build from. Waitlist open.',
     stack: {
       Frontend: ['Next.js 16', 'React 19', 'TypeScript'],
@@ -229,7 +229,7 @@ export const PROJECTS: Project[] = [
       { k: 'licence', v: 'MIT' },
     ],
     cover: '/projects/cstack/cover.webp',
-    featured: true,
+    featured: false,
     github: 'https://github.com/Clupai8o0/cstack',
   },
   {
@@ -269,7 +269,7 @@ export const PROJECTS: Project[] = [
       { k: 'passages per answer', v: '5' },
     ],
     cover: '/projects/allarkive/answer.webp',
-    featured: true,
+    featured: false,
     github: 'https://github.com/clupai8o0/allarkive',
   },
   {
@@ -291,7 +291,7 @@ export const PROJECTS: Project[] = [
       { k: 'platform', v: 'macOS 14+' },
     ],
     cover: '/projects/acknowledgement-force/preview.webp',
-    featured: true,
+    featured: false,
     github: 'https://github.com/clupai8o0/force',
   },
   {
@@ -313,7 +313,7 @@ export const PROJECTS: Project[] = [
       { k: 'section types today', v: '13' },
       { k: 'commits', v: '87' },
     ],
-    featured: true,
+    featured: false,
   },
   {
     slug: 'nmmun',
@@ -333,7 +333,7 @@ export const PROJECTS: Project[] = [
       { k: 'councils', v: '14' },
       { k: 'next-team commits', v: '105' },
     ],
-    featured: true,
+    featured: false,
   },
   {
     slug: 'tapcraft',
@@ -354,7 +354,7 @@ export const PROJECTS: Project[] = [
       { k: 'lines in the Blender script', v: '510' },
     ],
     cover: '/projects/tapcraft/desktop.webp',
-    featured: true,
+    featured: false,
   },
   {
     slug: 'lock-in',
@@ -381,6 +381,14 @@ export const PROJECTS: Project[] = [
 ]
 
 export const ARCHIVE: ArchiveItem[] = [
+  { year: '2026', name: 'Kairos · planner that learns task lengths', tech: 'Next.js 16 · Drizzle · PostgreSQL · Vercel AI SDK', link: 'live', slug: 'kairos' },
+  { year: '2026', name: 'ARIA · home battery simulator · Watt The Hack', tech: 'Next.js 15 · TypeScript · double-auction market · Vitest', link: 'github', slug: 'aria' },
+  { year: '2026', name: 'R1GPT · grid-connection checker · hackathon', tech: 'Next.js 14 · Drizzle · Neon Postgres · OpenAI', link: 'github', slug: 'r1gpt' },
+  { year: '2026', name: 'cstack · shared layer for coding agents', tech: 'Python · Shell · Claude Code · Codex', link: 'github', slug: 'cstack' },
+  { year: '2026', name: 'AllArkive · offline research assistant · BSides', tech: 'FastAPI · Ollama · sqlite-vec · Kiwix', link: 'github', slug: 'allarkive' },
+  { year: '2026', name: 'Acknowledgement Force · macOS app', tech: 'Swift 6 · SwiftUI · Next.js · Supabase', link: 'live', slug: 'acknowledgement-force' },
+  { year: '2026', name: 'TapCraft Studio · headless Shopify store', tech: 'Next.js 16 · Shopify Storefront API · React Three Fiber', link: 'live', slug: 'tapcraft' },
+  { year: '2026', name: 'Krishnaveni · school website · client', tech: 'Next.js 16 · Sanity · Tailwind v4 · Motion', link: 'live', slug: 'krishnaveni' },
   { year: '2026', name: 'Airtable clone · 100k-row grid', tech: 'Next.js · tRPC · Prisma · PostgreSQL · TanStack Virtual', link: 'private', slug: 'airtable' },
   { year: '2026', name: 'Farmers Intuition · Hack48', tech: 'FastAPI · Gemini · ElevenLabs', link: 'github', slug: 'farmers-intuition' },
   { year: '2026', name: 'Lock-In · embedded focus tracker', tech: 'Arduino C++ · Python asyncio · Gemini API · Flask', link: 'github', slug: 'lock-in' },
@@ -395,6 +403,7 @@ export const ARCHIVE: ArchiveItem[] = [
   { year: '2025', name: 'notes-app · CI/CD showcase', tech: 'Next.js · Express · MongoDB · Docker · Jenkins · AWS · Prometheus · Grafana', link: 'github', slug: 'notes-app' },
   { year: '2025', name: 'load-balancer', tech: 'Go · Prometheus', link: 'github', slug: 'load-balancer' },
   { year: '2025', name: 'Mindful break recommender · SIT225', tech: 'Arduino · MQTT · Raspberry Pi · Python · Streamlit', link: 'github', slug: 'mindful-break' },
+  { year: '2024', name: 'NMMUN · school conference website', tech: 'Next.js 14 · Tailwind · shadcn/ui · Framer Motion', link: 'live', slug: 'nmmun' },
   { year: '2024', name: 'Loco · offline course player', tech: 'Next.js · TypeScript · shadcn/ui', link: 'private', slug: 'loco' },
   { year: '2023', name: 'Thurman Events · events site', tech: 'Next.js · Tailwind · Framer Motion · Nodemailer', link: 'github', slug: 'thurman' },
   { year: '2023', name: 'RIV · random image viewer', tech: 'Electron · JavaScript · Tailwind', link: 'github', slug: 'riv' },
@@ -416,17 +425,17 @@ export const EXPERIENCE: ExperienceItem[] = [
     href: '/projects/morgue',
   },
   {
-    when: 'Mar 2026–present',
+    when: 'Mar–Sep 2026',
     role: 'CTO',
     org: 'Hoddle Melbourne',
-    detail: 'Sole developer of hoddle.org, a mentorship platform for international students: 25K+ lines, 51 routes, 24 Postgres tables. Placed 2nd at Study Melbourne Leadership 4Impact.',
+    detail: 'Sole developer of hoddle.org, a mentorship platform for international students: 25K+ lines of TypeScript, 24 Postgres tables behind row-level security. Placed 2nd at Study Melbourne Leadership 4Impact in May 2026.',
     href: '/projects/hoddle',
   },
   {
     when: 'Jun 2025–present',
     role: 'President',
     org: 'DSEC (Deakin Software Engineering Club)',
-    detail: 'Run a 190+ member club across five committees. Lead development of its site, committee hub and member portal on a FastAPI backend.',
+    detail: 'Ran a 190+ member club across five committees through 2025–26, and led development of its site, committee hub and member portal on a FastAPI backend.',
     href: '/projects/dsec',
   },
   {

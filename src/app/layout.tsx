@@ -24,10 +24,10 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 const DESCRIPTION =
-  'Software engineer in Melbourne. Final-year CS at Deakin, contract engineer for a US health-tech startup, CTO at Hoddle Melbourne, president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
+  'Software engineer in Melbourne. Final-year CS at Deakin, contract engineer for a US health-tech startup, sole developer of hoddle.org, president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
 
 const SHORT_DESCRIPTION =
-  'Software engineer in Melbourne. Final-year CS at Deakin, CTO at Hoddle Melbourne, president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
+  'Software engineer in Melbourne. Final-year CS at Deakin, sole developer of hoddle.org, president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

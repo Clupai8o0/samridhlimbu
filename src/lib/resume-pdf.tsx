@@ -171,8 +171,8 @@ export function ResumeDocument() {
         {/* ── Summary ─────────────────────────────────────── */}
         <Text style={s.summary}>
           Final-year CS at Deakin (WAM ~87), graduating Jun 2027. Contract engineer for a
-          US health-tech startup (search latency cut to under 200 ms), CTO and sole developer of a live
-          mentorship platform, President of a 190+ member software club. GovHack 2025 winner. Open
+          US health-tech startup (search latency cut to under 200 ms). Built a live mentorship platform
+          as CTO and sole developer. President of a 190+ member software club. GovHack 2025 winner. Open
           to SWE internships for summer 2026–27 and graduate roles from mid-2027.
         </Text>
 
@@ -208,11 +208,11 @@ export function ResumeDocument() {
           <View style={s.entry} wrap={false}>
             <View style={s.entryHeader}>
               <Text style={s.entryHead}>CTO · Hoddle Melbourne</Text>
-              <Text style={s.entryMeta}>Mar 2026–present</Text>
+              <Text style={s.entryMeta}>Mar–Sep 2026</Text>
             </View>
             <Text style={s.entryBody}>
               Built hoddle.org, an international-student mentorship platform, as sole developer. 25K+
-              lines, 51 routes, 24 Postgres tables with RLS. Weighted mentor matching, forums, DMs,
+              lines of TypeScript, 24 Postgres tables with RLS. Weighted mentor matching, forums, DMs,
               real-time notifications. 2nd place, Study Melbourne Leadership 4Impact.
             </Text>
           </View>
@@ -223,7 +223,7 @@ export function ResumeDocument() {
               <Text style={s.entryMeta}>Jun 2025–present</Text>
             </View>
             <Text style={s.entryBody}>
-              Run a 190+ member club across five committees. Lead developer of the platform the club
+              Ran a 190+ member club across five committees through 2025–26. Lead developer of the platform the club
               runs on: public site (<Link src="https://dsec.club" style={s.inlineLink}>dsec.club</Link>),
               member portal and a role-based committee hub where every team manages events, sponsors,
               finance, tasks and meetings, all on one FastAPI API with an MCP server
@@ -324,11 +324,11 @@ export function ResumeDocument() {
               <Text style={s.entryHead}>ARIA · multi-agent home-energy brain</Text>
               <Link src="https://github.com/Clupai8o0/aria" style={s.entryMetaLink}>github.com/clupai8o0/aria</Link>
             </View>
-            <Text style={s.projectStack}>Next.js · TypeScript · Claude / OpenAI (ReAct) · IBM Carbon</Text>
+            <Text style={s.projectStack}>Next.js · TypeScript · rule-based agents · IBM Carbon-style CSS</Text>
             <Text style={s.entryBody}>
               Backtested on the real 13 Feb 2024 AEMO VIC1 price-cap day: ~$120 day credit, ~$61 ahead
-              of an unmanaged home. One orchestrator coordinates five ReAct specialists that explain
-              their decisions.
+              of an unmanaged home. One orchestrator combines five rule-based modules and explains
+              each decision in one sentence.
             </Text>
           </View>
 
@@ -340,8 +340,7 @@ export function ResumeDocument() {
             <Text style={s.projectStack}>Next.js · FastAPI · Neon · OAuth · MCP</Text>
             <Text style={s.entryBody}>
               Lets Claude or ChatGPT read and log workouts. One FastAPI service powers REST, an
-              OAuth-protected MCP server and the Next.js client. 70 passing API tests at the phase
-              checkpoint.
+              OAuth-protected MCP server and the Next.js client. 353 API tests passing.
             </Text>
           </View>
 

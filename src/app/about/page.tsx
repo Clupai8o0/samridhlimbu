@@ -6,7 +6,7 @@ import { pageJsonLd } from '@/lib/seo'
 import { PageHeader } from '@/components/page-header'
 
 const DESCRIPTION =
-  'About Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer, CTO at Hoddle Melbourne and president of DSEC. From Nepal.'
+  'About Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer, sole developer of hoddle.org and president of DSEC. From Nepal.'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -73,7 +73,7 @@ export default function AboutPage() {
         {/* Bio */}
         <div data-stagger-item style={{ fontFamily: SANS, fontSize: 'var(--text-base)', color: 'var(--fg-dim)', lineHeight: 1.65, display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 40 }}>
           <p style={P}>
-            I&apos;m a software engineer in my final year of computer science at Deakin, on a Vice-Chancellor&apos;s International Scholarship. Since July 2026 I&apos;ve worked as a contract software engineer for a US health-tech startup (under NDA). I&apos;m also CTO and the only developer at{' '}
+            I&apos;m a software engineer in my final year of computer science at Deakin, on a Vice-Chancellor&apos;s International Scholarship. Since July 2026 I&apos;ve worked as a contract software engineer for a US health-tech startup (under NDA). From March to September 2026 I was the only developer at{' '}
             <Link href="/projects/hoddle" className="t2-link">Hoddle Melbourne</Link>, a mentorship platform for international students, and I lead{' '}
             <Link href="/projects/dsec" className="t2-link">DSEC</Link>. When barely anyone was showing up to our events and people were burning out, we stopped guessing and asked members what they&apos;d come to. We went from two events a week to one public event a month.
           </p>

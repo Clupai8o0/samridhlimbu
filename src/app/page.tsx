@@ -12,7 +12,7 @@ import { SectionHeading } from '@/components/home/section-heading'
 import styles from '@/components/home/home.module.css'
 
 const DESCRIPTION =
-  'Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer, CTO at Hoddle Melbourne and president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
+  'Samridh Limbu, software engineer in Melbourne. Final-year CS at Deakin, contract software engineer, sole developer of hoddle.org and president of DSEC. Open to summer 2026–27 software engineering internships and graduate roles from mid-2027.'
 
 export const metadata: Metadata = {
   description: DESCRIPTION,
@@ -43,8 +43,8 @@ export default function HomePage() {
         <section data-reveal-kids className={styles.section} aria-labelledby="whoami-heading">
           <SectionHeading id="whoami-heading">whoami</SectionHeading>
           <p className={styles.prose}>
-            I&apos;m Sam, in my final year of computer science at Deakin, graduating in June 2027. Since July 2026 I&apos;ve been a contract software engineer for a US health-tech startup (under NDA), where I took search from seconds to under 200 ms and have shipped dozens of production deploys. I&apos;m also CTO and sole developer of{' '}
-            <Link href="/projects/hoddle" className="t2-link">Hoddle Melbourne</Link>, and president of{' '}
+            I&apos;m Sam, in my final year of computer science at Deakin, graduating in June 2027. Since July 2026 I&apos;ve been a contract software engineer for a US health-tech startup (under NDA), where I took search from seconds to under 200 ms and have shipped dozens of production deploys. From March to September 2026 I was the sole developer of{' '}
+            <Link href="/projects/hoddle" className="t2-link">Hoddle Melbourne</Link>, a mentorship startup that placed 2nd at Leadership 4Impact, and I&apos;m president of{' '}
             <Link href="/projects/dsec" className="t2-link">DSEC</Link>, a software club of 190+ members.
           </p>
           <p className={styles.prose}>
@@ -52,7 +52,7 @@ export default function HomePage() {
             <Link href="/projects/kairos" className="t2-link">Kairos</Link>, and I still use it every day. Claude kept losing my workout history between sessions, so I built{' '}
             <Link href="/projects/tempo" className="t2-link">Tempo</Link>, a workout app it can read and log to through an MCP server. I care a lot about UI, and I want to own what sits behind it too: schema, API, tests, deploys.
           </p>
-          <div className={styles.meta}>last_updated: 2026-10-25</div>
+          <div className={styles.meta}>last_updated: 2026-11-05</div>
         </section>
 
         <ExperienceLog />

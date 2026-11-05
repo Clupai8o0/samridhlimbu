@@ -8,14 +8,17 @@ import styles from './home.module.css'
 export const EMAIL = 'samridh@samridhlimbu.com'
 
 export const AVAILABILITY =
-  'Final-year CS at Deakin, graduating June 2027. Open to summer 2026\u2060–\u206027 software engineering internships and graduate roles from mid-2027, in Melbourne.'
+  'Graduating June 2027. Open to summer 2026\u2060–\u206027 software engineering internships and graduate roles from mid-2027, in Melbourne.'
+
+// Mirrors VISA on the About page, shortened for the hero.
+const WORK_RIGHTS = 'On a student visa with work rights; eligible for the 485 post-study visa from mid-2027.'
 
 // countFrom: the number the count-up starts at (search went from seconds to <200 ms).
 const PROOF: { k: string; v: string; href: string; count?: boolean; countFrom?: number }[] = [
   { k: '<200 ms search', v: 'US health-tech contract', href: '#contract', count: true, countFrom: 2000 },
-  { k: '25K+\u00a0lines · 51\u00a0routes', v: 'hoddle.org', href: '/projects/hoddle', count: true },
+  { k: '2nd · Leadership 4Impact', v: 'hoddle.org, live', href: '/projects/hoddle' },
   { k: 'Winner · GovHack 2025', v: 'GovChat', href: '/projects/govchat' },
-  { k: '190+ members', v: 'DSEC president', href: '/projects/dsec', count: true },
+  { k: '100% tuition scholarship', v: 'Deakin · WAM ~87', href: '/resume' },
 ]
 
 const SOCIALS = [
@@ -69,14 +72,14 @@ export function Hero() {
           </span>
         </h1>
         <p className={styles.tagline}>
-          <span style={{ color: 'var(--fg)' }}>Software engineer</span> in Melbourne. React and TypeScript up front, FastAPI and Postgres behind.
+          <span style={{ color: 'var(--fg)' }}>Software engineer</span> and final-year CS student at Deakin, in Melbourne. React and TypeScript up front, FastAPI and Postgres behind.
         </p>
       </div>
 
       <div data-stagger-item>
         <p className={styles.availability}>
           <span className={styles.liveDot} aria-hidden="true" />
-          {AVAILABILITY}
+          {AVAILABILITY} {WORK_RIGHTS}
         </p>
         <div className={styles.actions}>
           <a href="/api/resume" className={`${styles.action} ${styles.actionPrimary}`}>

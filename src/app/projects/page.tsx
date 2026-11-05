@@ -9,7 +9,7 @@ import { PROJECTS, ARCHIVE } from '@/lib/data'
 import { ProjectCard } from './_components/project-card'
 
 const DESCRIPTION =
-  'Projects by Samridh Limbu, a software engineer in Melbourne: Hoddle, Kairos, ARIA, R1GPT, the DSEC club platform, Tempo, and client sites for King Double Glazing and Krishnaveni.'
+  'Projects by Samridh Limbu, a software engineer in Melbourne: the Hoddle mentorship platform, Tempo, his OnTrack capstone, the DSEC club platform, morgue, and a client site for King Double Glazing.'
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -32,7 +32,10 @@ const MONO = '"JetBrains Mono", var(--font-mono), monospace'
 const DISPLAY = 'Manrope, var(--font-manrope), sans-serif'
 
 export default function ProjectsPage() {
-  const featured = PROJECTS.filter(p => p.featured)
+  // The home page's picks lead, in their home order; the rest keep data.ts order.
+  const featured = PROJECTS
+    .filter(p => p.featured)
+    .sort((a, b) => (a.homeOrder ?? Infinity) - (b.homeOrder ?? Infinity))
 
   return (
     <PageShell jsonLd={pageJsonLd(metadata)}>
