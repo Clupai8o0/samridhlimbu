@@ -91,6 +91,40 @@ mount and sets up the motion.
   driven by `IntersectionObserver`). `gsap` is still in `package.json` from an
   earlier experiment — safe to remove if nothing reintroduces it.
 
+## Match funnel (6 Nov 2026, split 7 Nov)
+
+A modal asks the first question ("who's asking?"), then sends the visitor to
+`/match?as=<who>` for the other three and the results (`src/components/match/`:
+`match-funnel.tsx` is the modal, `match-flow.tsx` the page; scoring in
+`src/lib/match.ts`). It opens from the hero row, the /projects header, the ⌘K
+palette, or any URL with `?match` (share `samridhlimbu.com/?match`). Visitors
+with saved answers skip the modal and land on their results. Email is optional:
+`sendMatch` in `src/app/actions.ts` mails the shortlist and sends Sam the answers.
+
+- Every tag in `TAGS` must be true of its case study. When a case study changes
+  or a new one ships, update its tags there, or it never gets matched.
+
+## Chat with my work (7 Nov 2026)
+
+An AI chat that answers questions about Sam's work (`src/components/chat/`,
+route `src/app/api/chat/route.ts`, logic in `src/lib/chat/`). Opens from the
+hero ("or ask my work a question"), ⌘K, `?chat`, and sits under the /match results.
+
+- It only knows the site: `scripts/build-chat-corpus.mjs` pulls the visible text
+  of every case study, /about, /resume and `data.ts` into
+  `src/lib/chat/corpus.generated.ts` before each build. Run `npm run chat:corpus`
+  after changing a page and commit the result. Rules for the bot are in `prompt.ts`.
+- Env vars (Vercel): `ANTHROPIC_API_KEY` (required; without it the chat says it
+  is off), `CHAT_MONTHLY_CAP_USD` (default 10; 0 pauses it), `CHAT_MODEL`
+  (default `claude-opus-5-5`; `claude-haiku-5-5` is ~40x cheaper; a model with
+  no price in `budget.ts` keeps the chat off), and an Upstash Redis
+  (`KV_REST_API_URL`/`KV_REST_API_TOKEN`, required in production; without it the
+  chat stays off there, and dev uses in-memory counters).
+- The hard stop is the spend limit on the Anthropic workspace that owns the key.
+  The app cap reserves the worst case before each call (two attempts on Opus and
+  Sonnet, which retry refusals on a fallback model; about $1 on Opus) and settles
+  to the real cost after. A stopped or failed answer keeps the whole reservation.
+
 ## Charts and code blocks
 
 - Data charts are never static images. Draw them with `<ArticleChart>`

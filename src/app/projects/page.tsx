@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/page-header'
 import { Prompt } from '@/components/prompt'
 import { PROJECTS, ARCHIVE } from '@/lib/data'
 import { ProjectCard } from './_components/project-card'
+import { MatchTrigger } from '@/components/match/match-trigger'
 
 const DESCRIPTION =
   'Projects by Samridh Limbu, a software engineer in Melbourne: Hoddle, Kairos, ARIA, R1GPT, the DSEC club platform, Tempo, and client sites for King Double Glazing and Krishnaveni.'
@@ -46,6 +47,9 @@ export default function ProjectsPage() {
         </div>
         <div data-stagger-item style={{ marginBottom: 24 }}>
           <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: '-0.02em', color: 'var(--fg)' }}>Projects</h1>
+        </div>
+        <div data-stagger-item style={{ marginTop: -10, marginBottom: 28 }}>
+          <MatchTrigger prompt="short on time?" text="Get the four projects that fit your role" />
         </div>
 
         {/* Featured. The grid follows a .section-label, so PageAnimations

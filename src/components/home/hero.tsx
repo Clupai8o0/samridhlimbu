@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Icon } from '@/components/icons'
 import { CopyButton } from '@/components/copy-button'
 import { HeroBackdrop } from './hero-backdrop'
+import { ChatTrigger, MatchTrigger } from '@/components/match/match-trigger'
 import styles from './home.module.css'
 
 export const EMAIL = 'samridh@samridhlimbu.com'
@@ -112,6 +113,8 @@ export function Hero() {
             </a>
           ))}
         </div>
+        <MatchTrigger />
+        <ChatTrigger />
       </div>
 
       <ul data-stagger-item className={styles.proof} aria-label="Highlights">

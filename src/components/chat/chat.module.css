@@ -1,0 +1,168 @@
+/* "Chat with my work": the panel (log + input). The dialog frame comes from
+   match.module.css so both modals look and move the same. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.log {
+  flex: 1;
+  min-height: 220px;
+  max-height: min(56dvh, 520px);
+  padding: 18px 20px 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.panel[data-page] .log { max-height: none; min-height: 320px; padding: 18px 0 8px; }
+
+.empty { display: grid; gap: 14px; }
+.hello { margin: 0; color: var(--muted); }
+.starters { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.starter {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  color: var(--fg-dim);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+}
+.starter span { color: var(--accent); }
+.starter:hover { border-color: var(--border-2); background: var(--bg-3); color: var(--fg); }
+
+.msg {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.who {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  line-height: 1.6rem;
+  color: var(--accent);
+}
+.msg[data-role='assistant'] .who { color: var(--term-green); }
+.text { min-width: 0; overflow-wrap: anywhere; }
+.text p { margin: 0 0 8px; }
+.text p:last-child { margin-bottom: 0; }
+.text ul { margin: 0 0 8px; padding-left: 18px; list-style: disc; }
+.text li { margin: 2px 0; }
+.msg[data-role='user'] .text { color: var(--fg); font-weight: 500; }
+.msg[data-role='assistant'] .text { color: var(--fg-dim); }
+.text a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.text a:hover { color: var(--fg); }
+
+.thinking {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  color: var(--muted-2);
+}
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  margin-left: 4px;
+  vertical-align: -2px;
+  background: var(--muted-2);
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.error {
+  margin: 0 0 8px;
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  color: #f87171;
+}
+
+.form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 0 14px;
+  padding: 8px 8px 8px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: 2px;
+}
+.panel[data-page] .form { margin: 0; }
+.form:focus-within { border-color: var(--accent); }
+.prompt {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: var(--text-sm);
+  line-height: 32px;
+  color: var(--accent);
+}
+.input {
+  flex: 1;
+  min-width: 0;
+  max-height: 120px;
+  padding: 5px 0;
+  background: transparent;
+  border: 0;
+  resize: none;
+  field-sizing: content;
+  font-family: var(--font-inter), Inter, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.4;
+  color: var(--fg);
+  caret-color: var(--accent);
+}
+.input::placeholder { color: var(--muted-2); opacity: 1; }
+.input:focus-visible { outline: none; }
+.send {
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 12px;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.12s, transform 160ms var(--ease-out);
+}
+.send:hover { background: var(--accent-dim); }
+.send:active { transform: scale(0.97); }
+.send:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 14px 12px;
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted-2);
+}
+.panel[data-page] .note { padding: 8px 0 0; }
+.clear {
+  flex-shrink: 0;
+  padding: 4px 6px;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.clear:hover { color: var(--fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+  .starter,
+  .send { transition: none; }
+  .send:active { transform: none; }
+}

@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useRef, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
+import { openMatch } from '@/components/match/match-funnel'
+import { openChat } from '@/components/chat/chat-dialog'
 
 type Item = {
   k: string
@@ -46,6 +48,8 @@ const ITEMS: Item[] = [
   { k: '_web', label: 'clupai.com · freelance studio', hint: '', href: 'https://clupai.com',         group: 'external' },
 
   // Actions
+  { k: '_match', label: 'hiring? match my work to your role', hint: '', href: null, group: 'actions' },
+  { k: '_chat', label: 'ask my work a question (AI chat)', hint: '', href: null, group: 'actions' },
   { k: '_mail', label: 'copy email · samridh@samridhlimbu.com', hint: '⌘c', href: null, group: 'actions' },
 ]
 
@@ -108,6 +112,16 @@ export function CommandPalette({ open, onClose }: Props) {
   }, [activeIdx])
 
   function run(item: Item) {
+    if (item.k === '_match') {
+      onClose()
+      openMatch()
+      return
+    }
+    if (item.k === '_chat') {
+      onClose()
+      openChat()
+      return
+    }
     if (item.k === '_mail') {
       navigator.clipboard.writeText('samridh@samridhlimbu.com')
       setCopied(true)

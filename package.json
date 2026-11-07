@@ -4,13 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/check-seo.mjs",
+    "prebuild": "node scripts/build-chat-corpus.mjs && node scripts/check-seo.mjs",
+    "chat:corpus": "node scripts/build-chat-corpus.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "check:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
     "@react-pdf/renderer": "^4.5.1",
     "gsap": "^3.15.0",
     "next": "16.2.4",

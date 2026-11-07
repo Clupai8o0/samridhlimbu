@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Inter, Manrope, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { CmdProvider } from '@/components/cmd-provider'
+import { MatchProvider } from '@/components/match/match-funnel'
+import { ChatProvider } from '@/components/chat/chat-dialog'
 import { JsonLd } from '@/components/json-ld'
 import { BASE_URL, siteJsonLd } from '@/lib/seo'
 
@@ -78,6 +81,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={siteJsonLd()} />
         <CmdProvider>
           {children}
+          <Suspense fallback={null}>
+            <MatchProvider />
+            <ChatProvider />
+          </Suspense>
         </CmdProvider>
       </body>
     </html>
