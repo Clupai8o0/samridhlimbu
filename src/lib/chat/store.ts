@@ -4,7 +4,7 @@
 // KV_REST_API_URL / KV_REST_API_TOKEN, or UPSTASH_REDIS_REST_URL / _TOKEN),
 // counts are shared by every server instance. Without one they live in this
 // instance's memory, which is fine for local dev but is only a soft limit in
-// production: the Anthropic workspace spend limit is the hard stop.
+// production, so the chat stays off there without one (see route.ts).
 
 const URL = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL
 const TOKEN = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN
@@ -81,4 +81,19 @@ export async function addNumber(key: string, by: number, ttlSec: number): Promis
     ['EXPIRE', key, ttlSec, 'NX'],
   ])
   return Number(v) || 0
+}
+
+// Sets a flag once. Returns true the first time within the ttl, false after,
+// so an alert or warning fires at most once per window.
+export async function once(key: string, ttlSec: number): Promise<boolean>
+{
+  if (!sharedStore) {
+    if (memGet(key) > 0) {
+      return false
+    }
+    memAdd(key, 1, ttlSec)
+    return true
+  }
+  const [v] = await redis([['SET', key, 1, 'NX', 'EX', ttlSec]])
+  return v === 'OK'
 }

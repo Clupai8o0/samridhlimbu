@@ -120,6 +120,21 @@ hero ("or ask my work a question"), ⌘K, `?chat`, and sits under the /match res
   no price in `budget.ts` keeps the chat off), and an Upstash Redis
   (`KV_REST_API_URL`/`KV_REST_API_TOKEN`, required in production; without it the
   chat stays off there, and dev uses in-memory counters).
+- Captcha: Cloudflare Turnstile (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`,
+  `TURNSTILE_SECRET_KEY`; required in production, dev and previews fall back to
+  Cloudflare's always-pass test keys). Invisible unless Cloudflare wants a
+  click. A pass is a signed cookie for 2 hours and 40 messages
+  (`CHAT_SIGNING_SECRET` optional, defaults to the Turnstile secret).
+- Other guards (`src/lib/chat/guard.ts`): same-origin only, JSON under 24 KB,
+  invisible characters stripped, obvious rule-changing attempts get a fixed
+  reply without calling the model, answers capped at 700 tokens, 10 questions
+  per conversation. The rules in `prompt.ts` forbid code, essays, speaking for
+  Sam (rates, availability) and answers past ~150 words.
+- Telegram alerts (`src/lib/chat/alerts.ts`, existing `TELEGRAM_*` vars), each
+  once per window: 80% of the cap, cap used up, site daily limit, a visitor
+  hitting the limit, 10+ attack attempts in a day. Previews prefix `[preview]`.
+- When the cap is used up the panel swaps the input for an animated
+  "budget.monthly 100%" card. See it on a preview with `/?chat&demo=budget`.
 - The hard stop is the spend limit on the Anthropic workspace that owns the key.
   The app cap reserves the worst case before each call (two attempts on Opus and
   Sonnet, which retry refusals on a fallback model; about $1 on Opus) and settles
