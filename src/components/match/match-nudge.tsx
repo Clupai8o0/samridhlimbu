@@ -27,6 +27,7 @@ export function MatchNudge()
   const [leaving, setLeaving] = useState(false)
   const done = useRef(false)
   const closing = useRef(false)
+  const forcedRef = useRef<boolean | null>(null)
 
   useEffect(() => {
     function found()
@@ -43,14 +44,26 @@ export function MatchNudge()
   const onMatch = pathname === '/match'
 
   useEffect(() => {
-    if (onMatch || done.current || quiet() || loadSaved()) {
+    // ?nudge shows it again for someone who already closed or used it
+    // (handy for checking it on a preview).
+    // Read once and kept, so an effect re-run doesn't lose it.
+    if (forcedRef.current === null) {
+      const url = new URL(window.location.href)
+      forcedRef.current = url.searchParams.has('nudge')
+      if (forcedRef.current) {
+        url.searchParams.delete('nudge')
+        window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash)
+      }
+    }
+    const forced = forcedRef.current
+    if (onMatch || (!forced && (done.current || quiet() || loadSaved()))) {
       return
     }
     const t = window.setTimeout(() => {
-      if (!done.current && !quiet() && !document.querySelector('dialog[open]')) {
+      if ((forced || (!done.current && !quiet())) && !document.querySelector('dialog[open]')) {
         setShown(true)
       }
-    }, DELAY_MS)
+    }, forced ? 1000 : DELAY_MS)
     return () => window.clearTimeout(t)
   }, [onMatch])
 

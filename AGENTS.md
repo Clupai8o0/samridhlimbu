@@ -110,6 +110,7 @@ with saved answers skip the modal and land on their results. Email is optional:
   root layout) points visitors at the funnel, the chat and the Build Risk
   Check. It shows 5 s after load, never on /match, never to someone with saved
   answers, and stays away for 30 days once closed or used (`nudge:v1`).
+  `?nudge` on any page but /match shows it anyway, after 1 s (to check it on a preview).
 - Every tag in `TAGS` must be true of its case study. When a case study changes
   or a new one ships, update its tags there, or it never gets matched.
 
