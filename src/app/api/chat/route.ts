@@ -8,6 +8,7 @@ import {
 } from '@/lib/chat/guard'
 import { SYSTEM, SYSTEM_TOKENS_EST } from '@/lib/chat/prompt'
 import { STARTERS } from '@/lib/chat/starters'
+import { CHAT_ENABLED } from '@/lib/chat/enabled'
 import { addNumber, sharedStore } from '@/lib/chat/store'
 
 export const runtime = 'nodejs'
@@ -144,6 +145,9 @@ function canned(text: string, headers: Record<string, string>)
  *  captcha to show, and whether this visitor already passed one. */
 export async function GET(req: Request)
 {
+  if (!CHAT_ENABLED) {
+    return new Response(null, { status: 404 })
+  }
   let state = baseState()
   if (state === 'on') {
     try {
@@ -168,6 +172,9 @@ export async function GET(req: Request)
 
 export async function POST(req: Request)
 {
+  if (!CHAT_ENABLED) {
+    return new Response(null, { status: 404 })
+  }
   const state = baseState()
   if (state === 'off') {
     if (client) {

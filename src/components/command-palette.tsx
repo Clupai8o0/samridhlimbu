@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 import { openMatch } from '@/components/match/match-funnel'
 import { openChat } from '@/components/chat/chat-dialog'
+import { CHAT_ENABLED } from '@/lib/chat/enabled'
 
 type Item = {
   k: string
@@ -50,7 +51,7 @@ const ITEMS: Item[] = [
 
   // Actions
   { k: '_match', label: 'hiring? match my work to your role', hint: '', href: null, group: 'actions' },
-  { k: '_chat', label: 'ask my work a question (AI chat)', hint: '', href: null, group: 'actions' },
+  ...(CHAT_ENABLED ? [{ k: '_chat', label: 'ask my work a question (AI chat)', hint: '', href: null, group: 'actions' }] : []),
   { k: '_mail', label: 'copy email · samridh@samridhlimbu.com', hint: '⌘c', href: null, group: 'actions' },
 ]
 

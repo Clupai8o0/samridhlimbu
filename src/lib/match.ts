@@ -85,6 +85,11 @@ const ARCHIVE_BLURBS: Record<string, { name: string; blurb: string }> = {
   'robot-api': { name: 'Robot controller API', blurb: 'REST API in C# and ASP.NET Core on PostgreSQL, with BCrypt auth, two roles and paged lists.' },
   'art-gallery': { name: 'Art Gallery', blurb: 'Catalogue API and web app: Express and MongoDB behind Next.js, Google sign-in roles, 126 tests.' },
   'voice-controller': { name: 'Voice light controller', blurb: 'Voice switch for lights: a Raspberry Pi turns speech into commands, an Arduino switches over BLE.' },
+  'mindful-break': { name: 'Mindful break recommender', blurb: 'An Arduino streams heart-rate, posture and room readings over MQTT to a Raspberry Pi that suggests breaks.' },
+  loco: { name: 'Loco', blurb: 'Private Next.js app that turns a local videos folder into an offline course library with progress and PDFs.' },
+  thurman: { name: 'Thurman Events', blurb: 'Marketing site for an events business, with a contact form that emails through Nodemailer. Live since 2023.' },
+  riv: { name: 'RIV', blurb: 'Electron app for artists: scans local folders and flips through shuffled reference images on a timer.' },
+  'digi-convertor': { name: 'Digi Convertor', blurb: 'Converts numbers between binary, decimal, octal and hex, with formula panels and a small Flask API.' },
 }
 
 const TAGS: Record<string, Tags> = {
@@ -115,6 +120,11 @@ const TAGS: Record<string, Tags> = {
   'robot-api': { roles: { backend: 3 }, traits: ['security', 'data'], stacks: ['csharp', 'postgres'] },
   'art-gallery': { roles: { fullstack: 2, backend: 2 }, traits: ['tests', 'security'], stacks: ['node', 'react'] },
   'voice-controller': { roles: { embedded: 3, ai: 2 }, traits: [], stacks: ['python', 'c'] },
+  'mindful-break': { roles: { embedded: 3 }, traits: ['data'], stacks: ['python', 'c'] },
+  loco: { roles: { frontend: 2, fullstack: 1 }, traits: [], stacks: ['react', 'ts'] },
+  thurman: { roles: { frontend: 3 }, traits: ['shipped', 'design'], stacks: ['react'], client: true },
+  riv: { roles: { frontend: 2 }, traits: [], stacks: [] },
+  'digi-convertor': { roles: { frontend: 2, backend: 1 }, traits: ['shipped'], stacks: ['react', 'python'] },
 }
 
 export interface MatchItem {

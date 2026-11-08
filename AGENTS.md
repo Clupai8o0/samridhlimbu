@@ -116,6 +116,11 @@ with saved answers skip the modal and land on their results. Email is optional:
 
 ## Chat with my work (7 Nov 2026)
 
+**Parked (8 Nov 2026, owner's call).** `CHAT_ENABLED` in `src/lib/chat/enabled.ts`
+is `false`: no entry points (hero, ⌘K, `?chat`, the nudge, under /match results)
+and `/api/chat` returns 404. Set it to `true` to bring it all back; the keys
+and Redis below are still needed then.
+
 An AI chat that answers questions about Sam's work (`src/components/chat/`,
 route `src/app/api/chat/route.ts`, logic in `src/lib/chat/`). Opens from the
 hero ("or ask my work a question"), ⌘K, `?chat`, and sits under the /match results.

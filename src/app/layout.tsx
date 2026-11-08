@@ -5,6 +5,7 @@ import './globals.css'
 import { CmdProvider } from '@/components/cmd-provider'
 import { MatchProvider } from '@/components/match/match-funnel'
 import { ChatProvider } from '@/components/chat/chat-dialog'
+import { CHAT_ENABLED } from '@/lib/chat/enabled'
 import { MatchNudge } from '@/components/match/match-nudge'
 import { JsonLd } from '@/components/json-ld'
 import { BASE_URL, siteJsonLd } from '@/lib/seo'
@@ -84,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Suspense fallback={null}>
             <MatchProvider />
-            <ChatProvider />
+            {CHAT_ENABLED && <ChatProvider />}
             <MatchNudge />
           </Suspense>
         </CmdProvider>

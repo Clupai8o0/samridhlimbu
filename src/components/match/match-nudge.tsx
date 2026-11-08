@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { openChat } from '@/components/chat/chat-dialog'
+import { CHAT_ENABLED } from '@/lib/chat/enabled'
 import { openMatch } from './match-funnel'
 import { loadSaved, markNudgeDone, nudgeDoneAt, NUDGE_DONE_EVENT } from './match-store'
 import { BUILD_CHECK_URL } from './build-check'
@@ -126,9 +127,11 @@ export function MatchNudge()
         <button type="button" className={styles.primary} onClick={() => close(openMatch)}>
           match my work →
         </button>
-        <button type="button" className={styles.ask} onClick={() => close(openChat)}>
-          or ask a question
-        </button>
+        {CHAT_ENABLED && (
+          <button type="button" className={styles.ask} onClick={() => close(openChat)}>
+            or ask a question
+          </button>
+        )}
       </div>
       <a className={styles.build} href={BUILD_CHECK_URL} target="_blank" rel="noopener" onClick={() => close()}>
         Need something built? <span>clupai.com/start ↗</span>

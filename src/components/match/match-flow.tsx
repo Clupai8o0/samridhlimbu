@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import { sendMatch } from '@/app/actions'
 import { ChatPanel } from '@/components/chat/chat-panel'
+import { CHAT_ENABLED } from '@/lib/chat/enabled'
 import {
   MAX_TRAITS, ROLES, STACKS, TRAITS, WHO,
   matchProjects,
@@ -301,7 +302,7 @@ function Flow() {
         </div>
       </div>
 
-      {step === STEPS && answers && (
+      {CHAT_ENABLED && step === STEPS && answers && (
         <section id="ask" className={styles.ask} aria-labelledby={`${titleId}-ask`}>
           <h2 id={`${titleId}-ask`} className={styles.askTitle}>Questions about these?</h2>
           <ChatPanel page />
@@ -352,7 +353,7 @@ function Results({ answers, titleId, onRestart }: {
       <div className={styles.alt}>
         <a href="/api/resume" className={styles.btnGhost}>Resume PDF</a>
         <Link href="/projects" className={styles.btnGhost}>All projects</Link>
-        <a href="#ask" className={styles.btnGhost}>Ask about them</a>
+        {CHAT_ENABLED && <a href="#ask" className={styles.btnGhost}>Ask about them</a>}
         <button type="button" className={styles.linkBtn} onClick={onRestart} style={{ marginLeft: 'auto' }}>
           ↺ retake
         </button>
