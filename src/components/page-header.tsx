@@ -20,10 +20,11 @@ const STATUS_VERBS = [
 
 /**
  * Consistent page header rendered at the top of every page.
- * Left: green dot + typewriter status verb.
- * Right: samridhlimbu.com[/path] · v0.1
+ * Left: green dot + typewriter status verb, or a fixed `status` (the home
+ * page uses one so the first screen reads plainly).
+ * Right: samridhlimbu.com[/path]
  */
-export function PageHeader({ className }: { className?: string }) {
+export function PageHeader({ className, status }: { className?: string; status?: string }) {
   const pathname = usePathname() ?? '/'
   const suffix = pathname === '/' ? '' : pathname
 
@@ -46,10 +47,10 @@ export function PageHeader({ className }: { className?: string }) {
     >
       <span>
         <span style={{ color: 'var(--term-green)' }}>●</span>{' '}
-        <Typewriter texts={STATUS_VERBS} speed={70} pauseDuration={2400} />
+        {status ?? <Typewriter texts={STATUS_VERBS} speed={70} pauseDuration={2400} />}
       </span>
       <span style={{ minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        <span className={suffix ? 'page-header-host' : undefined}>samridhlimbu.com</span>{suffix} · v0.1
+        <span className={suffix ? 'page-header-host' : undefined}>samridhlimbu.com</span>{suffix}
       </span>
     </div>
   )

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420" role="img" aria-labelledby="t d">
+  <title id="t">Mindful break recommender system diagram</title>
+  <desc id="d">An Arduino Nano 33 IoT reads PPG, IMU, DHT and LDR sensors and publishes them over MQTT under mbreak/device/sensors. A Raspberry Pi runs ingest, HRV, posture and environment workers plus a rule-based recommender. A Streamlit dashboard and a Windows toast notifier subscribe to the results.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 11px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 400 11px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .zone { fill: #0e0e11; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+  </style>
+  <rect width="720" height="420" fill="#050505"/>
+
+  <rect class="zone" x="12" y="28" width="200" height="360" rx="4"/>
+  <rect class="zone" x="260" y="28" width="220" height="360" rx="4"/>
+  <rect class="zone" x="528" y="28" width="180" height="360" rx="4"/>
+
+  <text class="s" x="20" y="20">EDGE - Arduino Nano 33 IoT</text>
+  <rect class="box" x="24" y="44" width="176" height="48" rx="3"/>
+  <text class="k" x="34" y="64">MAX30102 PPG</text>
+  <text class="s" x="34" y="80">~50 Hz sample, ~20 Hz publish</text>
+  <rect class="box" x="24" y="104" width="176" height="48" rx="3"/>
+  <text class="k" x="34" y="124">IMU - MPU6050 / LSM6DS3</text>
+  <text class="s" x="34" y="140">10 Hz orientation / motion</text>
+  <rect class="box" x="24" y="164" width="176" height="48" rx="3"/>
+  <text class="k" x="34" y="184">DHT11 + LDR</text>
+  <text class="s" x="34" y="200">temp, humidity, light 0.5 Hz</text>
+  <rect class="box" x="24" y="240" width="176" height="56" rx="3"/>
+  <text class="k" x="34" y="262">arduino-sketch.cpp</text>
+  <text class="s" x="34" y="280">WiFiNINA + MQTT client</text>
+
+  <path class="ar" d="M212 268 L260 180" marker-end="url(#a)"/>
+  <text class="x" x="214" y="210">MQTT</text>
+  <text class="s" x="214" y="226">mbreak/.../sensors/*</text>
+
+  <text class="s" x="268" y="20">PI - Python workers</text>
+  <rect class="box" x="272" y="44" width="196" height="40" rx="3"/>
+  <text class="k" x="282" y="68">ingest.py to NDJSON</text>
+  <rect class="box" x="272" y="96" width="196" height="40" rx="3"/>
+  <text class="k" x="282" y="120">hrv_worker.py</text>
+  <rect class="box" x="272" y="148" width="196" height="40" rx="3"/>
+  <text class="k" x="282" y="172">posture_worker.py</text>
+  <rect class="box" x="272" y="200" width="196" height="40" rx="3"/>
+  <text class="k" x="282" y="224">env_worker.py</text>
+  <rect class="box" x="272" y="268" width="196" height="56" rx="3"/>
+  <text class="k" x="282" y="290">recommender.py</text>
+  <text class="s" x="282" y="308">stretch, breathing, cooldown</text>
+
+  <path class="ar" d="M480 296 L528 140" marker-end="url(#a)"/>
+  <path class="ar" d="M480 296 L528 280" marker-end="url(#a)"/>
+
+  <text class="s" x="536" y="20">FEEDBACK</text>
+  <rect class="box" x="540" y="100" width="156" height="72" rx="3"/>
+  <text class="k" x="550" y="128">dashboard.py</text>
+  <text class="s" x="550" y="146">Streamlit live signals</text>
+  <text class="s" x="550" y="162">and break states</text>
+  <rect class="box" x="540" y="240" width="156" height="72" rx="3"/>
+  <text class="k" x="550" y="268">notifier.py</text>
+  <text class="s" x="550" y="286">Windows toast</text>
+  <text class="s" x="550" y="302">Start / Postpone / Skip</text>
+</svg>

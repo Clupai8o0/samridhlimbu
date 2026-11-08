@@ -8,11 +8,10 @@ const ITEMS: { problem: string; did?: string; result?: string }[] = [
     did: 'Added database indexing and response compression.',
     result: 'Results in under 200 ms.',
   },
-  { problem: 'Owned frontend integration.' },
-  { problem: 'Built new data-source integrations.' },
-  { problem: 'Owned a production hardening pass.' },
-  { problem: 'Dozens of production deploys since July.' },
 ]
+
+// The rest of the work, as one plain line instead of empty bullets.
+const ALSO = 'I also owned the frontend integration, built new data-source integrations, ran a production hardening pass, and have shipped dozens of production deploys since July.'
 
 export function ContractWork() {
   return (
@@ -20,7 +19,7 @@ export function ContractWork() {
       <SectionHeading id="contract-heading">contract work · under NDA</SectionHeading>
 
       <p className={styles.prose}>
-        Since July 2026 I&apos;ve worked remotely as a contract software engineer for a US health-tech startup. I can&apos;t name the client or show the product, so this stays general.
+        Since July 2026 I&apos;ve worked remotely as a contract software engineer for a US health-tech startup.
       </p>
 
       <ol data-reveal-kids className={styles.contractList}>
@@ -38,6 +37,8 @@ export function ContractWork() {
           </li>
         ))}
       </ol>
+
+      <p className={styles.prose}>{ALSO}</p>
 
       <div className={styles.stack}>
         <span style={{ color: 'var(--muted-2)' }}>stack</span>

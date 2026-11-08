@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/page-header'
 import { DownloadPdfButton } from '@/components/download-pdf-button'
 
 const DESCRIPTION =
-  'Resume of Samridh Limbu, a software engineer in Melbourne: final-year CS at Deakin, contract engineer for a US health-tech startup, CTO of Hoddle and GovHack 2025 winner.'
+  'Resume of Samridh Limbu, a software engineer in Melbourne: final-year CS at Deakin, contract engineer for a US health-tech startup and GovHack 2025 winner, who built hoddle.org as its sole developer.'
 
 export const metadata: Metadata = {
   title: 'Resume',
@@ -48,13 +48,13 @@ const SECTIONS = [
       },
       {
         head: 'CTO · Hoddle Melbourne',
-        meta: 'Mar 2026–present',
-        body: 'Built hoddle.org, a mentorship platform for international students, as its sole developer: 25K+ lines, 51 routes, 24 Postgres tables behind row-level security. Designed weighted mentor matching with nightly recompute. Shipped forums, live Q&As, DMs and real-time notifications. Placed 2nd at Study Melbourne Leadership 4Impact.',
+        meta: 'Mar–Sep 2026',
+        body: 'Built hoddle.org, a mentorship platform for international students, as its sole developer: 25K+ lines of TypeScript, 24 Postgres tables behind row-level security. Designed weighted mentor matching with nightly recompute. Shipped forums, live Q&As, DMs and real-time notifications. Placed 2nd at Study Melbourne Leadership 4Impact.',
       },
       {
         head: 'President · Deakin Software Engineering Club (DSEC)',
         meta: 'Jun 2025–present',
-        body: 'Run a 190+ member club across five committees. Lead developer of the platform the club runs on: public site (dsec.club), member portal and a role-based committee hub where every team manages events, sponsors, finance, tasks and meetings, all on one FastAPI API (~24 routers) with an MCP server. Code at github.com/dsec-hub. Hosted T2 2026 workshops and a hackathon.',
+        body: 'Ran a 190+ member club across five committees through 2025–26. Lead developer of the platform the club runs on: public site (dsec.club), member portal and a role-based committee hub where every team manages events, sponsors, finance, tasks and meetings, all on one FastAPI API (~24 routers) with an MCP server. Code at github.com/dsec-hub. Hosted T2 2026 workshops and a hackathon.',
       },
       {
         head: 'Software Engineer · MyMor',
@@ -94,20 +94,20 @@ const SECTIONS = [
     ],
   },
   {
-    label: 'Research papers',
+    label: 'Coursework papers',
     rows: [
       {
-        head: 'Batched dispatch for a driverless-taxi fleet · SIT314 HD paper',
+        head: 'Batched dispatch for a driverless-taxi fleet · SIT314 paper',
         meta: 'Aug 2026',
         body: "Adapted DiDi's batched order assignment (KDD 2017) to my own Node.js dispatch service and tested it on a 2,000-car simulation. Under load, mean pickup distance fell 24% (1,068 m to 814 m) while p95 match latency rose from 51 to 112 ms. Written up on samridhlimbu.com/writing.",
       },
       {
-        head: 'RLiG · reinforcement learning for Bayesian network structure · SIT320 HD paper',
+        head: 'RLiG · reinforcement learning for Bayesian network structure · SIT320 paper',
         meta: 'Oct 2026',
         body: 'Implemented the RLiG decision process and trained tabular, linear and DQN agents to learn Bayesian network structure, against my own hill climbing, GES and PC baselines. With the generative reward off, the linear agent learned the best structure on three of six networks over ten seeds, and the paper reports that the generative reward mostly did not pay for its cost. 55 unit tests.',
       },
       {
-        head: 'Where Is the Algorithm? · two tic-tac-toe players · SIT320 HD position paper',
+        head: 'Where Is the Algorithm? · two tic-tac-toe players · SIT320 position paper',
         meta: 'Sep 2026',
         body: 'Built a dynamic programming player and a Q-learning player and scored both exactly over the whole 5,478-position game graph. Argued that "the algorithm" depends on the level of description and gave a three-part test for which run-time state belongs to it. The learner picked an optimal move in 108 of the 109 states it met in play but in only 90.6% of all 2,423 decision states. Designed a two-hour lab built on the two players (not yet run with a class). Self-published on samridhlimbu.com/writing.',
       },
@@ -133,13 +133,13 @@ const SECTIONS = [
     rows: [
       {
         head: 'ARIA · multi-agent home-energy brain',
-        meta: 'Next.js · TypeScript · Claude/OpenAI (ReAct) · IBM Carbon',
-        body: 'Backtested on the real 13 Feb 2024 AEMO VIC1 price-cap day: ~$120 day credit, ~$61 ahead of an unmanaged home. One orchestrator coordinates five ReAct specialists (forecasting, battery scheduling, load shifting, grid monitoring, P2P trading) that explain their decisions. Recomputes client-side in a browser sandbox.',
+        meta: 'Next.js · TypeScript · rule-based agents · IBM Carbon-style CSS',
+        body: 'Backtested on the real 13 Feb 2024 AEMO VIC1 price-cap day: ~$120 day credit, ~$61 ahead of an unmanaged home. One orchestrator combines five rule-based modules (forecasting, battery scheduling, load shifting, grid monitoring, P2P trading) and explains each decision in one sentence. Recomputes client-side in a browser sandbox.',
       },
       {
         head: 'Tempo · workout app with an MCP server',
         meta: 'Next.js · FastAPI · Neon · OAuth · MCP',
-        body: 'Built a live workout app where Claude or ChatGPT can read and log workouts. One FastAPI service powers REST, an OAuth-protected MCP server and the Next.js client. Each capability lives once in a shared service layer. 70 passing API tests at the phase checkpoint.',
+        body: 'Built a live workout app where Claude or ChatGPT can read and log workouts. One FastAPI service powers REST, an OAuth-protected MCP server and the Next.js client. Each capability lives once in a shared service layer. 353 API tests passing.',
       },
       {
         head: 'load-balancer · concurrent HTTP load balancer',
@@ -255,7 +255,7 @@ export default function ResumePage() {
 
         {/* Summary */}
         <p data-reveal style={{ fontFamily: SANS, fontSize: 13, color: 'var(--fg-dim)', lineHeight: 1.65, marginBottom: 24 }}>
-          Final-year Computer Science student at Deakin (WAM ~87), graduating Jun 2027. Contract engineer for a US health-tech startup (search latency cut to under 200 ms), CTO and sole developer of a live mentorship platform, President of a 190+ member software club. Builds full-stack TypeScript/Python systems. GovHack 2025 winner. Open to SWE internships for summer 2026–27 and graduate roles from mid-2027.
+          Final-year Computer Science student at Deakin (WAM ~87), graduating Jun 2027. Contract engineer for a US health-tech startup (search latency cut to under 200 ms). Built a live mentorship platform as CTO and sole developer (Leadership 4Impact 2nd). President of a 190+ member software club. Builds full-stack TypeScript/Python systems. GovHack 2025 winner. Open to SWE internships for summer 2026–27 and graduate roles from mid-2027.
         </p>
 
         {/* Sections */}

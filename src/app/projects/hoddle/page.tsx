@@ -9,7 +9,7 @@ import { Shot } from '@/components/case-study/shot'
 import { PROJECTS } from '@/lib/data'
 
 const DESCRIPTION =
-  'CTO and sole developer of hoddle.org, a mentorship platform for first-year international students in Melbourne. Mentor matching, forums, live Q&As and access rules in Postgres. An October 2026 rebuild redid every page and hardened the database.'
+  'Sole developer of hoddle.org, March to September 2026: a mentorship platform for first-year international students in Melbourne. Mentor matching, forums, live Q&As and access rules in Postgres. After the program ended, he rebuilt every page and hardened the database on his own.'
 
 export const metadata: Metadata = {
   title: 'Hoddle Melbourne · mentorship platform',
@@ -50,7 +50,8 @@ const TIMELINE = [
   { date: 'Apr 2026', title: 'Matching and mentor invites', body: 'Weighted mentor matching, recomputed nightly and when a student finishes onboarding. Mentors join through a single-use invite link that expires after 7 days.' },
   { date: 'Apr 2026', title: 'Library, forums, sessions, messages', body: 'Mentors publish articles, videos and downloads. Students can ask in the forums anonymously; mentors always answer under their name. Live Q&As with a seat limit, direct messages, and a realtime notification bell.' },
   { date: '23 Apr 2026', title: 'The build on hoddle.org', body: '181 commits from 13 to 23 April. Google sign-in joined magic links, and a feedback widget files bugs and ideas. hoddle.org still serves this build.' },
-  { date: '27 Oct 2026', title: 'The rebuild', body: 'A new component kit and every page redone, then 27 migrations that move rate limits, private meeting links and stricter write rules into the database, plus a check on sign-in links. It is finished on a branch and not deployed yet.', current: true },
+  { date: 'May 2026', title: '2nd at the final pitch', body: 'The Leadership 4Impact program ended with the final pitch, where we placed 2nd.' },
+  { date: '27 Oct 2026', title: 'The rebuild', body: 'After the program ended I rebuilt it on my own: a new component kit and every page redone, then 27 migrations that move rate limits, private meeting links and stricter write rules into the database, plus a check on sign-in links. It is finished on a branch and not deployed.', current: true },
 ]
 
 const DECISIONS = [
@@ -143,10 +144,10 @@ export default function HoddlePage() {
         <div data-stagger-item style={{ padding: '24px 0', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', columnGap: 12, rowGap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 'var(--text-2xl)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Hoddle Melbourne</h1>
-            <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · CTO</span>
+            <span className="pill" style={{ color: GREEN, borderColor: 'rgba(74,222,128,0.3)', fontFamily: MONO }}>● live · Mar–Sep 2026</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 18px' }}>
-            A mentorship platform that matches first-year international students in Melbourne with verified senior mentors. I built it as the sole developer, from the schema to the background jobs. hoddle.org runs the April 2026 build. The October 2026 rebuild shown here is finished but not deployed yet.
+            A mentorship platform that matches first-year international students in Melbourne with verified senior mentors. I built it as the sole developer, from the schema to the background jobs. hoddle.org runs the April 2026 build. The rebuild shown here, which I did on my own in October 2026 after the program ended, is finished and not deployed.
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <a href="https://hoddle.org" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> hoddle.org</a>
@@ -355,7 +356,7 @@ export default function HoddlePage() {
         </figure>
 
         {/* Roadmap */}
-        <div className="section-label" style={{ fontFamily: MONO }}>What&apos;s next</div>
+        <div className="section-label" style={{ fontFamily: MONO }}>What I&apos;d do next</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 40 }}>
           {NEXT.map(([label, desc]) => (
             <div key={label} style={{ display: 'grid', gridTemplateColumns: '16px 1fr', gap: 8, alignItems: 'baseline' }}>

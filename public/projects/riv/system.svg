@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="720" height="360" role="img" aria-labelledby="t d">
+  <title id="t">RIV architecture diagram</title>
+  <desc id="d">An Electron renderer manages folder paths and shows images. preload.js exposes window.ctx. The main process handles IPC and calls utils/path.js for data.json and utils/viewer.js to scan image folders recursively.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  <style>
+    .k { font: 600 13px "JetBrains Mono", Menlo, Consolas, monospace; fill: #e5e5e5; }
+    .s { font: 400 11px "JetBrains Mono", Menlo, Consolas, monospace; fill: #a1a1aa; }
+    .x { font: 400 11px "JetBrains Mono", Menlo, Consolas, monospace; fill: #3b82f6; }
+    .box { fill: #0a0a0b; stroke: #2a2a2e; stroke-width: 1; }
+    .zone { fill: #0e0e11; }
+    .ar { stroke: #3b82f6; stroke-width: 1.6; fill: none; }
+  </style>
+  <rect width="720" height="360" fill="#050505"/>
+
+  <rect class="zone" x="12" y="28" width="220" height="300" rx="4"/>
+  <rect class="zone" x="250" y="28" width="220" height="300" rx="4"/>
+  <rect class="zone" x="488" y="28" width="220" height="300" rx="4"/>
+
+  <text class="s" x="20" y="20">RENDERER</text>
+  <rect class="box" x="24" y="48" width="196" height="64" rx="3"/>
+  <text class="k" x="34" y="72">src/index.html</text>
+  <text class="s" x="34" y="90">paths list, image viewer</text>
+  <rect class="box" x="24" y="128" width="196" height="64" rx="3"/>
+  <text class="k" x="34" y="152">src/js/*</text>
+  <text class="s" x="34" y="170">timer, next / prev, add path</text>
+  <rect class="box" x="24" y="220" width="196" height="48" rx="3"/>
+  <text class="k" x="34" y="248">window.ctx (preload)</text>
+
+  <path class="ar" d="M220 244 L250 180" marker-end="url(#a)"/>
+  <text class="x" x="222" y="200">IPC</text>
+
+  <text class="s" x="258" y="20">MAIN</text>
+  <rect class="box" x="262" y="80" width="196" height="72" rx="3"/>
+  <text class="k" x="272" y="108">main.js</text>
+  <text class="s" x="272" y="126">get-paths, add-path</text>
+  <text class="s" x="272" y="142">get/next/prev-image</text>
+  <rect class="box" x="262" y="180" width="196" height="48" rx="3"/>
+  <text class="k" x="272" y="208">preload.js + contextBridge</text>
+
+  <path class="ar" d="M458 116 L488 100" marker-end="url(#a)"/>
+  <path class="ar" d="M458 140 L488 220" marker-end="url(#a)"/>
+
+  <text class="s" x="496" y="20">DISK</text>
+  <rect class="box" x="500" y="64" width="196" height="72" rx="3"/>
+  <text class="k" x="510" y="92">utils/path.js</text>
+  <text class="s" x="510" y="110">data.json (gitignored)</text>
+  <text class="s" x="510" y="126">folder path library</text>
+  <rect class="box" x="500" y="180" width="196" height="88" rx="3"/>
+  <text class="k" x="510" y="208">utils/viewer.js</text>
+  <text class="s" x="510" y="226">recursive scan</text>
+  <text class="s" x="510" y="242">.jpg .png .jpeg .gif .webp</text>
+  <text class="s" x="510" y="258">shuffled session order</text>
+</svg>

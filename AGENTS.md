@@ -32,8 +32,8 @@ every new page so the feel stays consistent.
   mounts `<PageAnimations />` inside `<main key={pathname}>`, so animations
   re-run on every navigation. Never render `<PageAnimations />` manually.
 - **`<PageHeader>`** (`src/components/page-header.tsx`) — the top-of-page
-  status line: `● <rotating verb>` on the left, `samridhlimbu.com<path> · v0.1`
-  on the right. Drop it in as the **first** child inside the page's outer
+  status line: `● <rotating verb>` on the left, `samridhlimbu.com<path>`
+  on the right (pass `status` for a fixed label instead of the rotating verb; the home page does). Drop it in as the **first** child inside the page's outer
   content wrapper (right after `<PageShell>` opens). It's already a
   `data-stagger-item`, so it fades in as the first item of the entrance.
 - **`<Typewriter>`** (`src/components/typewriter.tsx`) — generic typing-rotator.
