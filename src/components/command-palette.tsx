@@ -46,6 +46,7 @@ const ITEMS: Item[] = [
   { k: '_x',   label: 'x · @clupai8o0',      hint: '', href: 'https://x.com/clupai8o0',          group: 'external' },
   { k: '_ig',  label: 'instagram · @clupaii', hint: '', href: 'https://instagram.com/clupaii',   group: 'external' },
   { k: '_web', label: 'clupai.com · freelance studio', hint: '', href: 'https://clupai.com',         group: 'external' },
+  { k: '_build', label: 'need something built? clupai build risk check', hint: '', href: 'https://clupai.com/start', group: 'external' },
 
   // Actions
   { k: '_match', label: 'hiring? match my work to your role', hint: '', href: null, group: 'actions' },

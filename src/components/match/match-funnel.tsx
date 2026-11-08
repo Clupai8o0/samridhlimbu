@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { WHO, type Who } from '@/lib/match'
-import { loadSaved } from './match-store'
+import { loadSaved, markNudgeDone } from './match-store'
 import styles from './match.module.css'
 
 /** Dispatch this on window to open the funnel from anywhere. */
@@ -25,6 +25,7 @@ export function MatchProvider() {
   const router = useRouter()
 
   const start = useCallback(() => {
+    markNudgeDone()
     if (window.location.pathname === '/match') {
       return
     }

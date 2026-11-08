@@ -101,6 +101,15 @@ palette, or any URL with `?match` (share `samridhlimbu.com/?match`). Visitors
 with saved answers skip the modal and land on their results. Email is optional:
 `sendMatch` in `src/app/actions.ts` mails the shortlist and sends Sam the answers.
 
+- The role step is multi-select; scoring uses the best-matching role.
+- Visitors who need something built (`who: client`) get a link to clupai's
+  Build Risk Check, https://clupai.com/start (`build-check.tsx`, also in the
+  ⌘K palette and the chat's rules). clupai is Sam's company: say "we" and
+  "company", never "studio", and never quote prices.
+- A small card in the bottom-left corner (`match-nudge.tsx`, mounted in the
+  root layout) points visitors at the funnel, the chat and the Build Risk
+  Check. It shows 5 s after load, never on /match, never to someone with saved
+  answers, and stays away for 30 days once closed or used (`nudge:v1`).
 - Every tag in `TAGS` must be true of its case study. When a case study changes
   or a new one ships, update its tags there, or it never gets matched.
 
@@ -118,11 +127,12 @@ hero ("or ask my work a question"), ⌘K, `?chat`, and sits under the /match res
   is off), `CHAT_MONTHLY_CAP_USD` (default 10; 0 pauses it), `CHAT_MODEL`
   (default `claude-opus-5-5`; `claude-haiku-5-5` is ~40x cheaper; a model with
   no price in `budget.ts` keeps the chat off), and an Upstash Redis
-  (`KV_REST_API_URL`/`KV_REST_API_TOKEN`, required in production; without it the
-  chat stays off there, and dev uses in-memory counters).
+  (`KV_REST_API_URL`/`KV_REST_API_TOKEN`, required on every deployment; without
+  it the chat stays off there, and local dev uses in-memory counters).
 - Captcha: Cloudflare Turnstile (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`,
-  `TURNSTILE_SECRET_KEY`; required in production, dev and previews fall back to
-  Cloudflare's always-pass test keys). Invisible unless Cloudflare wants a
+  `TURNSTILE_SECRET_KEY`; required on every deployment, previews included,
+  along with Redis. Only plain local dev falls back to Cloudflare's always-pass
+  test keys and in-memory counters). Invisible unless Cloudflare wants a
   click. A pass is a signed cookie for 2 hours and 40 messages
   (`CHAT_SIGNING_SECRET` optional, defaults to the Turnstile secret).
 - Other guards (`src/lib/chat/guard.ts`): same-origin only, JSON under 24 KB,
@@ -133,6 +143,8 @@ hero ("or ask my work a question"), ⌘K, `?chat`, and sits under the /match res
 - Telegram alerts (`src/lib/chat/alerts.ts`, existing `TELEGRAM_*` vars), each
   once per window: 80% of the cap, cap used up, site daily limit, a visitor
   hitting the limit, 10+ attack attempts in a day. Previews prefix `[preview]`.
+- The only outside link the bot may give is clupai's Build Risk Check; the
+  panel renders it from an allowlist (`OUTSIDE_LINKS` in `chat-panel.tsx`).
 - When the cap is used up the panel swaps the input for an animated
   "budget.monthly 100%" card. See it on a preview with `/?chat&demo=budget`.
 - The hard stop is the spend limit on the Anthropic workspace that owns the key.

@@ -26,3 +26,33 @@ export function clearSaved() {
     // Nothing saved to clear.
   }
 }
+
+// The bottom-left nudge card stays away for a while once the visitor has
+// closed it or found the funnel or the chat some other way.
+const NUDGE_KEY = 'nudge:v1'
+export const NUDGE_DONE_EVENT = 't2:nudge-done'
+
+// Also kept in memory, for private mode (no storage) and for a nudge that
+// mounts after the event already fired.
+let doneThisLoad = false
+
+export function nudgeDoneAt(): number {
+  if (doneThisLoad) {
+    return Date.now()
+  }
+  try {
+    return Number(localStorage.getItem(NUDGE_KEY) ?? 0) || 0
+  } catch {
+    return 0
+  }
+}
+
+export function markNudgeDone() {
+  doneThisLoad = true
+  try {
+    localStorage.setItem(NUDGE_KEY, String(Date.now()))
+  } catch {
+    // Private mode: it just comes back next visit.
+  }
+  window.dispatchEvent(new Event(NUDGE_DONE_EVENT))
+}

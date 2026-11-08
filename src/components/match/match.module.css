@@ -429,6 +429,32 @@ textarea.field { height: auto; min-height: 72px; padding: 10px 12px; resize: ver
   margin-top: 14px;
 }
 
+/* Link to clupai's Build Risk Check, for visitors who need something built. */
+.buildCheck {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.12s, background 0.12s;
+}
+.buildCheck:hover { border-color: var(--accent); background: var(--bg-3); }
+.buildCheckText { flex: 1; min-width: 0; font-size: var(--text-sm); line-height: 1.5; color: var(--muted); }
+.buildCheckCta {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  color: var(--accent);
+  white-space: nowrap;
+}
+@media (max-width: 520px) {
+  .buildCheck { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dialog,
   .dialog::backdrop,
@@ -440,6 +466,7 @@ textarea.field { height: auto; min-height: 72px; padding: 10px 12px; resize: ver
   .result { animation: none; }
   .trigger,
   .askLink,
+  .buildCheck,
   .option,
   .btn,
   .tick,

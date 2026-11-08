@@ -10,12 +10,13 @@ import {
   matchProjects,
   type Answers, type Role, type Stack, type Trait, type Who,
 } from '@/lib/match'
-import { loadSaved, saveAnswers, clearSaved } from './match-store'
+import { BuildCheck } from './build-check'
+import { loadSaved, saveAnswers, clearSaved, markNudgeDone } from './match-store'
 import styles from './match.module.css'
 
 const STEPS = 4
 
-type Draft = { who?: Who; role?: Role; traits: Trait[]; stacks: Stack[] }
+type Draft = { who?: Who; roles: Role[]; traits: Trait[]; stacks: Stack[] }
 
 const ROLE_QUESTION: Record<Who, string> = {
   hiring: 'What’s the role?',
@@ -44,11 +45,11 @@ function Flow() {
   const [init] = useState(() => {
     // Coming from the modal: start fresh at step 2 with their answer.
     if (isWho(as)) {
-      return { step: 1, draft: { who: as, traits: [], stacks: [] } as Draft }
+      return { step: 1, draft: { who: as, roles: [], traits: [], stacks: [] } as Draft }
     }
     // A return visit lands on the saved results; a cold visit starts at step 1.
     const saved = loadSaved()
-    return saved ? { step: STEPS, draft: saved as Draft } : { step: 0, draft: { traits: [], stacks: [] } as Draft }
+    return saved ? { step: STEPS, draft: saved as Draft } : { step: 0, draft: { roles: [], traits: [], stacks: [] } as Draft }
   })
   const rootRef = useRef<HTMLDivElement>(null)
   const pending = useRef<number | null>(null)
@@ -66,6 +67,11 @@ function Flow() {
   }
 
   useEffect(() => () => cancelPending(), [])
+
+  // Reaching this page means the visitor found the funnel; the nudge can rest.
+  useEffect(() => {
+    markNudgeDone()
+  }, [])
 
   // Drop ?as= once read, so a reload or a shared link shows the saved results
   // instead of restarting at step 2.
@@ -90,13 +96,13 @@ function Flow() {
     cancelPending()
     setDir(next < step ? 'back' : 'fwd')
     setStep(next)
-    if (next === STEPS && draft.who && draft.role) {
+    if (next === STEPS && draft.who && draft.roles.length) {
       saveAnswers(draft as Answers)
     }
   }
 
-  const pickOne = <K extends 'who' | 'role'>(key: K, value: Draft[K]) => {
-    setDraft(d => ({ ...d, [key]: value }))
+  const pickWho = (value: Who) => {
+    setDraft(d => ({ ...d, who: value }))
     const target = step + 1
     cancelPending()
     pending.current = window.setTimeout(() => {
@@ -106,7 +112,7 @@ function Flow() {
     }, 160)
   }
 
-  const toggle = <K extends 'traits' | 'stacks'>(key: K, value: Draft[K][number], max?: number) => {
+  const toggle = <K extends 'roles' | 'traits' | 'stacks'>(key: K, value: Draft[K][number], max?: number) => {
     setDraft(d => {
       const list = d[key] as string[]
       if (list.includes(value)) {
@@ -122,7 +128,7 @@ function Flow() {
   const restart = () => {
     clearSaved()
     cancelPending()
-    setDraft({ traits: [], stacks: [] })
+    setDraft({ roles: [], traits: [], stacks: [] })
     setDir('back')
     setStep(0)
   }
@@ -150,11 +156,11 @@ function Flow() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const answers: Answers | null = draft.who && draft.role
-    ? { who: draft.who, role: draft.role, traits: draft.traits, stacks: draft.stacks }
+  const answers: Answers | null = draft.who && draft.roles.length
+    ? { who: draft.who, roles: draft.roles, traits: draft.traits, stacks: draft.stacks }
     : null
 
-  const cmd = ['./match.sh', draft.who && `--as ${draft.who}`, draft.role && `--role ${draft.role}`]
+  const cmd = ['./match.sh', draft.who && `--as ${draft.who}`, draft.roles.length > 0 && `--role ${draft.roles.join(',')}`]
     .filter(Boolean)
     .join(' ')
 
@@ -185,7 +191,7 @@ function Flow() {
               <ul className={styles.options}>
                 {WHO.map((w, i) => (
                   <li key={w.id}>
-                    <button type="button" data-key={i + 1} className={styles.option} aria-pressed={draft.who === w.id} onClick={() => pickOne('who', w.id)}>
+                    <button type="button" data-key={i + 1} className={styles.option} aria-pressed={draft.who === w.id} onClick={() => pickWho(w.id)}>
                       <span className={styles.optionKey}>{i + 1}</span>
                       <span className={styles.optionLabel}>
                         {w.label}
@@ -201,12 +207,13 @@ function Flow() {
 
           {step === 1 && (
             <>
-              <p className={styles.kicker}>step 2 · pick one</p>
+              <p className={styles.kicker}>step 2 · pick any</p>
               <h2 id={titleId} className={styles.question} tabIndex={-1}>{ROLE_QUESTION[draft.who ?? 'hiring']}</h2>
+              {draft.who === 'client' && <BuildCheck short />}
               <ul className={styles.options} data-grid="">
                 {ROLES.map((r, i) => (
                   <li key={r.id}>
-                    <button type="button" data-key={i + 1} className={styles.option} aria-pressed={draft.role === r.id} onClick={() => pickOne('role', r.id)}>
+                    <button type="button" data-key={i + 1} className={styles.option} aria-pressed={draft.roles.includes(r.id)} onClick={() => toggle('roles', r.id)}>
                       <span className={styles.optionKey}>{i + 1}</span>
                       <span className={styles.optionLabel}>{r.label}</span>
                       <span className={styles.tick} aria-hidden="true">✓</span>
@@ -214,6 +221,12 @@ function Flow() {
                   </li>
                 ))}
               </ul>
+              <div className={styles.foot}>
+                <span aria-live="polite">{draft.roles.length ? `${draft.roles.length} picked` : 'Pick at least one'}</span>
+                <button type="button" className={styles.btn} disabled={!draft.roles.length} onClick={() => go(2)}>
+                  Next →
+                </button>
+              </div>
             </>
           )}
 
@@ -304,7 +317,7 @@ function Results({ answers, titleId, onRestart }: {
   onRestart: () => void
 }) {
   const picks = matchProjects(answers)
-  const role = ROLES.find(r => r.id === answers.role)?.label ?? ''
+  const role = answers.roles.map(id => ROLES.find(r => r.id === id)?.label ?? id).join(' + ')
   const hiring = answers.who === 'hiring'
 
   return (
@@ -313,6 +326,7 @@ function Results({ answers, titleId, onRestart }: {
       <h2 id={titleId} className={styles.question} tabIndex={-1}>
         {hiring ? 'Here’s the work that fits the role.' : 'Here’s what fits.'}
       </h2>
+      {answers.who === 'client' && <BuildCheck />}
       <ol className={styles.results}>
         {picks.map((p, i) => (
           <li key={p.slug}>

@@ -58,7 +58,7 @@ export const RESULT_COUNT = 4
 
 export interface Answers {
   who: Who
-  role: Role
+  roles: Role[]
   traits: Trait[]
   stacks: Stack[]
 }
@@ -124,7 +124,7 @@ export interface MatchItem {
   /** Labels for what matched beyond the role, strongest first. */
   reasons: string[]
   score: number
-  /** How strongly it shows the chosen role, 0 to 3. */
+  /** How strongly it shows the best of the chosen roles, 0 to 3. */
   roleWeight: number
 }
 
@@ -148,12 +148,14 @@ export function matchProjects(a: Answers, count = RESULT_COUNT): MatchItem[] {
     if (!meta) {
       continue
     }
-    const roleWeight = t.roles[a.role] ?? 0
+    const roleHits = a.roles.filter(r => (t.roles[r] ?? 0) > 0)
+    const roleWeight = Math.max(0, ...a.roles.map(r => t.roles[r] ?? 0))
     const traitHits = a.traits.filter(x => t.traits.includes(x))
     const stackHits = a.stacks.filter(x => t.stacks.includes(x))
-    // Role fit dominates; a project that shows none of the role only
-    // surfaces when nothing else fits.
-    let score = roleWeight * 4 + traitHits.length * 2 + stackHits.length
+    // Role fit dominates (the strongest of the picked roles, plus a little for
+    // each other picked role it also shows); a project that shows none of
+    // them only surfaces when nothing else fits.
+    let score = roleWeight * 4 + Math.max(0, roleHits.length - 1) * 2 + traitHits.length * 2 + stackHits.length
     if (roleWeight === 0) {
       score -= 6
     }
@@ -164,6 +166,8 @@ export function matchProjects(a: Answers, count = RESULT_COUNT): MatchItem[] {
       score += 0.5
     }
     const reasons = [
+      // With several roles picked, say which of them this one shows.
+      ...(a.roles.length > 1 && roleHits.length > 1 ? roleHits.map(x => label(ROLES, x)) : []),
       ...traitHits.map(x => label(TRAITS, x)),
       ...stackHits.map(x => label(STACKS, x)),
       ...(a.who === 'client' && t.client ? ['Client or startup work'] : []),
@@ -192,17 +196,19 @@ export function parseAnswers(raw: unknown): Answers | null {
     Array.isArray(v) && v.length <= max && v.every(x => typeof x === 'string' && allowed.has(x)) ? [...new Set(v as string[])] : null
   const traits = list(r.traits, TRAIT_IDS, MAX_TRAITS)
   const stacks = list(r.stacks, STACK_IDS, STACKS.length)
-  if (typeof r.who !== 'string' || !WHO_IDS.has(r.who) || typeof r.role !== 'string' || !ROLE_IDS.has(r.role) || !traits || !stacks) {
+  // Answers saved before roles became a list have a single `role`.
+  const roles = list(r.roles ?? (typeof r.role === 'string' ? [r.role] : null), ROLE_IDS, ROLES.length)
+  if (typeof r.who !== 'string' || !WHO_IDS.has(r.who) || !roles?.length || !traits || !stacks) {
     return null
   }
-  return { who: r.who as Who, role: r.role as Role, traits: traits as Trait[], stacks: stacks as Stack[] }
+  return { who: r.who as Who, roles: roles as Role[], traits: traits as Trait[], stacks: stacks as Stack[] }
 }
 
 /** One line describing the answers, for the email to Sam. */
 export function describeAnswers(a: Answers) {
   return [
     `who: ${label(WHO, a.who)}`,
-    `role: ${label(ROLES, a.role)}`,
+    `role: ${a.roles.map(x => label(ROLES, x)).join(', ')}`,
     `cares about: ${a.traits.map(x => label(TRAITS, x)).join(', ') || '-'}`,
     `stack: ${a.stacks.map(x => label(STACKS, x)).join(', ') || '-'}`,
   ]

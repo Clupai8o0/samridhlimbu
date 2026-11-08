@@ -2,6 +2,7 @@
 
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { markNudgeDone } from '../match/match-store'
 import { ChatPanel } from './chat-panel'
 import frame from '../match/match.module.css'
 
@@ -20,6 +21,13 @@ export function ChatProvider()
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const search = useSearchParams()
+
+  // However the chat opens, the visitor has found it; the nudge can rest.
+  useEffect(() => {
+    if (open) {
+      markNudgeDone()
+    }
+  }, [open])
 
   useEffect(() => {
     const onOpen = () => setOpen(true)

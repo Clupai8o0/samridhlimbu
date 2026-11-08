@@ -167,7 +167,10 @@ function loadSaved(): Msg[]
 }
 
 // Answers use plain text, "- " bullets and markdown links to site paths.
-// Only links that start with "/" become links; anything else stays text.
+// Only links that start with "/", plus the few outside pages listed here,
+// become links; anything else stays text.
+const OUTSIDE_LINKS = new Set(['https://clupai.com/start', 'https://www.clupai.com/start'])
+
 function inline(text: string, onNavigate?: () => void): ReactNode[]
 {
   const out: ReactNode[] = []
@@ -179,6 +182,8 @@ function inline(text: string, onNavigate?: () => void): ReactNode[]
     const [, label, href] = m
     if (href.startsWith('/') && !href.startsWith('//')) {
       out.push(<Link key={m.index} href={href} onClick={onNavigate}>{label}</Link>)
+    } else if (OUTSIDE_LINKS.has(href.replace(/\/$/, ''))) {
+      out.push(<a key={m.index} href={href} target="_blank" rel="noopener">{label} ↗</a>)
     } else {
       out.push(label)
     }
