@@ -126,7 +126,7 @@ export default function MindfulBreakPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ ...PROSE, margin: '0 0 14px' }}>
-            The work lives in two places. The unit worksheets are in <code style={{ fontFamily: MONO, fontSize: '0.9em' }}>SIT225_2025T2</code>. The cleaned project, with the sketch, Pi services and Windows client, is the archived public repo linked below. There is no live deployment: the stack needs the board, a broker and the Pi.
+            The work lives in two places. The unit worksheets are in <code style={{ fontFamily: MONO, fontSize: '0.9em' }}>SIT225_2025T2</code>, a private unit repo. The cleaned project, with the sketch, Pi services and Windows client, is the archived public repo linked below. There is no live deployment: the stack needs the board, a broker and the Pi.
           </p>
           <p style={{ ...PROSE, margin: 0 }}>
             The README describes a single-participant pilot across four structured sessions, with end-to-end latency on the Pi in the tens to low hundreds of milliseconds. Those figures are not re-measured here; the page sticks to what the code shows.
@@ -202,7 +202,6 @@ export default function MindfulBreakPage() {
 
         <div style={{ display: 'flex', gap: 8, paddingTop: 20, flexWrap: 'wrap' }}>
           <a href="https://github.com/Clupai8o0/mindful-break-recommender-system" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> project repo</a>
-          <a href="https://github.com/Clupai8o0/SIT225_2025T2" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> unit worksheets</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO }}>← back to projects</Link>
         </div>
 

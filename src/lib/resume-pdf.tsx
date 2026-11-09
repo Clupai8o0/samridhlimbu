@@ -379,7 +379,7 @@ export function ResumeDocument() {
             <Text style={s.entryBody}>
               Audits grid-connection packages clause by clause against AEMO PSMG v3.0 and NER S5.2. Six
               deterministic assessors score readiness and trace every finding to its regulatory section.
-              24/24 cases pass. Built with Aarav.
+              27/27 stress checks pass. Built with Aarav.
             </Text>
           </View>
 

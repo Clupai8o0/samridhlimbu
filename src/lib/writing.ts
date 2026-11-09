@@ -1,4 +1,9 @@
 import { CSTACK_POST } from '@/lib/posts/cstack'
+import { MONOCODE_POST } from '@/lib/posts/keeping-a-fork-in-step'
+import { NOOP_POST } from '@/lib/posts/noop-weak-model-timed-event'
+import { PORTFOLIO_POST } from '@/lib/posts/portfolio-honest'
+import { VISATRACK_POST } from '@/lib/posts/visatrack-fortnight'
+import { CHAT_FIRST_POST } from '@/lib/posts/chat-first-apps'
 
 export type ContentBlock =
   | { type: 'paragraph'; html: string; dropCap?: boolean }
@@ -3901,6 +3906,11 @@ return the graph with the best measured H`,
     ],
   },
   CSTACK_POST,
+  MONOCODE_POST,
+  NOOP_POST,
+  VISATRACK_POST,
+  PORTFOLIO_POST,
+  CHAT_FIRST_POST,
 ]
 
 export const ALL_TAGS: string[] = Array.from(

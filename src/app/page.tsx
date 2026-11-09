@@ -52,7 +52,7 @@ export default function HomePage() {
             <Link href="/projects/kairos" className="t2-link">Kairos</Link>, and I still use it every day. Claude kept losing my workout history between sessions, so I built{' '}
             <Link href="/projects/tempo" className="t2-link">Tempo</Link>, a workout app it can read and log to through an MCP server. I care a lot about UI, and I want to own what sits behind it too: schema, API, tests, deploys.
           </p>
-          <div className={styles.meta}>last_updated: 2026-11-05</div>
+          <div className={styles.meta}>last_updated: 2026-11-09</div>
         </section>
 
         <ExperienceLog />

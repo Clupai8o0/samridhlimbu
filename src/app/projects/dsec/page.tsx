@@ -174,6 +174,9 @@ export default function DsecPage() {
               </li>
             ))}
           </ul>
+          <p style={{ ...PROSE, margin: '16px 0 0' }}>
+            For the Agentic Games, a planned 60-minute build competition, I built <Link href="/projects/noop" style={{ color: 'var(--accent)' }}>noop</Link>, a small terminal coding agent on a weak model with 30 metered instructions per student. The event was cancelled, so noop has not been used.
+          </p>
         </div>
 
         {/* Mobile shot */}

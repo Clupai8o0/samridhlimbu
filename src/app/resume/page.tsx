@@ -159,7 +159,7 @@ const SECTIONS = [
       {
         head: 'R1GPT · NEM connection-approval audit engine',
         meta: 'Next.js 14 · TypeScript · OpenAI gpt-4o · Zod · pdf-parse',
-        body: 'Audits R1 grid-connection packages clause by clause against AEMO PSMG v3.0 and NER S5.2. Six deterministic assessors produce a readiness index and trace every finding to its regulatory section. Outputs predicted RFIs and rectification plans. 24/24 deterministic test cases pass. Built with Aarav.',
+        body: 'Audits R1 grid-connection packages clause by clause against AEMO PSMG v3.0 and NER S5.2. Six deterministic assessors produce a readiness index and trace every finding to its regulatory section. Outputs predicted RFIs and rectification plans. 27/27 deterministic stress checks pass. Built with Aarav.',
       },
       {
         head: 'Kairos · AI-native scheduling app',

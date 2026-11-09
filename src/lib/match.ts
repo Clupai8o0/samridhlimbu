@@ -74,6 +74,12 @@ interface Tags {
 
 // Case studies outside PROJECTS (the archive rows with a page).
 const ARCHIVE_BLURBS: Record<string, { name: string; blurb: string }> = {
+  clupai: { name: 'clupai.com', blurb: 'The site for my software company, rebuilt around one offer and an eight-question Build Risk Check scored on the server.' },
+  monocode: { name: 'MonoCode fork', blurb: 'My fork of an open-source GUI for coding agents: 50 added features and an updater where an agent does the upstream merges.' },
+  noop: { name: 'noop', blurb: 'A small terminal coding agent for a DSEC build competition on a weak model: a tolerant tool-call parser, a model go/no-go gate, and a meter that refunds the model\'s failures in SQL.' },
+  'glow-up': { name: 'Glow Up', blurb: 'A co-op health game you log to by chatting: an MCP server and REST API with OAuth per household.' },
+  nomnom: { name: 'nomnom', blurb: 'Calorie tracker you log by sending Claude a photo. A remote MCP server, USDA data, and code that does the maths.' },
+  visatrack: { name: 'VisaTrack', blurb: 'Tracks student visa work hours across every overlapping Monday fortnight, with the rules in one tested Python engine.' },
   airtable: { name: 'Airtable clone', blurb: 'A grid that scrolls a 100,000-row table. Row loading written four times and measured.' },
   'farmers-intuition': { name: 'Farmers Intuition', blurb: 'Vineyard watering advisor built overnight at Hack48: a gradient boosting model plus a voice assistant.' },
   seatly: { name: 'Seatly', blurb: 'Restaurant bookings: onboarding wizard, a booking engine that picks tables, an operator dashboard.' },
@@ -125,6 +131,12 @@ const TAGS: Record<string, Tags> = {
   thurman: { roles: { frontend: 3 }, traits: ['shipped', 'design'], stacks: ['react'], client: true },
   riv: { roles: { frontend: 2 }, traits: [], stacks: [] },
   'digi-convertor': { roles: { frontend: 2, backend: 1 }, traits: ['shipped'], stacks: ['react', 'python'] },
+  clupai: { roles: { frontend: 3, fullstack: 2 }, traits: ['shipped', 'design'], stacks: ['react', 'ts'] },
+  monocode: { roles: { frontend: 2, ai: 2, devops: 1 }, traits: ['tests'], stacks: ['react', 'ts'] },
+  noop: { roles: { backend: 3, ai: 2, fullstack: 2, frontend: 1 }, traits: ['tests', 'data', 'lead'], stacks: ['python', 'react', 'ts', 'postgres'] },
+  'glow-up': { roles: { backend: 3, ai: 2, fullstack: 2 }, traits: ['tests', 'data', 'design'], stacks: ['react', 'ts', 'node', 'postgres'] },
+  visatrack: { roles: { fullstack: 3, backend: 3, frontend: 1 }, traits: ['tests', 'data'], stacks: ['react', 'ts', 'python', 'postgres'] },
+  nomnom: { roles: { fullstack: 3, ai: 2, backend: 2 }, traits: ['shipped', 'data', 'tests'], stacks: ['react', 'ts', 'postgres'] },
 }
 
 export interface MatchItem {

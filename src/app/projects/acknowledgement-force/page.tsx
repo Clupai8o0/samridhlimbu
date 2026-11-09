@@ -39,7 +39,7 @@ const GREEN = '#4ade80'
 
 const TIMELINE = [
   {
-    date: 'Apr 2026',
+    date: 'Jan 2026',
     title: 'v0.1.0 — first version',
     body: 'Built with Tauri (Rust + web tech). Cross-platform, ran on Windows. The core mechanic was already there: a blocking window that would not close until you read your rules, ticked the box, and named one action.',
   },

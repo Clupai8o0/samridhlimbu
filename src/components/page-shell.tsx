@@ -25,7 +25,7 @@ const FOOTER_LINKS = [
   { href: '/api/resume', label: 'resume (pdf)', rel: undefined, external: false },
 ]
 
-const LAST_UPDATED = '2026-10-25'
+const LAST_UPDATED = '2026-11-09'
 
 // jsonLd is required so no page ships without structured data (see SEO in AGENTS.md).
 // Pass pageJsonLd(metadata) from @/lib/seo; only error and 404 pages pass null.

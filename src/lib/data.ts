@@ -382,6 +382,12 @@ export const PROJECTS: Project[] = [
 
 export const ARCHIVE: ArchiveItem[] = [
   { year: '2026', name: 'Kairos · planner that learns task lengths', tech: 'Next.js 16 · Drizzle · PostgreSQL · Vercel AI SDK', link: 'live', slug: 'kairos' },
+  { year: '2026', name: 'clupai.com · company site and Build Risk Check', tech: 'Next.js 16 · React 19 · GSAP · matter-js · Resend · Upstash', link: 'live', slug: 'clupai' },
+  { year: '2026', name: 'MonoCode fork · features on a coding-agent GUI', tech: 'Tauri 2 · React 19 · TypeScript · Rust · Claude Code', link: 'github', slug: 'monocode' },
+  { year: '2026', name: 'noop · terminal coding agent for a weak model · DSEC', tech: 'FastAPI · asyncpg · Postgres · React 19 · Vite', link: 'private', slug: 'noop' },
+  { year: '2026', name: 'VisaTrack · student visa work-hours tracker', tech: 'Next.js 16 · FastAPI · SQLAlchemy · PostgreSQL', link: 'private', slug: 'visatrack' },
+  { year: '2026', name: 'nomnom · calorie tracker you log through Claude', tech: 'Next.js 16 · tRPC · Prisma · Better Auth · MCP', link: 'live', slug: 'nomnom' },
+  { year: '2026', name: 'Glow Up · co-op health game you log to by chatting', tech: 'Next.js 16 · MCP · Better Auth OAuth · Drizzle · Neon', link: 'private', slug: 'glow-up' },
   { year: '2026', name: 'ARIA · home battery simulator · Watt The Hack', tech: 'Next.js 15 · TypeScript · double-auction market · Vitest', link: 'github', slug: 'aria' },
   { year: '2026', name: 'R1GPT · grid-connection checker · hackathon', tech: 'Next.js 14 · Drizzle · Neon Postgres · OpenAI', link: 'github', slug: 'r1gpt' },
   { year: '2026', name: 'cstack · shared layer for coding agents', tech: 'Python · Shell · Claude Code · Codex', link: 'github', slug: 'cstack' },
