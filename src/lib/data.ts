@@ -83,8 +83,8 @@ export const PROJECTS: Project[] = [
     tag: 'Watch the infrared sky change · NASA Space Apps 2026',
     year: '2026',
     status: 'Live · slowsky.clupai.com · hackathon build, Nov 2026',
-    pitch: 'My solo entry for the NASA Space Apps Challenge 2026, challenge "Planet X and SPHEREx". Pick a spot in the sky and the page shows it on every visit by NASA\'s SPHEREx telescope, in date order, from real frames. It reads only the bytes it needs from NASA\'s public S3 bucket, keeps one frame per visit at the same wavelength, removes the zodiacal light and lines every frame up north-up, then lets you blink, stack or subtract them. Built in one weekend by an orchestrator session handing pieces to Claude, Codex, Gemini and Grok, with every piece reviewed by two models from different makers. 147 claims on the page and in the README are matched to a source. Submitted; results are not out yet.',
-    pitchShort: 'Shows any patch of sky on every visit by NASA\'s SPHEREx telescope, from real frames read byte by byte from S3. Solo entry, NASA Space Apps 2026.',
+    pitch: 'My solo entry for the NASA Space Apps Challenge 2026, challenge "Planet X and SPHEREx". Pick a spot in the sky and the page shows it on visit after visit by NASA\'s SPHEREx telescope, in date order, from real frames. It reads only the bytes it needs from NASA\'s public S3 bucket, keeps one frame per visit at the same wavelength, removes the zodiacal light and lines every frame up north-up, then lets you blink, stack or subtract them. Built in one weekend by an orchestrator session handing pieces to Claude, Codex, Gemini and Grok, with every piece reviewed by two models from different makers. 147 claims on the page and in the README are matched to a source. Submitted on 15 November 2026.',
+    pitchShort: 'Shows a patch of sky on visit after visit by NASA\'s SPHEREx telescope, from real frames read byte by byte from S3. Solo entry, NASA Space Apps 2026.',
     stack: {
       Frontend: ['TypeScript', 'Vite', 'Canvas 2D', 'Vitest'],
       Backend: ['Vercel functions', 'IRSA SIA proxy', 'S3 range reads', 'Claude API'],

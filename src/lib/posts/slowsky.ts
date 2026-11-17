@@ -23,18 +23,18 @@ export const SLOWSKY_POST: Post = {
   readMin: 11,
   tags: ['slowsky', 'ai-agents', 'astronomy', 'typescript', 'hackathons'],
   excerpt:
-    'For NASA Space Apps 2026 I built Slowsky on my own in one weekend: a page that shows a patch of sky on every visit by NASA\'s SPHEREx telescope, from real frames read byte by byte out of S3. One Claude Code session ran the build and handed pieces to Claude, Codex, Gemini and Grok. How the data path works, how the build ran, and the checks that kept the numbers honest.',
+    'For NASA Space Apps 2026 I built Slowsky on my own in one weekend: a page that shows a patch of sky on visit after visit by NASA\'s SPHEREx telescope, from real frames read byte by byte out of S3. One Claude Code session ran the build and handed pieces to Claude, Codex and Gemini, with Grok among the reviewers. How the data path works, how the build ran, and the checks that kept the numbers honest.',
   content: [
     {
       type: 'paragraph',
       dropCap: true,
       html:
-        'On 14 and 15 November 2026 I entered the NASA Space Apps Challenge on my own, for the Melbourne event, on the challenge called "Planet X and SPHEREx". What I built is Slowsky, a web page that shows a patch of sky on every visit by NASA\'s SPHEREx space telescope, in date order, so you can watch it change. It is live at <a href="https://slowsky.clupai.com" target="_blank" rel="noopener noreferrer">slowsky.clupai.com</a>, and the code is on <a href="https://github.com/Clupai8o0/slowsky" target="_blank" rel="noopener noreferrer">GitHub</a> under the MIT licence.',
+        'On 14 and 15 November 2026 I entered the NASA Space Apps Challenge on my own, for the Melbourne event, on the challenge called "Planet X and SPHEREx". What I built is Slowsky, a web page that shows a patch of sky on visit after visit by NASA\'s SPHEREx space telescope, in date order, so you can watch it change. It is live at <a href="https://slowsky.clupai.com" target="_blank" rel="noopener noreferrer">slowsky.clupai.com</a>, and the code is on <a href="https://github.com/Clupai8o0/slowsky" target="_blank" rel="noopener noreferrer">GitHub</a> under the MIT licence.',
     },
     {
       type: 'paragraph',
       html:
-        'I wrote very little of the code by hand. One Claude Code session ran the build and handed pieces to Claude, Codex, Gemini and Grok. Each piece had to pass its own test and two reviews before it merged. This post covers how a frame gets from NASA\'s archive to the screen, how the build ran, and the checks that kept the page from saying more than the data does. I submitted on Sunday night, and the results are not out yet.',
+        'I wrote very little of the code by hand. One Claude Code session ran the build and handed pieces to Claude, Codex and Gemini, with Grok among the reviewers. The rule was that each piece passed its own test and two reviews before it merged. This post covers how a frame gets from NASA\'s archive to the screen, how the build ran, and the checks that kept the page from saying more than the data does. I submitted on Sunday night.',
     },
     {
       type: 'image',
@@ -46,7 +46,7 @@ export const SLOWSKY_POST: Post = {
     {
       type: 'paragraph',
       html:
-        'The obvious pitch for a challenge called "Planet X and SPHEREx" is a tool that hunts for Planet Nine. I did not build one, and the page says so. Optical searches by ZTF, DES and Pan-STARRS1 have together ruled out about 78% of its predicted range, and what is left is faint, around V 22 (<a href="https://arxiv.org/abs/2401.17977" target="_blank" rel="noopener noreferrer">Brown, Holman and Batygin 2024</a>). SPHEREx reaches 19.5 to 19.9 AB below 3.8 µm, and only after its two-year survey, with four observations in each channel, away from the Milky Way\'s plane (<a href="https://arxiv.org/abs/2511.02985" target="_blank" rel="noopener noreferrer">Bock et al. 2025</a>). A single frame is shallower still (my reasoning, not the paper\'s). The bands differ, so this is a rough comparison, but the gap is too wide for a weekend\'s tool to close.',
+        'The obvious pitch for a challenge called "Planet X and SPHEREx" is a tool that hunts for Planet Nine. I did not build one, and the page says so. Optical searches by ZTF, DES and Pan-STARRS1 have together ruled out about 78% of its predicted range, and what is left is faint, around V 22 (<a href="https://arxiv.org/abs/2401.17977" target="_blank" rel="noopener noreferrer">Brown, Holman and Batygin 2024</a>). SPHEREx reaches 19.5 to 19.9 AB (5 sigma) below 3.8 µm, and only after its two-year survey, with four observations in each channel, away from the Milky Way\'s plane (<a href="https://arxiv.org/abs/2511.02985" target="_blank" rel="noopener noreferrer">Bock et al. 2025</a>). A single frame is shallower still (my reasoning, not the paper\'s). The bands differ, so this is a rough comparison, but the gap is too wide for a weekend\'s tool to close.',
     },
     {
       type: 'paragraph',
@@ -62,7 +62,7 @@ export const SLOWSKY_POST: Post = {
         '<strong>Read only the bytes it needs.</strong> The frames are FITS files in NASA\'s public S3 bucket, <code>nasa-irsa-spherex</code>. The page reads each file\'s header and wavelength table, then only the image rows that cover the view, using HTTP range requests. It never downloads a whole file.',
         '<strong>Keep one frame per visit, at one wavelength.</strong> Each part of a SPHEREx detector sees a slightly different wavelength. Frames from one detector are grouped into visits, and for each visit the page keeps the frame closest to the chosen wavelength at that spot. It keeps it only if the chosen wavelength is within half the band the spot sees. Without this, two dates would differ in colour as well as in time.',
         '<strong>Line them up.</strong> The page removes zodiacal light, the glow of sunlit dust in the solar system, using the archive\'s own model stored in each file. Then it resamples every frame onto one grid with north up, from the sky mapping (WCS) in each header. For the preset targets, proper motion is applied for each frame\'s own date.',
-        '<strong>Draw.</strong> All frames share one brightness scale, so a frame that looks brighter has higher values in the data.',
+        '<strong>Draw.</strong> All frames and the Stack picture share one brightness scale, so a frame that looks brighter has higher values in the data. Subtract gets scales of its own.',
       ],
     },
     {
@@ -91,7 +91,7 @@ export const SLOWSKY_POST: Post = {
     {
       type: 'paragraph',
       html:
-        'I cannot see by eye whether a frame is a third of a pixel off. So three test gates had to pass on every change, each checked against astropy, the standard Python library for astronomy.',
+        'I cannot see by eye whether a frame is a third of a pixel off. So three tests check the maths against astropy, the standard Python library for astronomy.',
     },
     {
       type: 'table',
@@ -137,7 +137,7 @@ export const SLOWSKY_POST: Post = {
       rows: [
         ['Data and back end: S3, the archive proxy, the snapshot, the decoders, the cube', 'Codex (GPT-6.1 Sol, or Terra when short on time)', 'Claude Opus 5.5 at high effort, plus Grok 4.7'],
         ['Maths with a test: WCS, regrid, stack, photometry', 'Claude Sonnet 5.5, then Codex Terra', 'Codex, plus Gemini Argon'],
-        ['Glue, page text, card wording', 'Claude Opus 5.5 at high effort', 'Codex. Gemini Argon checked every number against the code\'s output'],
+        ['Glue, page text, card wording', 'Claude Opus 5.5 at high effort', 'Codex, plus Gemini Argon'],
         ['Small parsers and tests', 'Claude Haiku 5.5', 'Codex'],
         ['A whole version before a submit', '', 'Codex at high effort, plus Claude Opus 5.5'],
       ],
@@ -161,7 +161,7 @@ export const SLOWSKY_POST: Post = {
     {
       type: 'paragraph',
       html:
-        'The plan froze features at v0.3 on Sunday morning. I did not hold to it. Ten more tagged versions followed, and the last, v0.4.0, a new layout, was tagged at 19:19 on Sunday, under five hours before the close.',
+        'The plan froze features at v0.3 on Sunday morning. I did not hold to it. Ten more tagged versions followed. The last, v0.4.0, switched on the sort hint and opened the AI note to everyone, and was tagged at 19:19 on Sunday, under five hours before the close.',
     },
     { type: 'heading', level: 2, text: 'What the reviews caught' },
     {
@@ -193,7 +193,7 @@ export const SLOWSKY_POST: Post = {
     {
       type: 'paragraph',
       html:
-        'The repo\'s <a href="https://github.com/Clupai8o0/slowsky/blob/main/SOURCES.md" target="_blank" rel="noopener noreferrer">SOURCES.md</a> has 147 rows in 12 tables, one for each claim in the README and on the page, with the file that makes it and the source behind it. Claude Opus 5.5 checked them with the sources open. Gemini Argon then read the claims with no web access and marked what it judged wrong, and Claude checked each mark against a fetched page or the repo\'s own files before anything changed. Codex checked that each row points at a file that really makes the claim, and Codex and Grok each opened the sources for 15 rows themselves.',
+        'The repo\'s <a href="https://github.com/Clupai8o0/slowsky/blob/main/SOURCES.md" target="_blank" rel="noopener noreferrer">SOURCES.md</a> has 147 rows in 12 tables. Each row takes a claim from the README, the page text, the target cards or the AI prompt, and gives the file that makes it and the source behind it. Numbers the page measures itself are left to the code and its tests. Claude Opus 5.5 checked them with the sources open. Gemini Argon then read the claims with no web access and marked what it judged wrong, and Claude checked each mark against a fetched page or the repo\'s own files before anything changed. Codex checked that each row points at a file that really makes the claim, and Codex and Grok each opened the sources for 15 rows themselves.',
     },
     {
       type: 'paragraph',
@@ -209,7 +209,7 @@ export const SLOWSKY_POST: Post = {
     {
       type: 'paragraph',
       html:
-        'A small neural network puts a sort hint under each candidate change on a live view: does this look like something moving, something changing brightness, a camera effect or noise? It was trained only on fake changes added to single real frames, and it never saw two real dates. In tests that held one field out of training at a time, it labelled 55% of the faint fake movers as moving.',
+        'A small neural network puts a sort hint under each candidate change on a live view: does this look like something moving, something changing brightness, a camera effect or noise? It was trained only on fake changes added to single real frames, and it never saw two real dates. In tests that held one field out of training at a time, it labelled only 55% of the fake movers whose peak was 3 to 5 times the noise as moving.',
     },
     {
       type: 'paragraph',

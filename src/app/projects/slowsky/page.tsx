@@ -9,7 +9,7 @@ import { ArticleChart } from '@/components/article-chart'
 import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
-  'Slowsky shows any patch of sky on every visit by NASA\'s SPHEREx telescope, in date order, from real frames read straight from NASA\'s public archive. My solo entry for the NASA Space Apps Challenge 2026, built in one weekend with several AI models. Live and open source.'
+  'Slowsky shows a patch of sky on visit after visit by NASA\'s SPHEREx telescope, in date order, from real frames out of NASA\'s public archive. My solo entry for the NASA Space Apps Challenge 2026, built in one weekend with several AI models. Live and open source.'
 
 const WRITE_UP = '/writing/slowsky-one-weekend-many-models'
 
@@ -60,7 +60,7 @@ const DECISIONS = [
   ['byte-range reads from S3', 'downloading whole files', 'The frames are FITS files in NASA\'s public S3 bucket. The page reads each file\'s header and wavelength table, then only the image rows that cover the view. It never downloads a whole file.'],
   ['one frame per visit, at one wavelength', 'every frame that covers the spot', 'Each part of a SPHEREx detector sees a slightly different wavelength. For each visit the page keeps the frame closest to the chosen wavelength, and only if that wavelength is within half the band the spot sees. Otherwise dates would differ in colour as well as time.'],
   ['a saved copy for the five presets', 'a 20 to 45 second wait on every visit', 'A live read takes 20 to 45 seconds, so the presets open from a small copy of real frames saved with the site: 24 frames each, 112 by 112 pixels. Go live reads the same target from the archive, and a preset falls back to the copy if the archive does not answer.'],
-  ['test gates against astropy', 'checking alignment by eye', 'Three gates block every change. The sky mapping must match astropy within 0.01 pixel at 9 points on two real frames, an S3 cutout must sum to astropy\'s value within 1 part in 1000, and simulated stars must land within 0.3 pixel after regridding.'],
+  ['test gates against astropy', 'checking alignment by eye', 'Three tests check the maths against astropy. The sky mapping must match within 0.01 pixel at 9 points on two real frames, in both directions, simulated stars must land within 0.3 pixel after regridding, and an S3 cutout must sum to astropy\'s value within 1 part in 1000 (that one needs the live archive, so it runs only on request).'],
   ['"candidate", never "discovery"', 'calling a change a find', 'A change between two dates can be noise, a satellite trail or a detector hit. The page lists changes as candidates for a closer look and says what it cannot rule out.'],
   ['fixed sentence forms for the AI note', 'trusting the model\'s prose', 'Claude Opus 5.5 can write a short note on what the page measured. A checker keeps only sentences that match a fixed list of forms, filled from the page\'s own fact sheet, and drops the rest.'],
 ]
@@ -91,7 +91,7 @@ export default function SlowskyPage() {
             <span className="pill" style={{ fontFamily: MONO }}>nasa space apps · nov 2026 · live</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 18px' }}>
-            A web page for watching the infrared sky change. Pick a spot, and it shows that patch of sky on every visit by NASA&apos;s SPHEREx space telescope, in date order, from real NASA frames. My solo entry for the NASA Space Apps Challenge 2026.
+            A web page for watching the infrared sky change. Pick a spot, and it shows that patch of sky on visit after visit by NASA&apos;s SPHEREx space telescope, in date order, from real NASA frames. My solo entry for the NASA Space Apps Challenge 2026.
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <a href="https://slowsky.clupai.com" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}>slowsky.clupai.com ↗</a>
@@ -125,10 +125,10 @@ export default function SlowskyPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ ...PROSE, margin: '0 0 14px' }}>
-            SPHEREx maps the whole sky in infrared light, in 102 colours, and comes back to each part of it again and again. The frames are public, but seeing how one spot changed means finding the right files, picking frames taken at the same colour and lining them up. Slowsky does that in the browser, then lets you blink between dates, stack them or subtract one from another.
+            SPHEREx maps the whole sky in infrared light, in 102 colours, and comes back to each part of it again and again. The frames are public, but seeing how one spot changed means finding the right files, picking frames taken at the same colour and lining them up. Slowsky does that for you, then lets you blink between dates, stack them or subtract one from another.
           </p>
           <p style={{ ...PROSE, margin: 0 }}>
-            The challenge was &quot;Planet X and SPHEREx&quot;. Slowsky is not a planet finder, and the page says so. Optical surveys have already ruled out about 78% of Planet Nine&apos;s predicted range, and what is left is around V 22 (Brown, Holman and Batygin 2024). SPHEREx reaches 19.5 to 19.9 AB below 3.8 µm, and only after its two-year survey (Bock et al. 2025). The bands differ, so it is a rough comparison, but one weekend&apos;s tool was never going to close that gap.
+            The challenge was &quot;Planet X and SPHEREx&quot;. Slowsky is not a planet finder, and the page says so. Optical searches by ZTF, DES and Pan-STARRS1 have together ruled out about 78% of Planet Nine&apos;s predicted range, and what is left is around V 22 (Brown, Holman and Batygin 2024). SPHEREx reaches 19.5 to 19.9 AB (5 sigma) below 3.8 µm, and only after its two-year survey (Bock et al. 2025). The bands differ, so it is a rough comparison, but one weekend&apos;s tool was never going to close that gap.
           </p>
         </div>
 
@@ -173,7 +173,7 @@ export default function SlowskyPage() {
           The build began after kick-off on Saturday 14 November. The first commit landed at 13:23 Melbourne time and the last at 21:18 on Sunday, and I submitted at 23:10. One orchestrator session in Claude Code took each version through the same seven steps: cut it into pieces, build each piece in its own worktree, run the piece&apos;s test itself, send the diff to two reviewers from different makers, merge, ship and tag, then report to my phone.
         </p>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          Claude (Fable, Opus, Sonnet and Haiku), Codex, Gemini and Grok wrote and reviewed the code. The event terms ban working with Chinese-owned companies, so a guardrail blocked those models in the Slowsky folders, and every tool used is named in the README. I chose the idea and made the product calls.
+          Claude (Fable, Opus, Sonnet and Haiku), Codex and Gemini wrote and reviewed the code, and Grok reviewed it too. The event terms ban working with Chinese-owned companies, so a guardrail blocked those models in the Slowsky folders, and every tool used is named in the README. I chose the idea and made the product calls.
         </p>
         <div style={{ marginBottom: 40 }}>
           <ArticleChart block={COMMITS_CHART} />
@@ -193,10 +193,10 @@ export default function SlowskyPage() {
         {/* Honesty */}
         <div className="section-label" style={{ fontFamily: MONO }}>Every claim has a source</div>
         <p style={{ ...PROSE, margin: '0 0 14px' }}>
-          The repo&apos;s SOURCES.md matches 147 claims from the README and the page to a NASA page, a paper or the data itself. Claude Opus 5.5 checked them with the sources open, Gemini read them as a second maker, and Codex and Grok each opened the sources for 15 rows. These checks were all run by AI tools; no person has gone through the list line by line, and the file says so.
+          The repo&apos;s SOURCES.md matches 147 claims from the README and the page to a NASA page, a paper, the data itself or the code that makes them, and a separate list names what rests on our own choices. Claude Opus 5.5 checked them with the sources open, Gemini read them as a second maker, and Codex and Grok each opened the sources for 15 rows. These checks were all run by AI tools; no person has gone through the list line by line, and the file says so.
         </p>
         <p style={{ ...PROSE, margin: '0 0 40px' }}>
-          One call went against the reviewers. A small neural network puts a sort hint under each candidate change. It was trained only on fake changes, and in tests it labelled 55% of faint fake movers as moving. Gemini and Opus reviews said its lines could mislead and advised against switching it on. I switched it on anyway, as an experiment labelled &quot;Not a verdict&quot;, with its limits written out in the README.
+          One call went against the reviewers. On a live view, a small neural network puts a sort hint under each candidate change. It was trained only on fake changes, and in tests it labelled only 55% of fake movers 3 to 5 times brighter than the noise as moving. Gemini and Opus reviews said its lines could mislead and advised against switching it on. I switched it on anyway, as an experiment labelled &quot;Not a verdict&quot;, with its limits written out in the README.
         </p>
 
         {/* Mobile shot */}
