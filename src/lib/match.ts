@@ -101,6 +101,7 @@ const ARCHIVE_BLURBS: Record<string, { name: string; blurb: string }> = {
 const TAGS: Record<string, Tags> = {
   hoddle: { roles: { fullstack: 3, frontend: 2, backend: 2 }, traits: ['shipped', 'lead', 'data', 'tests', 'security', 'design'], stacks: ['react', 'ts', 'postgres'], client: true },
   kairos: { roles: { fullstack: 3, ai: 2, frontend: 1, backend: 1 }, traits: ['tests', 'data'], stacks: ['react', 'ts', 'postgres'] },
+  slowsky: { roles: { frontend: 3, fullstack: 2, ai: 2 }, traits: ['shipped', 'fast', 'tests', 'data'], stacks: ['ts', 'python'] },
   aria: { roles: { fullstack: 1, ai: 1, backend: 1 }, traits: ['fast', 'tests'], stacks: ['react', 'ts'] },
   r1gpt: { roles: { fullstack: 2, frontend: 2, ai: 1 }, traits: ['fast', 'data', 'tests'], stacks: ['react', 'ts', 'postgres'] },
   dsec: { roles: { fullstack: 3, backend: 2, frontend: 1, ai: 1 }, traits: ['shipped', 'lead', 'security'], stacks: ['react', 'ts', 'python', 'postgres'] },
