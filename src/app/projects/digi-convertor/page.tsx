@@ -8,7 +8,7 @@ import { CodePre } from '@/components/code-pre'
 import { Icon } from '@/components/icons'
 
 const DESCRIPTION =
-  'Digi Convertor turns numbers between binary, decimal, octal and hex in a React/Vite UI, with formula panels for each pair, and a small Flask API on Vercel. Live since 2022; repos archived.'
+  'Digi Convertor turns numbers between binary, decimal, octal and hex in a React/Vite UI, with formula panels for each pair, and a small Flask API on Vercel. Built in 2022; retired in November 2026, when both Vercel apps were taken down. The repos are archived on GitHub.'
 
 export const metadata: Metadata = {
   title: 'Digi Convertor',
@@ -62,7 +62,8 @@ const DECISIONS = [
 const TIMELINE = [
   { date: 'Aug 2022', title: 'Front-end build', body: 'Vite + React + Recoil UI, theme toggle, formula animations (Framer Motion, GSAP, typed.js) and the first API wiring.' },
   { date: '24 Dec 2022', title: 'Server v2 on Vercel', body: 'digi-convertor-server-v2 copies the convert module into a Flask serverless entry and opens CORS for the front-end origin.' },
-  { date: '1 Jan 2023', title: 'Last API fix', body: 'Final server commit. The front-end later got an archive README on 27 Dec 2025; both GitHub repos are archived, and the Vercel apps still answer.', current: true },
+  { date: '1 Jan 2023', title: 'Last API fix', body: 'Final server commit. The front-end later got an archive README on 27 Dec 2025; both GitHub repos are archived.' },
+  { date: 'Nov 2026', title: 'Retired', body: 'Both Vercel apps, the front end and the API, were taken down. The code stays in the archived GitHub repos, and this page keeps the screenshots and the API log.', current: true },
 ]
 
 const STACK: [string, string[]][] = [
@@ -86,13 +87,12 @@ export default function DigiConvertorPage() {
         <div data-stagger-item style={{ padding: '24px 0', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', columnGap: 12, rowGap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 'var(--text-2xl)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Digi Convertor</h1>
-            <span className="pill" style={{ color: GREEN, fontFamily: MONO }}>● live · archived repos · 2022</span>
+            <span className="pill" style={{ fontFamily: MONO }}>○ retired · archived repos · 2022</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: '0 0 16px' }}>
             A base converter with the working visible. Pick binary, decimal, octal or hex on each side, type a value, and the Flask API returns the conversion while the right-hand panel shows the formula for that pair.
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <a href="https://digi-convertor.vercel.app" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> live site</a>
             <a href="https://github.com/Clupai8o0/digi-convertor-app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> app</a>
             <a href="https://github.com/Clupai8o0/digi-convertor-server-v2" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> api</a>
           </div>
@@ -109,7 +109,7 @@ export default function DigiConvertorPage() {
           />
         </div>
         <p data-stagger-item style={{ ...PROSE, fontSize: 13, color: 'var(--muted)', margin: '0 0 32px' }}>
-          Shots are the public Vercel front-end talking to digi-convertor-server-v2.vercel.app.
+          Shots are the public Vercel front-end talking to digi-convertor-server-v2.vercel.app, taken before both were retired in November 2026.
         </p>
 
         <div data-reveal style={{ marginBottom: 40 }}>
@@ -135,7 +135,7 @@ export default function DigiConvertorPage() {
         <div style={{ marginBottom: 40 }}>
           <div className="section-label" style={{ fontFamily: MONO }}>Context</div>
           <p style={{ ...PROSE, margin: 0 }}>
-            An early full-stack learning project: a styled converter in the browser and a tiny Python service for the arithmetic. Both GitHub repositories are archived; the deployments still serve traffic.
+            An early full-stack learning project: a styled converter in the browser and a tiny Python service for the arithmetic. Both GitHub repositories are archived, and both deployments were taken down in November 2026.
           </p>
         </div>
 
@@ -148,7 +148,7 @@ export default function DigiConvertorPage() {
         </div>
         <div data-reveal style={{ marginBottom: 40 }}>
           <CodePre code={VERIFY_LOG} lang="log" />
-          <p style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8, lineHeight: 1.5 }}>Live response from digi-convertor-server-v2.vercel.app, 3 Nov 2026.</p>
+          <p style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8, lineHeight: 1.5 }}>Response from digi-convertor-server-v2.vercel.app on 3 Nov 2026, before it was retired.</p>
         </div>
 
         <div className="section-label" style={{ fontFamily: MONO }}>Key technical decisions</div>
@@ -198,7 +198,6 @@ export default function DigiConvertorPage() {
         </div>
 
         <div style={{ display: 'flex', gap: 8, paddingTop: 20, flexWrap: 'wrap' }}>
-          <a href="https://digi-convertor.vercel.app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> digi-convertor.vercel.app</a>
           <a href="https://github.com/Clupai8o0/digi-convertor-app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> app</a>
           <a href="https://github.com/Clupai8o0/digi-convertor-server-v2" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> api</a>
           <Link href="/projects" className="btn btn-ghost" style={{ fontFamily: MONO }}>← back to projects</Link>
