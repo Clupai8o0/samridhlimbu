@@ -10,7 +10,7 @@ import { CodePre } from '@/components/code-pre'
 import type { ChartBlock } from '@/lib/writing'
 
 const DESCRIPTION =
-  'A watering advisor for vineyards, built overnight at Hack48 in March 2026. A gradient boosting model predicts weekly water, plain rules scale it to one block, and a voice assistant called Sage speaks the advice through Gemini and ElevenLabs. The March build is still live on Vercel.'
+  'A watering advisor for vineyards, built overnight at Hack48 in March 2026. A gradient boosting model predicts weekly water, plain rules scale it to one block, and a voice assistant called Sage speaks the advice through Gemini and ElevenLabs. The project is being retired in November 2026 and the live site is coming down. The code stays on GitHub.'
 
 export const metadata: Metadata = {
   title: 'Farmers Intuition · Hack48',
@@ -84,7 +84,8 @@ const TIMELINE = [
   { date: '14 Mar 2026 · 23:49', title: 'Voice page first', body: 'The front end starts as a voice assistant screen. By 00:26 it has routes for ElevenLabs speech to text and text to speech.' },
   { date: '15 Mar · 01:09 to 01:35', title: 'Dashboard prototype and the model', body: 'A separate dashboard prototype with five knobs. Then a teammate\'s first API commit: the simulated data, the training script, a trained model, the first rules and nine tests.' },
   { date: '15 Mar · 02:52 to 04:31', title: 'Wired up and deployed', body: 'Gemini chat, the Vercel config, a CORS fix and the lazy-import fix. The dashboard starts posting to the API, and the mic switches from the browser\'s speech API to ElevenLabs.' },
-  { date: '15 Mar · 06:19 to 08:53', title: 'Last fixes before demo time', body: 'Eighteen short commits across both repos. The savings card arrives around 08:00 and the Model Info card in the last commit. The live site serves that build.', current: true },
+  { date: '15 Mar · 06:19 to 08:53', title: 'Last fixes before demo time', body: 'Eighteen short commits across both repos. The savings card arrives around 08:00 and the Model Info card in the last commit. The live site served that build until it was retired.' },
+  { date: 'Nov 2026', title: 'Retired', body: 'The project is being retired and the live site on Vercel is coming down. The three repos stay up on GitHub, and this page keeps the screenshots and the recording.', current: true },
 ]
 
 const STACK: [string, string[]][] = [
@@ -136,10 +137,13 @@ export default function FarmersIntuitionPage() {
         <div data-stagger-item style={{ padding: '24px 0', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', columnGap: 12, rowGap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 'var(--text-2xl)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.025em', color: 'var(--fg)' }}>Farmers Intuition</h1>
-            <span className="pill" style={{ fontFamily: MONO }}>hack48 · mar 2026 · live</span>
+            <span className="pill" style={{ fontFamily: MONO }}>hack48 · mar 2026 · retired</span>
           </div>
           <p style={{ ...PROSE, fontSize: 'var(--text-base)', margin: 0 }}>
             A watering advisor for vineyards, built overnight at Hack48. You set the day&apos;s conditions on the dashboard and it tells you how many litres to put on the block. A voice assistant called Sage reads the advice out and answers questions, so a grower can use it without looking at a screen.
+          </p>
+          <p style={{ fontFamily: MONO, fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.6, margin: '14px 0 0' }}>
+            <span style={{ color: 'var(--accent)' }}>note</span> · Retired in November 2026. The live site is coming down, so the screenshots and recording here are what remains. The code is still on GitHub.
           </p>
         </div>
 
@@ -333,7 +337,6 @@ export default function FarmersIntuitionPage() {
 
         {/* Footer actions */}
         <div style={{ display: 'flex', gap: 8, paddingTop: 20, flexWrap: 'wrap' }}>
-          <a href="https://farmers-intuition.vercel.app" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="external" size={12} /> farmers-intuition.vercel.app</a>
           <a href="https://github.com/clupai8o0/farmers-intuition" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> frontend</a>
           <a href="https://github.com/Clupai8o0/Farmers_Intuition_API" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> api</a>
           <a href="https://github.com/Clupai8o0/farmers-intuition-dashboard" target="_blank" rel="noopener noreferrer" className="btn" style={{ fontFamily: MONO }}><Icon name="github" size={12} /> dashboard prototype</a>
